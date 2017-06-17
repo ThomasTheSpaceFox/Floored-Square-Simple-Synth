@@ -81,7 +81,7 @@ cpytx=simplefont.render("(c) 2016-2017 Thomas Leathers, See readme.md for detail
 verstx=simplefont.render("v1.1", True, (0, 0, 0), (192, 192, 255))
 bgimg.blit(verstx, (2, 2))
 bgimg.blit(cpytx, (2, 22))
-txtx1=simplefont.render("Use keys q-i,2,3, 5-7 and z-?/, s,d,g-k, l,: to play. ", True, (0, 0, 0), (192, 192, 255))
+txtx1=simplefont.render("Use keys q-],2,3, 5-7, 9,0, + and z-?/, s,d,g-k, l,: to play. ", True, (0, 0, 0), (192, 192, 255))
 txtx2=simplefont.render("Escape quits, ", True, (0, 0, 0), (192, 192, 255))
 txtx3=simplefont.render("Use up and down arrow keys to control fade-out ", True, (0, 0, 0), (192, 192, 255))
 txtx4=simplefont.render("Use pageup and pagedown to control note volume.", True, (0, 0, 0), (192, 192, 255))
@@ -302,31 +302,31 @@ while evhappenflg2==0:
 			if event.type == KEYDOWN and event.key == K_ESCAPE:
 				evhappenflg2=1
 				break
-			if event.type == KEYDOWN and event.key == K_UP:
+			if event.type == KEYDOWN and (event.key == K_UP or event.key == K_KP8):
 				fadex += 100
 				dispupdate()
 				fadetime=fadex
-			if event.type == KEYDOWN and event.key == K_DOWN:
+			if event.type == KEYDOWN and (event.key == K_DOWN or event.key == K_KP2):
 				fadex -= 100
 				if fadex<0:
 					fadex=0
 				dispupdate()
 				fadetime=fadex
-			if event.type == KEYDOWN and event.key == K_RIGHT:
+			if event.type == KEYDOWN and (event.key == K_RIGHT or event.key == K_KP6):
 				fadeintime += 100
 				dispupdate()
-			if event.type == KEYDOWN and event.key == K_LEFT:
+			if event.type == KEYDOWN and (event.key == K_LEFT or event.key == K_KP4):
 				fadeintime -= 100
 				if fadeintime<0:
 					fadeintime=0
 				dispupdate()
-			if event.type == KEYDOWN and event.key == K_PAGEUP:
+			if event.type == KEYDOWN and (event.key == K_PAGEUP or event.key == K_KP9):
 				notevol += 0.1
 				if notevol>1.0:
 					notevol=1.0
 				setnotevols()
 				dispupdate()
-			if event.type == KEYDOWN and event.key == K_PAGEDOWN:
+			if event.type == KEYDOWN and (event.key == K_PAGEDOWN or event.key == K_KP3):
 				notevol -= 0.1
 				if notevol<0.1:
 					notevol=0.1
