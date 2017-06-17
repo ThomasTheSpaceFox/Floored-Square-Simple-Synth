@@ -63,9 +63,15 @@ snf20=pygame.mixer.Sound(autosquare(233, notetime))
 snf21=pygame.mixer.Sound(autosquare(247, notetime))
 snf22=pygame.mixer.Sound(autosquare(262, notetime))
 
-
+snf23=pygame.mixer.Sound(autosquare(277, notetime))
+snf24=pygame.mixer.Sound(autosquare(294, notetime))
+snf25=pygame.mixer.Sound(autosquare(311, notetime))
+snf26=pygame.mixer.Sound(autosquare(330, notetime))
+snf27=pygame.mixer.Sound(autosquare(349, notetime))
+snf28=pygame.mixer.Sound(autosquare(370, notetime))
+snf29=pygame.mixer.Sound(autosquare(392, notetime))
 def setnotevols():
-	for snd in [snf, snf0, snf1, snf2, snf3, snf4, snf5, snf5b, snf6, snf7, snf8, snf9, snf10, snf11, snf12, snf13, snf14, snf15, snf16, snf17, snf18, snf19, snf20, snf21, snf22]:
+	for snd in [snf, snf0, snf1, snf2, snf3, snf4, snf5, snf5b, snf6, snf7, snf8, snf9, snf10, snf11, snf12, snf13, snf14, snf15, snf16, snf17, snf18, snf19, snf20, snf21, snf22, snf23, snf24, snf25, snf26, snf27, snf28, snf29]:
 		snd.set_volume(notevol)
 notevol=0.7
 setnotevols()
@@ -75,7 +81,7 @@ cpytx=simplefont.render("(c) 2016-2017 Thomas Leathers, See readme.md for detail
 verstx=simplefont.render("v1.1", True, (0, 0, 0), (192, 192, 255))
 bgimg.blit(verstx, (2, 2))
 bgimg.blit(cpytx, (2, 22))
-txtx1=simplefont.render("Use keys q-i,2,3, 5-7 and z-m, s,d,g-k to play. ", True, (0, 0, 0), (192, 192, 255))
+txtx1=simplefont.render("Use keys q-i,2,3, 5-7 and z-?/, s,d,g-k, l,: to play. ", True, (0, 0, 0), (192, 192, 255))
 txtx2=simplefont.render("Escape quits, ", True, (0, 0, 0), (192, 192, 255))
 txtx3=simplefont.render("Use up and down arrow keys to control fade-out ", True, (0, 0, 0), (192, 192, 255))
 txtx4=simplefont.render("Use pageup and pagedown to control note volume.", True, (0, 0, 0), (192, 192, 255))
@@ -123,15 +129,15 @@ while evhappenflg2==0:
 				snf9.play(-1, fade_ms=fadeintime)
 			if event.type == KEYDOWN and event.key == K_m:
 				snf10.play(-1, fade_ms=fadeintime)
-			if event.type == KEYDOWN and event.key == K_q:
+			if event.type == KEYDOWN and (event.key == K_q or event.key == K_LESS or event.key == K_COMMA):
 				snf11.play(-1, fade_ms=fadeintime)
-			if event.type == KEYDOWN and event.key == K_2:
+			if event.type == KEYDOWN and (event.key == K_2 or event.key == K_l):
 				snf12.play(-1, fade_ms=fadeintime)
-			if event.type == KEYDOWN and event.key == K_w:
+			if event.type == KEYDOWN and (event.key == K_w or event.key == K_GREATER or event.key == K_PERIOD):
 				snf13.play(-1, fade_ms=fadeintime)
-			if event.type == KEYDOWN and event.key == K_3:
+			if event.type == KEYDOWN and (event.key == K_3 or event.key == K_COLON or event.key == K_SEMICOLON):
 				snf14.play(-1, fade_ms=fadeintime)
-			if event.type == KEYDOWN and event.key == K_e:
+			if event.type == KEYDOWN and (event.key == K_e or event.key == K_SLASH or event.key == K_QUESTION):
 				snf15.play(-1, fade_ms=fadeintime)
 			if event.type == KEYDOWN and event.key == K_r:
 				snf16.play(-1, fade_ms=fadeintime)
@@ -149,6 +155,20 @@ while evhappenflg2==0:
 				snf21.play(-1, fade_ms=fadeintime)
 			if event.type == KEYDOWN and event.key == K_i:
 				snf22.play(-1, fade_ms=fadeintime)
+			if event.type == KEYDOWN and event.key == K_9:
+				snf23.play(-1, fade_ms=fadeintime)
+			if event.type == KEYDOWN and event.key == K_o:
+				snf24.play(-1, fade_ms=fadeintime)
+			if event.type == KEYDOWN and event.key == K_0:
+				snf25.play(-1, fade_ms=fadeintime)
+			if event.type == KEYDOWN and event.key == K_p:
+				snf26.play(-1, fade_ms=fadeintime)
+			if event.type == KEYDOWN and event.key == K_LEFTBRACKET:
+				snf27.play(-1, fade_ms=fadeintime)
+			if event.type == KEYDOWN and (event.key == K_EQUALS or event.key == K_PLUS):
+				snf28.play(-1, fade_ms=fadeintime)
+			if event.type == KEYDOWN and event.key == K_RIGHTBRACKET:
+				snf29.play(-1, fade_ms=fadeintime)
 			if fadetime!=0:
 				if event.type == KEYUP and event.key == K_z:
 					snf0.fadeout(fadetime)
@@ -174,15 +194,15 @@ while evhappenflg2==0:
 					snf9.fadeout(fadetime)
 				if event.type == KEYUP and event.key == K_m:
 					snf10.fadeout(fadetime)
-				if event.type == KEYUP and event.key == K_q:
+				if event.type == KEYUP and (event.key == K_q or event.key == K_LESS or event.key == K_COMMA):
 					snf11.fadeout(fadetime)
-				if event.type == KEYUP and event.key == K_2:
+				if event.type == KEYUP and (event.key == K_2 or event.key == K_l):
 					snf12.fadeout(fadetime)
-				if event.type == KEYUP and event.key == K_w:
+				if event.type == KEYUP and (event.key == K_w or event.key == K_GREATER or event.key == K_PERIOD):
 					snf13.fadeout(fadetime)
-				if event.type == KEYUP and event.key == K_3:
+				if event.type == KEYUP and (event.key == K_3 or event.key == K_COLON or event.key == K_SEMICOLON):
 					snf14.fadeout(fadetime)
-				if event.type == KEYUP and event.key == K_e:
+				if event.type == KEYUP and (event.key == K_e or event.key == K_SLASH or event.key == K_QUESTION):
 					snf15.fadeout(fadetime)
 				if event.type == KEYUP and event.key == K_r:
 					snf16.fadeout(fadetime)
@@ -200,6 +220,20 @@ while evhappenflg2==0:
 					snf21.fadeout(fadetime)
 				if event.type == KEYUP and event.key == K_i:
 					snf22.fadeout(fadetime)
+				if event.type == KEYUP and event.key == K_9:
+					snf23.fadeout(fadetime)
+				if event.type == KEYUP and event.key == K_o:
+					snf24.fadeout(fadetime)
+				if event.type == KEYUP and event.key == K_0:
+					snf25.fadeout(fadetime)
+				if event.type == KEYUP and event.key == K_p:
+					snf26.fadeout(fadetime)
+				if event.type == KEYUP and event.key == K_LEFTBRACKET:
+					snf27.fadeout(fadetime)
+				if event.type == KEYUP and (event.key == K_EQUALS or event.key == K_PLUS):
+					snf28.fadeout(fadetime)
+				if event.type == KEYUP and event.key == K_RIGHTBRACKET:
+					snf29.fadeout(fadetime)
 			else:
 				if event.type == KEYUP and event.key == K_z:
 					snf0.stop()
@@ -225,15 +259,15 @@ while evhappenflg2==0:
 					snf9.stop()
 				if event.type == KEYUP and event.key == K_m:
 					snf10.stop()
-				if event.type == KEYUP and event.key == K_q:
+				if event.type == KEYUP and (event.key == K_q or event.key == K_LESS or event.key == K_COMMA):
 					snf11.stop()
-				if event.type == KEYUP and event.key == K_2:
+				if event.type == KEYUP and (event.key == K_2 or event.key == K_l):
 					snf12.stop()
-				if event.type == KEYUP and event.key == K_w:
+				if event.type == KEYUP and (event.key == K_w or event.key == K_GREATER or event.key == K_PERIOD):
 					snf13.stop()
-				if event.type == KEYUP and event.key == K_3:
+				if event.type == KEYUP and (event.key == K_3 or event.key == K_COLON or event.key == K_SEMICOLON):
 					snf14.stop()
-				if event.type == KEYUP and event.key == K_e:
+				if event.type == KEYUP and (event.key == K_e or event.key == K_SLASH or event.key == K_QUESTION):
 					snf15.stop()
 				if event.type == KEYUP and event.key == K_r:
 					snf16.stop()
@@ -251,6 +285,20 @@ while evhappenflg2==0:
 					snf21.stop()
 				if event.type == KEYUP and event.key == K_i:
 					snf22.stop()
+				if event.type == KEYUP and event.key == K_9:
+					snf23.stop()
+				if event.type == KEYUP and event.key == K_o:
+					snf24.stop()
+				if event.type == KEYUP and event.key == K_0:
+					snf25.stop()
+				if event.type == KEYUP and event.key == K_p:
+					snf26.stop()
+				if event.type == KEYUP and event.key == K_LEFTBRACKET:
+					snf27.stop()
+				if event.type == KEYUP and (event.key == K_EQUALS or event.key == K_PLUS):
+					snf28.stop()
+				if event.type == KEYUP and event.key == K_RIGHTBRACKET:
+					snf29.stop()
 			if event.type == KEYDOWN and event.key == K_ESCAPE:
 				evhappenflg2=1
 				break
