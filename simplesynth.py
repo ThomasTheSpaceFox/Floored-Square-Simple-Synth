@@ -78,8 +78,8 @@ bgimg.blit(cpytx, (2, 22))
 txtx1=simplefont.render("Use keys q-i,2,3, 5-7 and z-m, s,d,g-k to play. ", True, (0, 0, 0), (192, 192, 255))
 txtx2=simplefont.render("Escape quits, ", True, (0, 0, 0), (192, 192, 255))
 txtx3=simplefont.render("Use up and down arrow keys to control fade-out ", True, (0, 0, 0), (192, 192, 255))
-txtx4=simplefont.render("Use left and right arrow keys to control note volume. ", True, (0, 0, 0), (192, 192, 255))
-txtx5=simplefont.render("Use Pageup and Pagedown to control fade-in", True, (0, 0, 0), (192, 192, 255))
+txtx4=simplefont.render("Use pageup and pagedown to control note volume.", True, (0, 0, 0), (192, 192, 255))
+txtx5=simplefont.render("Use left and right arrow keys to control fade-in", True, (0, 0, 0), (192, 192, 255))
 bgimg.blit(txtx1, (2, 42))
 bgimg.blit(txtx2, (2, 62))
 bgimg.blit(txtx3, (2, 82))
@@ -264,21 +264,21 @@ while evhappenflg2==0:
 					fadex=0
 				dispupdate()
 				fadetime=fadex
-			if event.type == KEYDOWN and event.key == K_PAGEUP:
+			if event.type == KEYDOWN and event.key == K_RIGHT:
 				fadeintime += 100
 				dispupdate()
-			if event.type == KEYDOWN and event.key == K_PAGEDOWN:
+			if event.type == KEYDOWN and event.key == K_LEFT:
 				fadeintime -= 100
 				if fadeintime<0:
 					fadeintime=0
 				dispupdate()
-			if event.type == KEYDOWN and event.key == K_LEFT:
+			if event.type == KEYDOWN and event.key == K_PAGEUP:
 				notevol += 0.1
 				if notevol>1.0:
 					notevol=1.0
 				setnotevols()
 				dispupdate()
-			if event.type == KEYDOWN and event.key == K_RIGHT:
+			if event.type == KEYDOWN and event.key == K_PAGEDOWN:
 				notevol -= 0.1
 				if notevol<0.1:
 					notevol=0.1
