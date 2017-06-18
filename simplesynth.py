@@ -19,14 +19,16 @@ pygame.display.set_caption("Floored Square Simple Synth", "Floored Square Simple
 pygame.font.init()
 
 simplefont = pygame.font.SysFont(None, 22)
-bgimg=pygame.image.load("simplesynth.png").convert()
+bgimg=pygame.image.load("simplesynth.jpg").convert()
 
 pygame.mixer.init()
 
 def foobsin(num):
 	return (math.floor(math.sin(num)) * 4500)
 stackit=1
+octshift=1
 def autosquare(freq, lenth):
+	freq=(freq*octshift)
 	if stackit==1:
 		return autosquare1stack(freq, lenth)
 	elif stackit==2:
@@ -149,30 +151,34 @@ setnotevols()
 
 evhappenflg2=0
 cpytx=simplefont.render("(c) 2016-2017 Thomas Leathers, See readme.md for details.", True, (0, 0, 0), (192, 192, 255))
-verstx=simplefont.render("v1.2", True, (0, 0, 0), (192, 192, 255))
+verstx=simplefont.render("v1.3", True, (0, 0, 0), (192, 192, 255))
 bgimg.blit(verstx, (2, 2))
 bgimg.blit(cpytx, (2, 22))
-txtx1=simplefont.render("Use keys q-],2,3, 5-7, 9,0, + and z-?/, s,d,g-k, l,: to play. ", True, (0, 0, 0), (192, 192, 255))
-txtx2=simplefont.render("Escape quits, shift+1,2,3, or 4 controls octave stacking ", True, (0, 0, 0), (192, 192, 255))
+txtx1=simplefont.render("Use keys q-],2,3, 5-7, 9,0, + and z-?/, s,d,g-k, l,: to play. Escape quits.", True, (0, 0, 0), (192, 192, 255))
+txtx2=simplefont.render("shift+1,2,3, or 4 controls octave stacking ", True, (0, 0, 0), (192, 192, 255))
+txtx2b=simplefont.render("CTRL+1,2,3, or 4 controls octave shift", True, (0, 0, 0), (192, 192, 255))
 txtx3=simplefont.render("Use up and down arrow keys to control fade-out ", True, (0, 0, 0), (192, 192, 255))
 txtx4=simplefont.render("Use pageup and pagedown to control note volume.", True, (0, 0, 0), (192, 192, 255))
 txtx5=simplefont.render("Use left and right arrow keys to control fade-in", True, (0, 0, 0), (192, 192, 255))
-bgimg.blit(txtx1, (2, 42))
-bgimg.blit(txtx2, (2, 62))
-bgimg.blit(txtx3, (2, 82))
-bgimg.blit(txtx4, (2, 102))
-bgimg.blit(txtx5, (2, 122))
+bgimg.blit(txtx1, (2, 62))
+bgimg.blit(txtx2, (2, 82))
+bgimg.blit(txtx2b, (2, 102))
+bgimg.blit(txtx4, (2, 122))
+bgimg.blit(txtx3, (2, 142))
+bgimg.blit(txtx5, (2, 162))
 fadeintime=0
 def dispupdate():
 	notevtx=simplefont.render(("Note Vol: " + str(notevol)), True, (0, 0, 0), (192, 192, 255))
 	fadetx=simplefont.render(("Note fadeout time: " + str(fadex)), True, (0, 0, 0), (192, 192, 255))
 	fadeintx=simplefont.render(("Note fadein time: " + str(fadeintime)), True, (0, 0, 0), (192, 192, 255))
 	stackintx=simplefont.render(("Octave Stacking: " + str(stackit)), True, (0, 0, 0), (192, 192, 255))
+	octshifttx=simplefont.render(("Octave Shift: " + str(octshift)), True, (0, 0, 0), (192, 192, 255))
 	screensurf.blit(bgimg, (0, 0))
-	screensurf.blit(notevtx, (2, 400))
-	screensurf.blit(fadetx, (2, 420))
-	screensurf.blit(fadeintx, (2, 440))
-	screensurf.blit(stackintx, (2, 460))
+	screensurf.blit(notevtx, (2, 380))
+	screensurf.blit(fadetx, (2, 400))
+	screensurf.blit(fadeintx, (2, 420))
+	screensurf.blit(stackintx, (2, 440))
+	screensurf.blit(octshifttx, (2, 460))
 	pygame.display.update()
 dispupdate()
 while evhappenflg2==0:
@@ -203,6 +209,33 @@ while evhappenflg2==0:
 						redefsounds()
 						dispupdate()
 						setnotevols()
+			elif pygame.key.get_mods() & pygame.KMOD_CTRL:
+				if event.type == KEYDOWN and event.key == K_1:
+					if octshift!=1:
+						octshift=1
+						redefsounds()
+						dispupdate()
+						setnotevols()
+				if event.type == KEYDOWN and event.key == K_2:
+					if octshift!=2:
+						octshift=2
+						redefsounds()
+						dispupdate()
+						setnotevols()
+				if event.type == KEYDOWN and event.key == K_3:
+					if octshift!=3:
+						octshift=3
+						redefsounds()
+						dispupdate()
+						setnotevols()
+				if event.type == KEYDOWN and event.key == K_4:
+					if octshift!=4:
+						octshift=4
+						redefsounds()
+						dispupdate()
+						setnotevols()
+				
+				
 			else:
 				
 				if event.type == KEYDOWN and event.key == K_z:
