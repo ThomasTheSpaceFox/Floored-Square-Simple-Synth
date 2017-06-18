@@ -47,6 +47,32 @@ def autosquare(freq, lenth):
 			return autosquare5stack(freq, lenth)
 		else:
 			return autosquare1stack(freq, lenth)
+	if stackmod==3:
+		if stackit==1:
+			return autosquare1stack(freq, lenth)
+		elif stackit==2:
+			return autosquare2stackne(freq, lenth)
+		elif stackit==3:
+			return autosquare3stacknexq(freq, lenth)
+		elif stackit==4:
+			return autosquare4stacknexq(freq, lenth)
+		elif stackit==5:
+			return autosquare5stacknexq(freq, lenth)
+		else:
+			return autosquare1stack(freq, lenth)
+	if stackmod==4:
+		if stackit==1:
+			return autosquare1stack(freq, lenth)
+		elif stackit==2:
+			return autosquare2stacksubab(freq, lenth)
+		elif stackit==3:
+			return autosquare3stacksubab(freq, lenth)
+		elif stackit==4:
+			return autosquare4stacksubab(freq, lenth)
+		elif stackit==5:
+			return autosquare5stacksubab(freq, lenth)
+		else:
+			return autosquare1stack(freq, lenth)
 	else:
 		if stackit==1:
 			return autosquare1stack(freq, lenth)
@@ -105,6 +131,47 @@ def autosquare5stackne(freq, lenth):
 	temparray=array.array('f', [((foobsin(2.0 * math.pi * freq * t / 22050) - foobsin(2.0 * math.pi * (freq * 2) * t / 22050) - foobsin(2.0 * math.pi * (freq * 3) * t / 22050) - foobsin(2.0 * math.pi * (freq * 4) * t / 22050) - foobsin(2.0 * math.pi * (freq * 5) * t / 22050))) for t in xrange(0, int(22050))])
 	#temparray=array.array('f', [(foobsin(2.0 * math.pi * freq * t / 22050)) for t in xrange(0, int(lenth * 22050))])
 	return temparray
+
+def autosquare2stacknexq(freq, lenth):
+	temparray=array.array('f', [((foobsin(2.0 * math.pi * freq * t / 22050) - (foobsin(2.0 * math.pi * (freq * 2) * t / 22050)))) for t in xrange(0, int(22050))])
+	#temparray=array.array('f', [(foobsin(2.0 * math.pi * freq * t / 22050)) for t in xrange(0, int(lenth * 22050))])
+	return temparray
+
+def autosquare3stacknexq(freq, lenth):
+	temparray=array.array('f', [((foobsin(2.0 * math.pi * freq * t / 22050) - (foobsin(2.0 * math.pi * (freq * 2) * t / 22050) + foobsin(2.0 * math.pi * (freq * 3) * t / 22050)))) for t in xrange(0, int(22050))])
+	#temparray=array.array('f', [(foobsin(2.0 * math.pi * freq * t / 22050)) for t in xrange(0, int(lenth * 22050))])
+	return temparray
+
+def autosquare4stacknexq(freq, lenth):
+	temparray=array.array('f', [((foobsin(2.0 * math.pi * freq * t / 22050) - (foobsin(2.0 * math.pi * (freq * 2) * t / 22050) + foobsin(2.0 * math.pi * (freq * 3) * t / 22050) - foobsin(2.0 * math.pi * (freq * 4) * t / 22050)))) for t in xrange(0, int(22050))])
+	#temparray=array.array('f', [(foobsin(2.0 * math.pi * freq * t / 22050)) for t in xrange(0, int(lenth * 22050))])
+	return temparray
+
+def autosquare5stacknexq(freq, lenth):
+	temparray=array.array('f', [((foobsin(2.0 * math.pi * freq * t / 22050) - (foobsin(2.0 * math.pi * (freq * 2) * t / 22050) + foobsin(2.0 * math.pi * (freq * 3) * t / 22050) - foobsin(2.0 * math.pi * (freq * 4) * t / 22050) + foobsin(2.0 * math.pi * (freq * 5) * t / 22050)))) for t in xrange(0, int(22050))])
+	#temparray=array.array('f', [(foobsin(2.0 * math.pi * freq * t / 22050)) for t in xrange(0, int(lenth * 22050))])
+	return temparray
+
+def autosquare2stacksubab(freq, lenth):
+	temparray=array.array('f', [((foobsin(2.0 * math.pi * freq * t / 22050) - abs(foobsin(2.0 * math.pi * (freq * 2) * t / 22050)))) for t in xrange(0, int(22050))])
+	#temparray=array.array('f', [(foobsin(2.0 * math.pi * freq * t / 22050)) for t in xrange(0, int(lenth * 22050))])
+	return temparray
+
+def autosquare3stacksubab(freq, lenth):
+	temparray=array.array('f', [((foobsin(2.0 * math.pi * freq * t / 22050) - abs(foobsin(2.0 * math.pi * (freq * 2) * t / 22050) + foobsin(2.0 * math.pi * (freq * 3) * t / 22050)))) for t in xrange(0, int(22050))])
+	#temparray=array.array('f', [(foobsin(2.0 * math.pi * freq * t / 22050)) for t in xrange(0, int(lenth * 22050))])
+	return temparray
+
+def autosquare4stacksubab(freq, lenth):
+	temparray=array.array('f', [((foobsin(2.0 * math.pi * freq * t / 22050) - abs(foobsin(2.0 * math.pi * (freq * 2) * t / 22050) + foobsin(2.0 * math.pi * (freq * 3) * t / 22050) + foobsin(2.0 * math.pi * (freq * 4) * t / 22050)))) for t in xrange(0, int(22050))])
+	#temparray=array.array('f', [(foobsin(2.0 * math.pi * freq * t / 22050)) for t in xrange(0, int(lenth * 22050))])
+	return temparray
+
+def autosquare5stacksubab(freq, lenth):
+	temparray=array.array('f', [((foobsin(2.0 * math.pi * freq * t / 22050) - abs(foobsin(2.0 * math.pi * (freq * 2) * t / 22050) + foobsin(2.0 * math.pi * (freq * 3) * t / 22050) + foobsin(2.0 * math.pi * (freq * 4) * t / 22050) + foobsin(2.0 * math.pi * (freq * 5) * t / 22050)))) for t in xrange(0, int(22050))])
+	#temparray=array.array('f', [(foobsin(2.0 * math.pi * freq * t / 22050)) for t in xrange(0, int(lenth * 22050))])
+	return temparray
+
 fadex=600
 fadetime=fadex
 notetime=(0.1)
@@ -250,6 +317,7 @@ perc50tx=simplefont.render("50%...", True, (0, 0, 0), (192, 192, 255))
 perc75tx=simplefont.render("75%...", True, (0, 0, 0), (192, 192, 255))
 #Define sounds
 def redefsounds():
+	dispupdate()
 	screensurf.blit(pleasewaittx, (2, 320))
 	screensurf.blit(perc0tx, (2, 340))
 	pygame.display.update()
@@ -327,7 +395,7 @@ def redefsounds():
 	snf29=pygame.mixer.Sound(autosquare(392, notetime))
 	pygame.event.clear()
 
-redefsounds()
+
 
 def setnotevols():
 	for snd in [snf, snf0, snf1, snf2, snf3, snf4, snf5, snf5b, snf6, snf7, snf8, snf9, snf10, snf11, snf12, snf13, snf14, snf15, snf16, snf17, snf18, snf19, snf20, snf21, snf22, snf23, snf24, snf25, snf26, snf27, snf28, snf29]:
@@ -342,7 +410,7 @@ def setnotevols():
 		if stackit==5:
 			snd.set_volume((notevol/1.7))
 notevol=0.5
-setnotevols()
+
 notestack=1
 
 def noteplay(notesnd):
@@ -367,11 +435,11 @@ def notepop(notesnd):
 
 evhappenflg2=0
 cpytx=simplefont.render("(c) 2016-2017 Thomas Leathers, See readme.md for details.", True, (0, 0, 0), (192, 192, 255))
-verstx=simplefont.render("v2.0", True, (0, 0, 0), (192, 192, 255))
+verstx=simplefont.render("v2.1", True, (0, 0, 0), (192, 192, 255))
 bgimg.blit(verstx, (2, 2))
 bgimg.blit(cpytx, (2, 22))
 txtx1=simplefont.render("Use keys q-],2,3, 5-7, 9,0, + and z-?/, s,d,g-k, l,: to play. Escape quits.", True, (0, 0, 0), (192, 192, 255))
-txtx2=simplefont.render("shift+1,2,3,4, or 5 controls octave stacking, Shift + A,S controls Stack Synth ", True, (0, 0, 0), (192, 192, 255))
+txtx2=simplefont.render("shift+1,2,3,4, or 5 controls octave stacking, Shift + A,S,D,F controls Stack Synth ", True, (0, 0, 0), (192, 192, 255))
 txtx2b=simplefont.render("CTRL+0,1,2,3, or 4 controls octave shift.  ALT+shift+1,2,3 controls multi-trigger", True, (0, 0, 0), (192, 192, 255))
 txtx3=simplefont.render("Use up and down arrow keys to control fade-out ", True, (0, 0, 0), (192, 192, 255))
 txtx4=simplefont.render("Use pageup and pagedown to control note volume.", True, (0, 0, 0), (192, 192, 255))
@@ -392,6 +460,10 @@ def dispupdate():
 	multrigtx=simplefont.render(("Key multi-trigger: " + str(notestack)), True, (0, 0, 0), (192, 192, 255))
 	if stackmod==1:
 		stacksyntx=simplefont.render(("Stack Synth: Additive"), True, (0, 0, 0), (192, 192, 255))
+	if stackmod==3:
+		stacksyntx=simplefont.render(("Stack Synth: adsub1"), True, (0, 0, 0), (192, 192, 255))
+	if stackmod==4:
+		stacksyntx=simplefont.render(("Stack Synth: Sub ABS"), True, (0, 0, 0), (192, 192, 255))
 	else:
 		stacksyntx=simplefont.render(("Stack Synth: Subtractive"), True, (0, 0, 0), (192, 192, 255))
 	screensurf.blit(bgimg, (0, 0))
@@ -403,6 +475,9 @@ def dispupdate():
 	screensurf.blit(multrigtx, (200, 380))
 	screensurf.blit(stacksyntx, (200, 400))
 	pygame.display.update()
+
+redefsounds()
+setnotevols()
 dispupdate()
 while evhappenflg2==0:
 		time.sleep(.001)
@@ -461,6 +536,18 @@ while evhappenflg2==0:
 				if event.type == KEYDOWN and event.key == K_s:
 					if stackmod!=2:
 						stackmod=2
+						redefsounds()
+						dispupdate()
+						setnotevols()
+				if event.type == KEYDOWN and event.key == K_d:
+					if stackmod!=3:
+						stackmod=3
+						redefsounds()
+						dispupdate()
+						setnotevols()
+				if event.type == KEYDOWN and event.key == K_f:
+					if stackmod!=4:
+						stackmod=4
 						redefsounds()
 						dispupdate()
 						setnotevols()
