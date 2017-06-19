@@ -24,8 +24,22 @@ bgimg=pygame.image.load("simplesynth.jpg").convert()
 
 pygame.mixer.init()
 
-def foobsin(num):
-	return (math.floor(math.sin(num)) * 4500)
+def foobsin1(num):
+	return (strex(math.sin(num)) * 4500)
+def foobsin2(num):
+	return (strex(math.tan(num)) * 4500)
+def foobsin3(num):
+	return (strex(math.cos(num) + math.sin(num)) * 4500)	
+def foobsin4(num):
+	return (strex(math.tan(num) + math.sin(num)) * 4500)	
+foobsin=foobsin1
+
+strex=math.floor
+#def dummyfunct(arg):
+#	return arg
+strexmd=1
+wavemode=1
+
 stackit=1
 octshift=1
 stackmod=1
@@ -518,7 +532,7 @@ def notepop(notesnd):
 
 evhappenflg2=0
 cpytx=simplefont.render("(c) 2016-2017 Thomas Leathers, See readme.md for details.", True, (0, 0, 0))
-verstx=simplefont.render("v2.2", True, (0, 0, 0))
+verstx=simplefont.render("v2.3", True, (0, 0, 0))
 bgimg.blit(verstx, (2, 2))
 bgimg.blit(cpytx, (2, 22))
 txtx1=simplefont.render("Use keys q-],2,3, 5-7, 9,0, + and z-?/, s,d,g-k, l,: to play.", True, (0, 0, 0))
@@ -526,6 +540,8 @@ txtx2=simplefont.render("shift+1,2,3,4, or 5 controls octave stacking.", True, (
 txtx2b=simplefont.render("CTRL+0,1,2,3, or 4 controls octave shift.", True, (0, 0, 0))
 txtx2c=simplefont.render("Shift + A,S,D,F,G,H controls Stack Synth ", True, (0, 0, 0))
 txtx2bc=simplefont.render("ALT+shift+1,2,3 controls multi-trigger", True, (0, 0, 0))
+txtx6=simplefont.render("shift+z,x controls square method", True, (0, 0, 0))
+txtx7=simplefont.render("shift+q,w,e,r controls basewave", True, (0, 0, 0))
 txtx1c=simplefont.render("Escape Quits", True, (0, 0, 0))
 txtx3b=simplefont.render("(hold shift for fine control)", True, (0, 0, 0))
 txtx3=simplefont.render("Use up and down arrow keys to control fade-out.", True, (0, 0, 0))
@@ -537,6 +553,8 @@ bgimg.blit(txtx2b, (2, 102))
 bgimg.blit(txtx1c, (400, 62))
 bgimg.blit(txtx2c, (400, 82))
 bgimg.blit(txtx2bc, (400, 102))
+bgimg.blit(txtx6, (400, 122))
+bgimg.blit(txtx7, (400, 142))
 bgimg.blit(txtx3b, (2, 122))
 bgimg.blit(txtx4, (2, 142))
 bgimg.blit(txtx3, (2, 162))
@@ -549,6 +567,12 @@ stm3=simplefont.render(("Stack Synth: adsub1"), True, (255, 255, 255))
 stm4=simplefont.render(("Stack Synth: Sub ABS"), True, (255, 255, 255))
 stm5=simplefont.render(("Stack Synth: Sub Mean"), True, (255, 255, 255))
 stm6=simplefont.render(("Stack Synth: Mean"), True, (255, 255, 255))
+ws1=simplefont.render(("square method: floor"), True, (255, 255, 255))
+ws2=simplefont.render(("square method: ceiling"), True, (255, 255, 255))
+wm1=simplefont.render(("Wave basetype: sin"), True, (255, 255, 255))
+wm2=simplefont.render(("Wave basetype: tan"), True, (255, 255, 255))
+wm3=simplefont.render(("Wave basetype: cos+sin"), True, (255, 255, 255))
+wm4=simplefont.render(("Wave basetype: tan+sin"), True, (255, 255, 255))
 sam1=simplefont.render(("Press enter/return to update samples!"), True, (0, 0, 0), (255, 127, 127))
 sam2=simplefont.render(("Samples are updated."), True, (255, 255, 255))
 def dispupdate():
@@ -564,20 +588,34 @@ def dispupdate():
 		stacksyntx=stm3
 	elif stackmod==4:
 		stacksyntx=stm4
-	elif stackmod==5:
-		stacksyntx=stm5
-	elif stackmod==6:
-		stacksyntx=stm6
 	else:
 		stacksyntx=stm2
 	if sampup==1:
 		syntx=sam1
 	else:
 		syntx=sam2
+	if strexmd==1:
+		wstx=ws1
+	else:
+		wstx=ws2
+	if wavemode==1:
+		wmtx=wm1
+	elif wavemode==3:
+		wmtx=wm3
+	elif wavemode==4:
+		wmtx=wm4
+	elif wavemode==5:
+		wmtx=wm5
+	elif wavemode==6:
+		wmtx=wm6
+	else:
+		wmtx=wm2
 	screensurf.blit(bgimg, (0, 0))
 	screensurf.blit(stacksyntx, (2, 480))
 	screensurf.blit(stackintx, (2, 500))
 	screensurf.blit(octshifttx, (2, 520))
+	screensurf.blit(wstx, (2, 540))
+	screensurf.blit(wmtx, (2, 560))
 	screensurf.blit(multrigtx, (200, 480))
 	screensurf.blit(fadetx, (200, 520))
 	screensurf.blit(fadeintx, (200, 540))
@@ -645,6 +683,49 @@ while evhappenflg2==0:
 						
 						sampup=1
 						dispupdate()
+						
+				#wavemode
+				if event.type == KEYDOWN and event.key == K_q:
+					if wavemode!=1:
+						wavemode=1
+						foobsin=foobsin1
+						sampup=1
+						dispupdate()
+				if event.type == KEYDOWN and event.key == K_w:
+					if wavemode!=2:
+						wavemode=2
+						foobsin=foobsin2
+						sampup=1
+						dispupdate()
+				if event.type == KEYDOWN and event.key == K_e:
+					if wavemode!=3:
+						wavemode=3
+						foobsin=foobsin3
+						sampup=1
+						dispupdate()
+				if event.type == KEYDOWN and event.key == K_r:
+					if wavemode!=4:
+						wavemode=4
+						foobsin=foobsin4
+						sampup=1
+						dispupdate()
+				#wavesqmode
+				if event.type == KEYDOWN and event.key == K_z:
+					if strexmd!=1:
+						strexmd=1
+						#foobsin=foobsin1
+						strex=math.floor
+						sampup=1
+						dispupdate()
+				if event.type == KEYDOWN and event.key == K_x:
+					if strexmd!=2:
+						strexmd=2
+						#foobsin=foobsin2
+						strex=math.ceil
+						sampup=1
+						dispupdate()
+				
+				#stackmode
 				if event.type == KEYDOWN and event.key == K_a:
 					if stackmod!=1:
 						stackmod=1
