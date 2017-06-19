@@ -15,7 +15,7 @@ pygame.display.init()
 
 windowicon=pygame.image.load("icon32.png")
 pygame.display.set_icon(windowicon)
-screensurf=pygame.display.set_mode((640, 480))
+screensurf=pygame.display.set_mode((800, 600))
 pygame.display.set_caption("Floored Square Simple Synth", "Floored Square Simple Synth")
 pygame.font.init()
 
@@ -73,6 +73,32 @@ def autosquare(freq, lenth):
 			return autosquare5stacksubab(freq, lenth)
 		else:
 			return autosquare1stack(freq, lenth)
+	if stackmod==5:
+		if stackit==1:
+			return autosquare1stack(freq, lenth)
+		elif stackit==2:
+			return autosquare2stackne(freq, lenth)
+		elif stackit==3:
+			return autosquare3stacksubmean(freq, lenth)
+		elif stackit==4:
+			return autosquare4stacksubmean(freq, lenth)
+		elif stackit==5:
+			return autosquare5stacksubmean(freq, lenth)
+		else:
+			return autosquare1stack(freq, lenth)
+	if stackmod==6:
+		if stackit==1:
+			return autosquare1stack(freq, lenth)
+		elif stackit==2:
+			return autosquare2stackmean(freq, lenth)
+		elif stackit==3:
+			return autosquare3stackmean(freq, lenth)
+		elif stackit==4:
+			return autosquare4stackmean(freq, lenth)
+		elif stackit==5:
+			return autosquare5stackmean(freq, lenth)
+		else:
+			return autosquare1stack(freq, lenth)
 	else:
 		if stackit==1:
 			return autosquare1stack(freq, lenth)
@@ -85,8 +111,8 @@ def autosquare(freq, lenth):
 		elif stackit==5:
 			return autosquare5stackne(freq, lenth)
 		else:
-			return autosquare1stackne(freq, lenth)
-
+			return autosquare1stack(freq, lenth)
+#add
 def autosquare1stack(freq, lenth):
 	temparray=array.array('f', [(foobsin(2.0 * math.pi * freq * t / 22050)) for t in xrange(0, int(22050))])
 	#temparray=array.array('f', [(foobsin(2.0 * math.pi * freq * t / 22050)) for t in xrange(0, int(lenth * 22050))])
@@ -111,7 +137,7 @@ def autosquare5stack(freq, lenth):
 	temparray=array.array('f', [((foobsin(2.0 * math.pi * freq * t / 22050) + foobsin(2.0 * math.pi * (freq * 2) * t / 22050) + foobsin(2.0 * math.pi * (freq * 3) * t / 22050) + foobsin(2.0 * math.pi * (freq * 4) * t / 22050) + foobsin(2.0 * math.pi * (freq * 5) * t / 22050))) for t in xrange(0, int(22050))])
 	#temparray=array.array('f', [(foobsin(2.0 * math.pi * freq * t / 22050)) for t in xrange(0, int(lenth * 22050))])
 	return temparray
-
+#subtract
 def autosquare2stackne(freq, lenth):
 	temparray=array.array('f', [((foobsin(2.0 * math.pi * freq * t / 22050) - foobsin(2.0 * math.pi * (freq * 2) * t / 22050))) for t in xrange(0, int(22050))])
 	#temparray=array.array('f', [(foobsin(2.0 * math.pi * freq * t / 22050)) for t in xrange(0, int(lenth * 22050))])
@@ -131,7 +157,7 @@ def autosquare5stackne(freq, lenth):
 	temparray=array.array('f', [((foobsin(2.0 * math.pi * freq * t / 22050) - foobsin(2.0 * math.pi * (freq * 2) * t / 22050) - foobsin(2.0 * math.pi * (freq * 3) * t / 22050) - foobsin(2.0 * math.pi * (freq * 4) * t / 22050) - foobsin(2.0 * math.pi * (freq * 5) * t / 22050))) for t in xrange(0, int(22050))])
 	#temparray=array.array('f', [(foobsin(2.0 * math.pi * freq * t / 22050)) for t in xrange(0, int(lenth * 22050))])
 	return temparray
-
+#adsub1
 def autosquare2stacknexq(freq, lenth):
 	temparray=array.array('f', [((foobsin(2.0 * math.pi * freq * t / 22050) - (foobsin(2.0 * math.pi * (freq * 2) * t / 22050)))) for t in xrange(0, int(22050))])
 	#temparray=array.array('f', [(foobsin(2.0 * math.pi * freq * t / 22050)) for t in xrange(0, int(lenth * 22050))])
@@ -152,6 +178,8 @@ def autosquare5stacknexq(freq, lenth):
 	#temparray=array.array('f', [(foobsin(2.0 * math.pi * freq * t / 22050)) for t in xrange(0, int(lenth * 22050))])
 	return temparray
 
+#SUB ABS
+
 def autosquare2stacksubab(freq, lenth):
 	temparray=array.array('f', [((foobsin(2.0 * math.pi * freq * t / 22050) - abs(foobsin(2.0 * math.pi * (freq * 2) * t / 22050)))) for t in xrange(0, int(22050))])
 	#temparray=array.array('f', [(foobsin(2.0 * math.pi * freq * t / 22050)) for t in xrange(0, int(lenth * 22050))])
@@ -171,6 +199,46 @@ def autosquare5stacksubab(freq, lenth):
 	temparray=array.array('f', [((foobsin(2.0 * math.pi * freq * t / 22050) - abs(foobsin(2.0 * math.pi * (freq * 2) * t / 22050) + foobsin(2.0 * math.pi * (freq * 3) * t / 22050) + foobsin(2.0 * math.pi * (freq * 4) * t / 22050) + foobsin(2.0 * math.pi * (freq * 5) * t / 22050)))) for t in xrange(0, int(22050))])
 	#temparray=array.array('f', [(foobsin(2.0 * math.pi * freq * t / 22050)) for t in xrange(0, int(lenth * 22050))])
 	return temparray
+	
+#sub mean
+
+def autosquare3stacksubmean(freq, lenth):
+	temparray=array.array('f', [((foobsin(2.0 * math.pi * freq * t / 22050) - mean([foobsin(2.0 * math.pi * (freq * 2) * t / 22050), foobsin(2.0 * math.pi * (freq * 3) * t / 22050)]))) for t in xrange(0, int(22050))])
+	#temparray=array.array('f', [(foobsin(2.0 * math.pi * freq * t / 22050)) for t in xrange(0, int(lenth * 22050))])
+	return temparray
+
+def autosquare4stacksubmean(freq, lenth):
+	temparray=array.array('f', [((foobsin(2.0 * math.pi * freq * t / 22050) - mean([foobsin(2.0 * math.pi * (freq * 2) * t / 22050), foobsin(2.0 * math.pi * (freq * 3) * t / 22050), foobsin(2.0 * math.pi * (freq * 4) * t / 22050)]))) for t in xrange(0, int(22050))])
+	#temparray=array.array('f', [(foobsin(2.0 * math.pi * freq * t / 22050)) for t in xrange(0, int(lenth * 22050))])
+	return temparray
+
+def autosquare5stacksubmean(freq, lenth):
+	temparray=array.array('f', [((foobsin(2.0 * math.pi * freq * t / 22050) - mean([foobsin(2.0 * math.pi * (freq * 2) * t / 22050), foobsin(2.0 * math.pi * (freq * 3) * t / 22050), foobsin(2.0 * math.pi * (freq * 4) * t / 22050), foobsin(2.0 * math.pi * (freq * 5) * t / 22050)]))) for t in xrange(0, int(22050))])
+	#temparray=array.array('f', [(foobsin(2.0 * math.pi * freq * t / 22050)) for t in xrange(0, int(lenth * 22050))])
+	return temparray
+
+#mean
+def autosquare2stackmean(freq, lenth):
+	temparray=array.array('f', [(mean([foobsin(2.0 * math.pi * freq * t / 22050), foobsin(2.0 * math.pi * (freq * 2) * t / 22050)])) for t in xrange(0, int(22050))])
+	#temparray=array.array('f', [(foobsin(2.0 * math.pi * freq * t / 22050)) for t in xrange(0, int(lenth * 22050))])
+	return temparray
+
+def autosquare3stackmean(freq, lenth):
+	temparray=array.array('f', [(mean([foobsin(2.0 * math.pi * freq * t / 22050), foobsin(2.0 * math.pi * (freq * 2) * t / 22050), foobsin(2.0 * math.pi * (freq * 3) * t / 22050)])) for t in xrange(0, int(22050))])
+	#temparray=array.array('f', [(foobsin(2.0 * math.pi * freq * t / 22050)) for t in xrange(0, int(lenth * 22050))])
+	return temparray
+
+def autosquare4stackmean(freq, lenth):
+	temparray=array.array('f', [(mean([foobsin(2.0 * math.pi * freq * t / 22050), foobsin(2.0 * math.pi * (freq * 2) * t / 22050), foobsin(2.0 * math.pi * (freq * 3) * t / 22050), foobsin(2.0 * math.pi * (freq * 4) * t / 22050)])) for t in xrange(0, int(22050))])
+	#temparray=array.array('f', [(foobsin(2.0 * math.pi * freq * t / 22050)) for t in xrange(0, int(lenth * 22050))])
+	return temparray
+
+def autosquare5stackmean(freq, lenth):
+	temparray=array.array('f', [(mean([foobsin(2.0 * math.pi * freq * t / 22050), foobsin(2.0 * math.pi * (freq * 2) * t / 22050), foobsin(2.0 * math.pi * (freq * 3) * t / 22050), foobsin(2.0 * math.pi * (freq * 4) * t / 22050), foobsin(2.0 * math.pi * (freq * 5) * t / 22050)])) for t in xrange(0, int(22050))])
+	#temparray=array.array('f', [(foobsin(2.0 * math.pi * freq * t / 22050)) for t in xrange(0, int(lenth * 22050))])
+	return temparray
+
+
 
 fadex=600
 fadetime=fadex
@@ -310,16 +378,20 @@ def keycheckoff():
 			snf29.stop()
 
 
-pleasewaittx=simplefont.render("Please wait... Generating samples...", True, (0, 0, 0), (192, 192, 255))
-perc0tx=simplefont.render("0%...", True, (0, 0, 0), (192, 192, 255))
-perc25tx=simplefont.render("25%...", True, (0, 0, 0), (192, 192, 255))
-perc50tx=simplefont.render("50%...", True, (0, 0, 0), (192, 192, 255))
-perc75tx=simplefont.render("75%...", True, (0, 0, 0), (192, 192, 255))
+pleasewaittx=simplefont.render("Please wait... Generating samples...     ", True, (0, 0, 0), (255, 127, 127))
+perc0tx=simplefont.render("0%", True, (0, 0, 0), (255, 127, 127))
+perc25tx=simplefont.render("25%", True, (0, 0, 0), (255, 127, 127))
+perc50tx=simplefont.render("50%", True, (0, 0, 0), (255, 127, 127))
+perc75tx=simplefont.render("75%", True, (0, 0, 0), (255, 127, 127))
+perc12tx=simplefont.render("12%", True, (0, 0, 0), (255, 127, 127))
+perc37tx=simplefont.render("37%", True, (0, 0, 0), (255, 127, 127))
+perc62tx=simplefont.render("62%", True, (0, 0, 0), (255, 127, 127))
+perc87tx=simplefont.render("87%", True, (0, 0, 0), (255, 127, 127))
 #Define sounds
 def redefsounds():
 	dispupdate()
-	screensurf.blit(pleasewaittx, (2, 320))
-	screensurf.blit(perc0tx, (2, 340))
+	screensurf.blit(pleasewaittx, (200, 580))
+	screensurf.blit(perc0tx, (460, 580))
 	pygame.display.update()
 	global snf
 	global snf0
@@ -357,38 +429,46 @@ def redefsounds():
 	snf1=pygame.mixer.Sound(autosquare(69, notetime))
 	snf2=pygame.mixer.Sound(autosquare(74, notetime))
 	snf3=pygame.mixer.Sound(autosquare(78, notetime))
+	screensurf.blit(perc12tx, (460, 580))
+	pygame.display.update()
 	snf4=pygame.mixer.Sound(autosquare(82, notetime))
 	snf5=pygame.mixer.Sound(autosquare(87, notetime))
 	snf5b=pygame.mixer.Sound(autosquare(92, notetime))
 	snf6=pygame.mixer.Sound(autosquare(98, notetime))
-	screensurf.blit(perc25tx, (2, 340))
+	screensurf.blit(perc25tx, (460, 580))
 	pygame.display.update()
 	snf7=pygame.mixer.Sound(autosquare(104, notetime))
 	snf8=pygame.mixer.Sound(autosquare(110, notetime))
 	snf9=pygame.mixer.Sound(autosquare(116, notetime))
 	snf9=pygame.mixer.Sound(autosquare(116, notetime))
 	snf10=pygame.mixer.Sound(autosquare(123, notetime))
+	screensurf.blit(perc37tx, (460, 580))
+	pygame.display.update()
 	snf11=pygame.mixer.Sound(autosquare(131, notetime))
 	snf12=pygame.mixer.Sound(autosquare(139, notetime))
 	snf13=pygame.mixer.Sound(autosquare(147, notetime))
 	snf14=pygame.mixer.Sound(autosquare(156, notetime))
 	snf15=pygame.mixer.Sound(autosquare(165, notetime))
-	screensurf.blit(perc50tx, (2, 340))
+	screensurf.blit(perc50tx, (460, 580))
 	pygame.display.update()
 	snf16=pygame.mixer.Sound(autosquare(175, notetime))
 	snf17=pygame.mixer.Sound(autosquare(185, notetime))
 	snf18=pygame.mixer.Sound(autosquare(196, notetime))
 	snf19=pygame.mixer.Sound(autosquare(208, notetime))
+	screensurf.blit(perc62tx, (460, 580))
+	pygame.display.update()
 	snf19=pygame.mixer.Sound(autosquare(208, notetime))
 	snf=pygame.mixer.Sound(autosquare(220, notetime))
 	snf20=pygame.mixer.Sound(autosquare(233, notetime))
 	snf21=pygame.mixer.Sound(autosquare(247, notetime))
 	snf22=pygame.mixer.Sound(autosquare(262, notetime))
-	screensurf.blit(perc75tx, (2, 340))
+	screensurf.blit(perc75tx, (460, 580))
 	pygame.display.update()
 	snf23=pygame.mixer.Sound(autosquare(277, notetime))
 	snf24=pygame.mixer.Sound(autosquare(294, notetime))
 	snf25=pygame.mixer.Sound(autosquare(311, notetime))
+	screensurf.blit(perc87tx, (460, 580))
+	pygame.display.update()
 	snf26=pygame.mixer.Sound(autosquare(330, notetime))
 	snf27=pygame.mixer.Sound(autosquare(349, notetime))
 	snf28=pygame.mixer.Sound(autosquare(370, notetime))
@@ -413,6 +493,9 @@ notevol=0.5
 
 notestack=1
 
+def mean(numbers):
+    return float(sum(numbers)) / max(len(numbers), 1)
+
 def noteplay(notesnd):
 	if notestack==1:
 		notesnd.play(-1, fade_ms=fadeintime)
@@ -434,55 +517,90 @@ def notepop(notesnd):
 		notethread.start()
 
 evhappenflg2=0
-cpytx=simplefont.render("(c) 2016-2017 Thomas Leathers, See readme.md for details.", True, (0, 0, 0), (192, 192, 255))
-verstx=simplefont.render("v2.1", True, (0, 0, 0), (192, 192, 255))
+cpytx=simplefont.render("(c) 2016-2017 Thomas Leathers, See readme.md for details.", True, (0, 0, 0))
+verstx=simplefont.render("v2.2", True, (0, 0, 0))
 bgimg.blit(verstx, (2, 2))
 bgimg.blit(cpytx, (2, 22))
-txtx1=simplefont.render("Use keys q-],2,3, 5-7, 9,0, + and z-?/, s,d,g-k, l,: to play. Escape quits.", True, (0, 0, 0), (192, 192, 255))
-txtx2=simplefont.render("shift+1,2,3,4, or 5 controls octave stacking, Shift + A,S,D,F controls Stack Synth ", True, (0, 0, 0), (192, 192, 255))
-txtx2b=simplefont.render("CTRL+0,1,2,3, or 4 controls octave shift.  ALT+shift+1,2,3 controls multi-trigger", True, (0, 0, 0), (192, 192, 255))
-txtx3=simplefont.render("Use up and down arrow keys to control fade-out ", True, (0, 0, 0), (192, 192, 255))
-txtx4=simplefont.render("Use pageup and pagedown to control note volume.", True, (0, 0, 0), (192, 192, 255))
-txtx5=simplefont.render("Use left and right arrow keys to control fade-in", True, (0, 0, 0), (192, 192, 255))
+txtx1=simplefont.render("Use keys q-],2,3, 5-7, 9,0, + and z-?/, s,d,g-k, l,: to play.", True, (0, 0, 0))
+txtx2=simplefont.render("shift+1,2,3,4, or 5 controls octave stacking.", True, (0, 0, 0))
+txtx2b=simplefont.render("CTRL+0,1,2,3, or 4 controls octave shift.", True, (0, 0, 0))
+txtx2c=simplefont.render("Shift + A,S,D,F,G,H controls Stack Synth ", True, (0, 0, 0))
+txtx2bc=simplefont.render("ALT+shift+1,2,3 controls multi-trigger", True, (0, 0, 0))
+txtx1c=simplefont.render("Escape Quits", True, (0, 0, 0))
+txtx3b=simplefont.render("(hold shift for fine control)", True, (0, 0, 0))
+txtx3=simplefont.render("Use up and down arrow keys to control fade-out.", True, (0, 0, 0))
+txtx4=simplefont.render("Use pageup and pagedown to control note volume.", True, (0, 0, 0))
+txtx5=simplefont.render("Use left and right arrow keys to control fade-in.", True, (0, 0, 0))
 bgimg.blit(txtx1, (2, 62))
 bgimg.blit(txtx2, (2, 82))
 bgimg.blit(txtx2b, (2, 102))
-bgimg.blit(txtx4, (2, 122))
-bgimg.blit(txtx3, (2, 142))
-bgimg.blit(txtx5, (2, 162))
+bgimg.blit(txtx1c, (400, 62))
+bgimg.blit(txtx2c, (400, 82))
+bgimg.blit(txtx2bc, (400, 102))
+bgimg.blit(txtx3b, (2, 122))
+bgimg.blit(txtx4, (2, 142))
+bgimg.blit(txtx3, (2, 162))
+bgimg.blit(txtx5, (2, 182))
 fadeintime=0
-def dispupdate():
-	notevtx=simplefont.render(("Note Vol: " + str(notevol)), True, (0, 0, 0), (192, 192, 255))
-	fadetx=simplefont.render(("Note fadeout time: " + str(fadex)), True, (0, 0, 0), (192, 192, 255))
-	fadeintx=simplefont.render(("Note fadein time: " + str(fadeintime)), True, (0, 0, 0), (192, 192, 255))
-	stackintx=simplefont.render(("Octave Stacking: " + str(stackit)), True, (0, 0, 0), (192, 192, 255))
-	octshifttx=simplefont.render(("Octave Shift: " + str(octshift)), True, (0, 0, 0), (192, 192, 255))
-	multrigtx=simplefont.render(("Key multi-trigger: " + str(notestack)), True, (0, 0, 0), (192, 192, 255))
-	if stackmod==1:
-		stacksyntx=simplefont.render(("Stack Synth: Additive"), True, (0, 0, 0), (192, 192, 255))
-	if stackmod==3:
-		stacksyntx=simplefont.render(("Stack Synth: adsub1"), True, (0, 0, 0), (192, 192, 255))
-	if stackmod==4:
-		stacksyntx=simplefont.render(("Stack Synth: Sub ABS"), True, (0, 0, 0), (192, 192, 255))
-	else:
-		stacksyntx=simplefont.render(("Stack Synth: Subtractive"), True, (0, 0, 0), (192, 192, 255))
-	screensurf.blit(bgimg, (0, 0))
-	screensurf.blit(notevtx, (2, 380))
-	screensurf.blit(fadetx, (2, 400))
-	screensurf.blit(fadeintx, (2, 420))
-	screensurf.blit(stackintx, (2, 440))
-	screensurf.blit(octshifttx, (2, 460))
-	screensurf.blit(multrigtx, (200, 380))
-	screensurf.blit(stacksyntx, (200, 400))
-	pygame.display.update()
 
+stm1=simplefont.render(("Stack Synth: Additive"), True, (255, 255, 255))
+stm2=simplefont.render(("Stack Synth: Subtractive"), True, (255, 255, 255))
+stm3=simplefont.render(("Stack Synth: adsub1"), True, (255, 255, 255))
+stm4=simplefont.render(("Stack Synth: Sub ABS"), True, (255, 255, 255))
+stm5=simplefont.render(("Stack Synth: Sub Mean"), True, (255, 255, 255))
+stm6=simplefont.render(("Stack Synth: Mean"), True, (255, 255, 255))
+sam1=simplefont.render(("Press enter/return to update samples!"), True, (0, 0, 0), (255, 127, 127))
+sam2=simplefont.render(("Samples are updated."), True, (255, 255, 255))
+def dispupdate():
+	notevtx=simplefont.render(("Note Vol: " + str(notevol)), True, (255, 255, 255))
+	fadetx=simplefont.render(("Note fadeout time: " + str(fadex)), True, (255, 255, 255))
+	fadeintx=simplefont.render(("Note fadein time: " + str(fadeintime)), True, (255, 255, 255))
+	stackintx=simplefont.render(("Octave Stacking: " + str(stackit)), True, (255, 255, 255))
+	octshifttx=simplefont.render(("Octave Shift: " + str(octshift)), True, (255, 255, 255))
+	multrigtx=simplefont.render(("Key multi-trigger: " + str(notestack)), True, (255, 255, 255))
+	if stackmod==1:
+		stacksyntx=stm1
+	elif stackmod==3:
+		stacksyntx=stm3
+	elif stackmod==4:
+		stacksyntx=stm4
+	elif stackmod==5:
+		stacksyntx=stm5
+	elif stackmod==6:
+		stacksyntx=stm6
+	else:
+		stacksyntx=stm2
+	if sampup==1:
+		syntx=sam1
+	else:
+		syntx=sam2
+	screensurf.blit(bgimg, (0, 0))
+	screensurf.blit(stacksyntx, (2, 480))
+	screensurf.blit(stackintx, (2, 500))
+	screensurf.blit(octshifttx, (2, 520))
+	screensurf.blit(multrigtx, (200, 480))
+	screensurf.blit(fadetx, (200, 520))
+	screensurf.blit(fadeintx, (200, 540))
+	screensurf.blit(notevtx, (200, 500))
+	screensurf.blit(syntx, (200, 580))
+	
+	pygame.display.update()
+sampup=0
 redefsounds()
 setnotevols()
 dispupdate()
+
 while evhappenflg2==0:
 		time.sleep(.001)
 		keycheckoff()
 		for event in pygame.event.get():
+			if event.type == KEYDOWN and event.key == K_RETURN:
+				if sampup==1:
+					redefsounds()
+					setnotevols()
+					sampup=0
+					dispupdate()
+			
 			if (pygame.key.get_mods() & pygame.KMOD_ALT) and (pygame.key.get_mods() & pygame.KMOD_SHIFT):
 				if event.type == KEYDOWN and event.key == K_1:
 					if notestack!=1:
@@ -500,88 +618,99 @@ while evhappenflg2==0:
 				if event.type == KEYDOWN and event.key == K_1:
 					if stackit!=1:
 						stackit=1
-						redefsounds()
+						
+						sampup=1
 						dispupdate()
-						setnotevols()
 				if event.type == KEYDOWN and event.key == K_2:
 					if stackit!=2:
 						stackit=2
-						redefsounds()
+						
+						sampup=1
 						dispupdate()
-						setnotevols()
 				if event.type == KEYDOWN and event.key == K_3:
 					if stackit!=3:
 						stackit=3
-						redefsounds()
+						
+						sampup=1
 						dispupdate()
-						setnotevols()
 				if event.type == KEYDOWN and event.key == K_4:
 					if stackit!=4:
 						stackit=4
-						redefsounds()
+						
+						sampup=1
 						dispupdate()
-						setnotevols()
 				if event.type == KEYDOWN and event.key == K_5:
 					if stackit!=5:
 						stackit=5
-						redefsounds()
+						
+						sampup=1
 						dispupdate()
-						setnotevols()
 				if event.type == KEYDOWN and event.key == K_a:
 					if stackmod!=1:
 						stackmod=1
-						redefsounds()
+						
+						sampup=1
 						dispupdate()
-						setnotevols()
 				if event.type == KEYDOWN and event.key == K_s:
 					if stackmod!=2:
 						stackmod=2
-						redefsounds()
+						
+						sampup=1
 						dispupdate()
-						setnotevols()
 				if event.type == KEYDOWN and event.key == K_d:
 					if stackmod!=3:
 						stackmod=3
-						redefsounds()
+						
+						sampup=1
 						dispupdate()
-						setnotevols()
 				if event.type == KEYDOWN and event.key == K_f:
 					if stackmod!=4:
 						stackmod=4
-						redefsounds()
+						
+						sampup=1
 						dispupdate()
-						setnotevols()
+				if event.type == KEYDOWN and event.key == K_g:
+					if stackmod!=5:
+						stackmod=5
+						
+						sampup=1
+						dispupdate()
+				if event.type == KEYDOWN and event.key == K_h:
+					if stackmod!=6:
+						stackmod=6
+						
+						sampup=1
+						dispupdate()
 			elif pygame.key.get_mods() & pygame.KMOD_CTRL:
 				if event.type == KEYDOWN and event.key == K_1:
 					if octshift!=1:
 						octshift=1
-						redefsounds()
+						
+						sampup=1
 						dispupdate()
-						setnotevols()
 				if event.type == KEYDOWN and event.key == K_2:
 					if octshift!=2:
 						octshift=2
-						redefsounds()
+						
+						sampup=1
 						dispupdate()
-						setnotevols()
 				if event.type == KEYDOWN and event.key == K_3:
 					if octshift!=3:
 						octshift=3
-						redefsounds()
+						
+						sampup=1
 						dispupdate()
-						setnotevols()
 				if event.type == KEYDOWN and event.key == K_4:
 					if octshift!=4:
 						octshift=4
-						redefsounds()
+						
+						sampup=1
 						dispupdate()
-						setnotevols()
 				if event.type == KEYDOWN and event.key == K_0:
 					if octshift!=0:
 						octshift=0
-						redefsounds()
+						sampup=1
 						dispupdate()
-						setnotevols()
 				
 			else:
 				
@@ -653,36 +782,69 @@ while evhappenflg2==0:
 			if event.type == KEYDOWN and event.key == K_ESCAPE:
 				evhappenflg2=1
 				break
-			if event.type == KEYDOWN and (event.key == K_UP or event.key == K_KP8):
-				fadex += 100
-				dispupdate()
-				fadetime=fadex
-			if event.type == KEYDOWN and (event.key == K_DOWN or event.key == K_KP2):
-				fadex -= 100
-				if fadex<0:
-					fadex=0
-				dispupdate()
-				fadetime=fadex
-			if event.type == KEYDOWN and (event.key == K_RIGHT or event.key == K_KP6):
-				fadeintime += 100
-				dispupdate()
-			if event.type == KEYDOWN and (event.key == K_LEFT or event.key == K_KP4):
-				fadeintime -= 100
-				if fadeintime<0:
-					fadeintime=0
-				dispupdate()
-			if event.type == KEYDOWN and (event.key == K_PAGEUP or event.key == K_KP9):
-				notevol += 0.1
-				if notevol>1.0:
-					notevol=1.0
-				setnotevols()
-				dispupdate()
-			if event.type == KEYDOWN and (event.key == K_PAGEDOWN or event.key == K_KP3):
-				notevol -= 0.1
-				if notevol<0.1:
-					notevol=0.1
-				setnotevols()
-				dispupdate()
+			if pygame.key.get_mods() & pygame.KMOD_SHIFT:
+				if event.type == KEYDOWN and (event.key == K_UP or event.key == K_KP8):
+					fadex += 10
+					dispupdate()
+					fadetime=fadex
+				if event.type == KEYDOWN and (event.key == K_DOWN or event.key == K_KP2):
+					fadex -= 10
+					if fadex<0:
+						fadex=0
+					dispupdate()
+					fadetime=fadex
+				if event.type == KEYDOWN and (event.key == K_RIGHT or event.key == K_KP6):
+					fadeintime += 10
+					dispupdate()
+				if event.type == KEYDOWN and (event.key == K_LEFT or event.key == K_KP4):
+					fadeintime -= 10
+					if fadeintime<0:
+						fadeintime=0
+					dispupdate()
+				if event.type == KEYDOWN and (event.key == K_PAGEUP or event.key == K_KP9):
+					notevol += 0.01
+					if notevol>1.0:
+						notevol=1.0
+					setnotevols()
+					dispupdate()
+				if event.type == KEYDOWN and (event.key == K_PAGEDOWN or event.key == K_KP3):
+					notevol -= 0.01
+					if notevol<0.1:
+						notevol=0.1
+					setnotevols()
+					dispupdate()
+			else:
+				
+				if event.type == KEYDOWN and (event.key == K_UP or event.key == K_KP8):
+					fadex += 100
+					dispupdate()
+					fadetime=fadex
+				if event.type == KEYDOWN and (event.key == K_DOWN or event.key == K_KP2):
+					fadex -= 100
+					if fadex<0:
+						fadex=0
+					dispupdate()
+					fadetime=fadex
+				if event.type == KEYDOWN and (event.key == K_RIGHT or event.key == K_KP6):
+					fadeintime += 100
+					dispupdate()
+				if event.type == KEYDOWN and (event.key == K_LEFT or event.key == K_KP4):
+					fadeintime -= 100
+					if fadeintime<0:
+						fadeintime=0
+					dispupdate()
+				if event.type == KEYDOWN and (event.key == K_PAGEUP or event.key == K_KP9):
+					notevol += 0.1
+					if notevol>1.0:
+						notevol=1.0
+					setnotevols()
+					dispupdate()
+				if event.type == KEYDOWN and (event.key == K_PAGEDOWN or event.key == K_KP3):
+					notevol -= 0.1
+					if notevol<0.1:
+						notevol=0.1
+					setnotevols()
+					dispupdate()
 			#if event.type == KEYDOWN and (event.key == K_LSHIFT or event.key == K_RSHIFT):
 				#fadetime=fadex
 			#if not keypressed[ K_LSHIFT or event.key == K_RSHIFT):
