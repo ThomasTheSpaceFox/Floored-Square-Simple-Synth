@@ -22,8 +22,22 @@ pygame.font.init()
 simplefont = pygame.font.SysFont(None, 22)
 bgimg=pygame.image.load("simplesynth.jpg").convert()
 
-pygame.mixer.init()
+#controls the frequency of the synthesizer logic and pygame mixer.
+#lower frequencies are faster, but are lower quality.
 
+synthfreq=22050
+#synthfreq=16000
+#synthfreq=11025
+#synthfreq=8000
+
+STACKRANGE=int(synthfreq/1)
+
+araylimit=1
+
+#pygame.mixer.init()
+pygame.mixer.init(frequency=synthfreq , size=-16)
+
+print ("number of channels: "+ str(pygame.mixer.get_num_channels()))
 def foobsin1(num):
 	return (strex(math.sin(num)) * 4500)
 def foobsin2(num):
@@ -31,10 +45,52 @@ def foobsin2(num):
 def foobsin3(num):
 	return (strex(math.cos(num) + math.sin(num)) * 4500)	
 def foobsin4(num):
-	return (strex(math.tan(num) + math.sin(num)) * 4500)	
+	return (strex(math.tan(num) + math.sin(num)) * 4500)
 foobsin=foobsin1
 
+def vstroke(num):
+	if num<0.5:
+		return math.ceil(num)
+	else:
+		return math.floor(num)
+def jstroke(num):
+	if num>0.5:
+		return math.ceil(abs(num) - abs(num) - abs(num))
+	else:
+		return math.floor(abs(num))
+def cstroke(num):
+	if num>0.5:
+		return math.floor(abs(num) - abs(num) - abs(num))
+	else:
+		return math.floor(abs(num))
+def wstroke(num):
+	if num>0.7:
+		return math.ceil(num)
+	elif num<0.3:
+		return math.floor(num)
+	else:
+		return float(0.5)
+def wstroke(num):
+	if num>0.5:
+		return math.ceil(num)
+	elif num<(-0.5):
+		return math.floor(num)
+	else:
+		return float(0.0)
+def three_way(num):
+	if num>0.5:
+		return float(0.9)
+	elif num<(-0.5):
+		return float(-0.9)
+	else:
+		return float(0.0)
+def two_way(num):
+	if num>=0:
+		return float(1)
+	else:
+		return float(0)
 strex=math.floor
+#strex=two_way
 #def dummyfunct(arg):
 #	return arg
 strexmd=1
@@ -46,210 +102,224 @@ stackmod=1
 def autosquare(freq, lenth):
 	if octshift==0:
 		freq=(freq//2)
+	if octshift==-1:
+		freq=(freq//3)
 	else:
 		freq=(freq*octshift)
 	if stackmod==1:
 		if stackit==1:
-			return autosquare1stack(freq, lenth)
+			retarray=autosquare1stack(freq, lenth)
 		elif stackit==2:
-			return autosquare2stack(freq, lenth)
+			retarray=autosquare2stack(freq, lenth)
 		elif stackit==3:
-			return autosquare3stack(freq, lenth)
+			retarray=autosquare3stack(freq, lenth)
 		elif stackit==4:
-			return autosquare4stack(freq, lenth)
+			retarray=autosquare4stack(freq, lenth)
 		elif stackit==5:
-			return autosquare5stack(freq, lenth)
+			retarray=autosquare5stack(freq, lenth)
 		else:
-			return autosquare1stack(freq, lenth)
+			retarray=autosquare1stack(freq, lenth)
 	if stackmod==3:
 		if stackit==1:
-			return autosquare1stack(freq, lenth)
+			retarray=autosquare1stack(freq, lenth)
 		elif stackit==2:
-			return autosquare2stackne(freq, lenth)
+			retarray=autosquare2stackne(freq, lenth)
 		elif stackit==3:
-			return autosquare3stacknexq(freq, lenth)
+			retarray=autosquare3stacknexq(freq, lenth)
 		elif stackit==4:
-			return autosquare4stacknexq(freq, lenth)
+			retarray=autosquare4stacknexq(freq, lenth)
 		elif stackit==5:
-			return autosquare5stacknexq(freq, lenth)
+			retarray=autosquare5stacknexq(freq, lenth)
 		else:
-			return autosquare1stack(freq, lenth)
+			retarray=autosquare1stack(freq, lenth)
 	if stackmod==4:
 		if stackit==1:
-			return autosquare1stack(freq, lenth)
+			retarray=autosquare1stack(freq, lenth)
 		elif stackit==2:
-			return autosquare2stacksubab(freq, lenth)
+			retarray=autosquare2stacksubab(freq, lenth)
 		elif stackit==3:
-			return autosquare3stacksubab(freq, lenth)
+			retarray=autosquare3stacksubab(freq, lenth)
 		elif stackit==4:
-			return autosquare4stacksubab(freq, lenth)
+			retarray=autosquare4stacksubab(freq, lenth)
 		elif stackit==5:
-			return autosquare5stacksubab(freq, lenth)
+			retarray=autosquare5stacksubab(freq, lenth)
 		else:
-			return autosquare1stack(freq, lenth)
+			retarray=autosquare1stack(freq, lenth)
 	if stackmod==5:
 		if stackit==1:
-			return autosquare1stack(freq, lenth)
+			retarray=autosquare1stack(freq, lenth)
 		elif stackit==2:
-			return autosquare2stackne(freq, lenth)
+			retarray=autosquare2stackne(freq, lenth)
 		elif stackit==3:
-			return autosquare3stacksubmean(freq, lenth)
+			retarray=autosquare3stacksubmean(freq, lenth)
 		elif stackit==4:
-			return autosquare4stacksubmean(freq, lenth)
+			retarray=autosquare4stacksubmean(freq, lenth)
 		elif stackit==5:
-			return autosquare5stacksubmean(freq, lenth)
+			retarray=autosquare5stacksubmean(freq, lenth)
 		else:
-			return autosquare1stack(freq, lenth)
+			retarray=autosquare1stack(freq, lenth)
 	if stackmod==6:
 		if stackit==1:
-			return autosquare1stack(freq, lenth)
+			retarray=autosquare1stack(freq, lenth)
 		elif stackit==2:
-			return autosquare2stackmean(freq, lenth)
+			retarray=autosquare2stackmean(freq, lenth)
 		elif stackit==3:
-			return autosquare3stackmean(freq, lenth)
+			retarray=autosquare3stackmean(freq, lenth)
 		elif stackit==4:
-			return autosquare4stackmean(freq, lenth)
+			retarray=autosquare4stackmean(freq, lenth)
 		elif stackit==5:
-			return autosquare5stackmean(freq, lenth)
+			retarray=autosquare5stackmean(freq, lenth)
 		else:
-			return autosquare1stack(freq, lenth)
+			retarray=autosquare1stack(freq, lenth)
 	else:
 		if stackit==1:
-			return autosquare1stack(freq, lenth)
+			retarray=autosquare1stack(freq, lenth)
 		elif stackit==2:
-			return autosquare2stackne(freq, lenth)
+			retarray=autosquare2stackne(freq, lenth)
 		elif stackit==3:
-			return autosquare3stackne(freq, lenth)
+			retarray=autosquare3stackne(freq, lenth)
 		elif stackit==4:
-			return autosquare4stackne(freq, lenth)
+			retarray=autosquare4stackne(freq, lenth)
 		elif stackit==5:
-			return autosquare5stackne(freq, lenth)
+			retarray=autosquare5stackne(freq, lenth)
 		else:
-			return autosquare1stack(freq, lenth)
+			retarray=autosquare1stack(freq, lenth)
+	#return (retarray + retarray[::-1])
+	return retarray
+
+pival=math.pi
+
+stacksub=1
+
 #add
 def autosquare1stack(freq, lenth):
-	temparray=array.array('f', [(foobsin(2.0 * math.pi * freq * t / 22050)) for t in xrange(0, int(22050))])
-	#temparray=array.array('f', [(foobsin(2.0 * math.pi * freq * t / 22050)) for t in xrange(0, int(lenth * 22050))])
+	temparray=array.array('f', [(foobsin(2.0 * pival * (freq * stacksub) * t / synthfreq)) for t in xrange(0, STACKRANGE)])
+	#temparray=array.array('f', [(foobsin(2.0 * pival * freq * t / synthfreq)) for t in xrange(0, int(lenth * synthfreq))])
+	return temparray
+
+def autosquare1stack(freq, lenth):
+	temparray=array.array('f', [(foobsin(2.0 * pival * (freq * stacksub) * t / synthfreq)) for t in xrange(0, STACKRANGE)])
+	#temparray=array.array('f', [(foobsin(2.0 * pival * freq * t / synthfreq)) for t in xrange(0, int(lenth * synthfreq))])
 	return temparray
 
 def autosquare2stack(freq, lenth):
-	temparray=array.array('f', [((foobsin(2.0 * math.pi * freq * t / 22050) + foobsin(2.0 * math.pi * (freq * 2) * t / 22050))) for t in xrange(0, int(22050))])
-	#temparray=array.array('f', [(foobsin(2.0 * math.pi * freq * t / 22050)) for t in xrange(0, int(lenth * 22050))])
+	temparray=array.array('f', [((foobsin(2.0 * pival * (freq * stacksub) * t / synthfreq) + foobsin(2.0 * pival * (freq *(stacksub * 2)) * t / synthfreq))) for t in xrange(0, STACKRANGE)])
+	#temparray=array.array('f', [(foobsin(2.0 * pival * freq * t / synthfreq)) for t in xrange(0, int(lenth * synthfreq))])
 	return temparray
 
 def autosquare3stack(freq, lenth):
-	temparray=array.array('f', [((foobsin(2.0 * math.pi * freq * t / 22050) + foobsin(2.0 * math.pi * (freq * 2) * t / 22050) + foobsin(2.0 * math.pi * (freq * 3) * t / 22050))) for t in xrange(0, int(22050))])
-	#temparray=array.array('f', [(foobsin(2.0 * math.pi * freq * t / 22050)) for t in xrange(0, int(lenth * 22050))])
+	temparray=array.array('f', [((foobsin(2.0 * pival * (freq * stacksub) * t / synthfreq) + foobsin(2.0 * pival * (freq *(stacksub * 2)) * t / synthfreq) + foobsin(2.0 * pival * (freq *(stacksub * 3)) * t / synthfreq))) for t in xrange(0, STACKRANGE)])
+	#temparray=array.array('f', [(foobsin(2.0 * pival * freq * t / synthfreq)) for t in xrange(0, int(lenth * synthfreq))])
 	return temparray
 
 def autosquare4stack(freq, lenth):
-	temparray=array.array('f', [((foobsin(2.0 * math.pi * freq * t / 22050) + foobsin(2.0 * math.pi * (freq * 2) * t / 22050) + foobsin(2.0 * math.pi * (freq * 3) * t / 22050) + foobsin(2.0 * math.pi * (freq * 4) * t / 22050))) for t in xrange(0, int(22050))])
-	#temparray=array.array('f', [(foobsin(2.0 * math.pi * freq * t / 22050)) for t in xrange(0, int(lenth * 22050))])
+	temparray=array.array('f', [((foobsin(2.0 * pival * (freq * stacksub) * t / synthfreq) + foobsin(2.0 * pival * (freq *(stacksub * 2)) * t / synthfreq) + foobsin(2.0 * pival * (freq *(stacksub * 3)) * t / synthfreq) + foobsin(2.0 * pival * (freq *(stacksub * 4)) * t / synthfreq))) for t in xrange(0, STACKRANGE)])
+	#temparray=array.array('f', [(foobsin(2.0 * pival * freq * t / synthfreq)) for t in xrange(0, int(lenth * synthfreq))])
 	return temparray
 	
 def autosquare5stack(freq, lenth):
-	temparray=array.array('f', [((foobsin(2.0 * math.pi * freq * t / 22050) + foobsin(2.0 * math.pi * (freq * 2) * t / 22050) + foobsin(2.0 * math.pi * (freq * 3) * t / 22050) + foobsin(2.0 * math.pi * (freq * 4) * t / 22050) + foobsin(2.0 * math.pi * (freq * 5) * t / 22050))) for t in xrange(0, int(22050))])
-	#temparray=array.array('f', [(foobsin(2.0 * math.pi * freq * t / 22050)) for t in xrange(0, int(lenth * 22050))])
+	temparray=array.array('f', [((foobsin(2.0 * pival * (freq * stacksub) * t / synthfreq) + foobsin(2.0 * pival * (freq *(stacksub * 2)) * t / synthfreq) + foobsin(2.0 * pival * (freq *(stacksub * 3)) * t / synthfreq) + foobsin(2.0 * pival * (freq *(stacksub * 4)) * t / synthfreq) + foobsin(2.0 * pival * (freq *(stacksub * 5)) * t / synthfreq))) for t in xrange(0, STACKRANGE)])
+	#temparray=array.array('f', [(foobsin(2.0 * pival * freq * t / synthfreq)) for t in xrange(0, int(lenth * synthfreq))])
 	return temparray
 #subtract
 def autosquare2stackne(freq, lenth):
-	temparray=array.array('f', [((foobsin(2.0 * math.pi * freq * t / 22050) - foobsin(2.0 * math.pi * (freq * 2) * t / 22050))) for t in xrange(0, int(22050))])
-	#temparray=array.array('f', [(foobsin(2.0 * math.pi * freq * t / 22050)) for t in xrange(0, int(lenth * 22050))])
+	temparray=array.array('f', [((foobsin(2.0 * pival * (freq * stacksub) * t / synthfreq) - foobsin(2.0 * pival * (freq *(stacksub * 2)) * t / synthfreq))) for t in xrange(0, STACKRANGE)])
+	#temparray=array.array('f', [(foobsin(2.0 * pival * freq * t / synthfreq)) for t in xrange(0, int(lenth * synthfreq))])
 	return temparray
 
 def autosquare3stackne(freq, lenth):
-	temparray=array.array('f', [((foobsin(2.0 * math.pi * freq * t / 22050) - foobsin(2.0 * math.pi * (freq * 2) * t / 22050) - foobsin(2.0 * math.pi * (freq * 3) * t / 22050))) for t in xrange(0, int(22050))])
-	#temparray=array.array('f', [(foobsin(2.0 * math.pi * freq * t / 22050)) for t in xrange(0, int(lenth * 22050))])
+	temparray=array.array('f', [((foobsin(2.0 * pival * (freq * stacksub) * t / synthfreq) - foobsin(2.0 * pival * (freq *(stacksub * 2)) * t / synthfreq) - foobsin(2.0 * pival * (freq *(stacksub * 3)) * t / synthfreq))) for t in xrange(0, STACKRANGE)])
+	#temparray=array.array('f', [(foobsin(2.0 * pival * freq * t / synthfreq)) for t in xrange(0, int(lenth * synthfreq))])
 	return temparray
 
 def autosquare4stackne(freq, lenth):
-	temparray=array.array('f', [((foobsin(2.0 * math.pi * freq * t / 22050) - foobsin(2.0 * math.pi * (freq * 2) * t / 22050) - foobsin(2.0 * math.pi * (freq * 3) * t / 22050) - foobsin(2.0 * math.pi * (freq * 4) * t / 22050))) for t in xrange(0, int(22050))])
-	#temparray=array.array('f', [(foobsin(2.0 * math.pi * freq * t / 22050)) for t in xrange(0, int(lenth * 22050))])
+	temparray=array.array('f', [((foobsin(2.0 * pival * (freq * stacksub) * t / synthfreq) - foobsin(2.0 * pival * (freq *(stacksub * 2)) * t / synthfreq) - foobsin(2.0 * pival * (freq *(stacksub * 3)) * t / synthfreq) - foobsin(2.0 * pival * (freq *(stacksub * 4)) * t / synthfreq))) for t in xrange(0, STACKRANGE)])
+	#temparray=array.array('f', [(foobsin(2.0 * pival * freq * t / synthfreq)) for t in xrange(0, int(lenth * synthfreq))])
 	return temparray
 
 def autosquare5stackne(freq, lenth):
-	temparray=array.array('f', [((foobsin(2.0 * math.pi * freq * t / 22050) - foobsin(2.0 * math.pi * (freq * 2) * t / 22050) - foobsin(2.0 * math.pi * (freq * 3) * t / 22050) - foobsin(2.0 * math.pi * (freq * 4) * t / 22050) - foobsin(2.0 * math.pi * (freq * 5) * t / 22050))) for t in xrange(0, int(22050))])
-	#temparray=array.array('f', [(foobsin(2.0 * math.pi * freq * t / 22050)) for t in xrange(0, int(lenth * 22050))])
+	temparray=array.array('f', [((foobsin(2.0 * pival * (freq * stacksub) * t / synthfreq) - foobsin(2.0 * pival * (freq *(stacksub * 2)) * t / synthfreq) - foobsin(2.0 * pival * (freq *(stacksub * 3)) * t / synthfreq) - foobsin(2.0 * pival * (freq *(stacksub * 4)) * t / synthfreq) - foobsin(2.0 * pival * (freq *(stacksub * 5)) * t / synthfreq))) for t in xrange(0, STACKRANGE)])
+	#temparray=array.array('f', [(foobsin(2.0 * pival * freq * t / synthfreq)) for t in xrange(0, int(lenth * synthfreq))])
 	return temparray
 #adsub1
 def autosquare2stacknexq(freq, lenth):
-	temparray=array.array('f', [((foobsin(2.0 * math.pi * freq * t / 22050) - (foobsin(2.0 * math.pi * (freq * 2) * t / 22050)))) for t in xrange(0, int(22050))])
-	#temparray=array.array('f', [(foobsin(2.0 * math.pi * freq * t / 22050)) for t in xrange(0, int(lenth * 22050))])
+	temparray=array.array('f', [((foobsin(2.0 * pival * (freq * stacksub) * t / synthfreq) - (foobsin(2.0 * pival * (freq *(stacksub * 2)) * t / synthfreq)))) for t in xrange(0, STACKRANGE)])
+	#temparray=array.array('f', [(foobsin(2.0 * pival * freq * t / synthfreq)) for t in xrange(0, int(lenth * synthfreq))])
 	return temparray
 
 def autosquare3stacknexq(freq, lenth):
-	temparray=array.array('f', [((foobsin(2.0 * math.pi * freq * t / 22050) - (foobsin(2.0 * math.pi * (freq * 2) * t / 22050) + foobsin(2.0 * math.pi * (freq * 3) * t / 22050)))) for t in xrange(0, int(22050))])
-	#temparray=array.array('f', [(foobsin(2.0 * math.pi * freq * t / 22050)) for t in xrange(0, int(lenth * 22050))])
+	temparray=array.array('f', [((foobsin(2.0 * pival * (freq * stacksub) * t / synthfreq) - (foobsin(2.0 * pival * (freq *(stacksub * 2)) * t / synthfreq) + foobsin(2.0 * pival * (freq *(stacksub * 3)) * t / synthfreq)))) for t in xrange(0, STACKRANGE)])
+	#temparray=array.array('f', [(foobsin(2.0 * pival * freq * t / synthfreq)) for t in xrange(0, int(lenth * synthfreq))])
 	return temparray
 
 def autosquare4stacknexq(freq, lenth):
-	temparray=array.array('f', [((foobsin(2.0 * math.pi * freq * t / 22050) - (foobsin(2.0 * math.pi * (freq * 2) * t / 22050) + foobsin(2.0 * math.pi * (freq * 3) * t / 22050) - foobsin(2.0 * math.pi * (freq * 4) * t / 22050)))) for t in xrange(0, int(22050))])
-	#temparray=array.array('f', [(foobsin(2.0 * math.pi * freq * t / 22050)) for t in xrange(0, int(lenth * 22050))])
+	temparray=array.array('f', [((foobsin(2.0 * pival * (freq * stacksub) * t / synthfreq) - (foobsin(2.0 * pival * (freq *(stacksub * 2)) * t / synthfreq) + foobsin(2.0 * pival * (freq *(stacksub * 3)) * t / synthfreq) - foobsin(2.0 * pival * (freq *(stacksub * 4)) * t / synthfreq)))) for t in xrange(0, STACKRANGE)])
+	#temparray=array.array('f', [(foobsin(2.0 * pival * freq * t / synthfreq)) for t in xrange(0, int(lenth * synthfreq))])
 	return temparray
 
 def autosquare5stacknexq(freq, lenth):
-	temparray=array.array('f', [((foobsin(2.0 * math.pi * freq * t / 22050) - (foobsin(2.0 * math.pi * (freq * 2) * t / 22050) + foobsin(2.0 * math.pi * (freq * 3) * t / 22050) - foobsin(2.0 * math.pi * (freq * 4) * t / 22050) + foobsin(2.0 * math.pi * (freq * 5) * t / 22050)))) for t in xrange(0, int(22050))])
-	#temparray=array.array('f', [(foobsin(2.0 * math.pi * freq * t / 22050)) for t in xrange(0, int(lenth * 22050))])
+	temparray=array.array('f', [((foobsin(2.0 * pival * (freq * stacksub) * t / synthfreq) - (foobsin(2.0 * pival * (freq *(stacksub * 2)) * t / synthfreq) + foobsin(2.0 * pival * (freq *(stacksub * 3)) * t / synthfreq) - foobsin(2.0 * pival * (freq *(stacksub * 4)) * t / synthfreq) + foobsin(2.0 * pival * (freq *(stacksub * 5)) * t / synthfreq)))) for t in xrange(0, STACKRANGE)])
+	#temparray=array.array('f', [(foobsin(2.0 * pival * freq * t / synthfreq)) for t in xrange(0, int(lenth * synthfreq))])
 	return temparray
 
 #SUB ABS
 
 def autosquare2stacksubab(freq, lenth):
-	temparray=array.array('f', [((foobsin(2.0 * math.pi * freq * t / 22050) - abs(foobsin(2.0 * math.pi * (freq * 2) * t / 22050)))) for t in xrange(0, int(22050))])
-	#temparray=array.array('f', [(foobsin(2.0 * math.pi * freq * t / 22050)) for t in xrange(0, int(lenth * 22050))])
+	temparray=array.array('f', [((foobsin(2.0 * pival * (freq * stacksub) * t / synthfreq) - abs(foobsin(2.0 * pival * (freq *(stacksub * 2)) * t / synthfreq)))) for t in xrange(0, STACKRANGE)])
+	#temparray=array.array('f', [(foobsin(2.0 * pival * freq * t / synthfreq)) for t in xrange(0, int(lenth * synthfreq))])
 	return temparray
 
 def autosquare3stacksubab(freq, lenth):
-	temparray=array.array('f', [((foobsin(2.0 * math.pi * freq * t / 22050) - abs(foobsin(2.0 * math.pi * (freq * 2) * t / 22050) + foobsin(2.0 * math.pi * (freq * 3) * t / 22050)))) for t in xrange(0, int(22050))])
-	#temparray=array.array('f', [(foobsin(2.0 * math.pi * freq * t / 22050)) for t in xrange(0, int(lenth * 22050))])
+	temparray=array.array('f', [((foobsin(2.0 * pival * (freq * stacksub) * t / synthfreq) - abs(foobsin(2.0 * pival * (freq *(stacksub * 2)) * t / synthfreq) + foobsin(2.0 * pival * (freq *(stacksub * 3)) * t / synthfreq)))) for t in xrange(0, STACKRANGE)])
+	#temparray=array.array('f', [(foobsin(2.0 * pival * freq * t / synthfreq)) for t in xrange(0, int(lenth * synthfreq))])
 	return temparray
 
 def autosquare4stacksubab(freq, lenth):
-	temparray=array.array('f', [((foobsin(2.0 * math.pi * freq * t / 22050) - abs(foobsin(2.0 * math.pi * (freq * 2) * t / 22050) + foobsin(2.0 * math.pi * (freq * 3) * t / 22050) + foobsin(2.0 * math.pi * (freq * 4) * t / 22050)))) for t in xrange(0, int(22050))])
-	#temparray=array.array('f', [(foobsin(2.0 * math.pi * freq * t / 22050)) for t in xrange(0, int(lenth * 22050))])
+	temparray=array.array('f', [((foobsin(2.0 * pival * (freq * stacksub) * t / synthfreq) - abs(foobsin(2.0 * pival * (freq *(stacksub * 2)) * t / synthfreq) + foobsin(2.0 * pival * (freq *(stacksub * 3)) * t / synthfreq) + foobsin(2.0 * pival * (freq *(stacksub * 4)) * t / synthfreq)))) for t in xrange(0, STACKRANGE)])
+	#temparray=array.array('f', [(foobsin(2.0 * pival * freq * t / synthfreq)) for t in xrange(0, int(lenth * synthfreq))])
 	return temparray
 
 def autosquare5stacksubab(freq, lenth):
-	temparray=array.array('f', [((foobsin(2.0 * math.pi * freq * t / 22050) - abs(foobsin(2.0 * math.pi * (freq * 2) * t / 22050) + foobsin(2.0 * math.pi * (freq * 3) * t / 22050) + foobsin(2.0 * math.pi * (freq * 4) * t / 22050) + foobsin(2.0 * math.pi * (freq * 5) * t / 22050)))) for t in xrange(0, int(22050))])
-	#temparray=array.array('f', [(foobsin(2.0 * math.pi * freq * t / 22050)) for t in xrange(0, int(lenth * 22050))])
+	temparray=array.array('f', [((foobsin(2.0 * pival * (freq * stacksub) * t / synthfreq) - abs(foobsin(2.0 * pival * (freq *(stacksub * 2)) * t / synthfreq) + foobsin(2.0 * pival * (freq *(stacksub * 3)) * t / synthfreq) + foobsin(2.0 * pival * (freq *(stacksub * 4)) * t / synthfreq) + foobsin(2.0 * pival * (freq *(stacksub * 5)) * t / synthfreq)))) for t in xrange(0, STACKRANGE)])
+	#temparray=array.array('f', [(foobsin(2.0 * pival * freq * t / synthfreq)) for t in xrange(0, int(lenth * synthfreq))])
 	return temparray
 	
 #sub mean
 
 def autosquare3stacksubmean(freq, lenth):
-	temparray=array.array('f', [((foobsin(2.0 * math.pi * freq * t / 22050) - mean([foobsin(2.0 * math.pi * (freq * 2) * t / 22050), foobsin(2.0 * math.pi * (freq * 3) * t / 22050)]))) for t in xrange(0, int(22050))])
-	#temparray=array.array('f', [(foobsin(2.0 * math.pi * freq * t / 22050)) for t in xrange(0, int(lenth * 22050))])
+	temparray=array.array('f', [((foobsin(2.0 * pival * (freq * stacksub) * t / synthfreq) - mean([foobsin(2.0 * pival * (freq *(stacksub * 2)) * t / synthfreq), foobsin(2.0 * pival * (freq *(stacksub * 3)) * t / synthfreq)]))) for t in xrange(0, STACKRANGE)])
+	#temparray=array.array('f', [(foobsin(2.0 * pival * freq * t / synthfreq)) for t in xrange(0, int(lenth * synthfreq))])
 	return temparray
 
 def autosquare4stacksubmean(freq, lenth):
-	temparray=array.array('f', [((foobsin(2.0 * math.pi * freq * t / 22050) - mean([foobsin(2.0 * math.pi * (freq * 2) * t / 22050), foobsin(2.0 * math.pi * (freq * 3) * t / 22050), foobsin(2.0 * math.pi * (freq * 4) * t / 22050)]))) for t in xrange(0, int(22050))])
-	#temparray=array.array('f', [(foobsin(2.0 * math.pi * freq * t / 22050)) for t in xrange(0, int(lenth * 22050))])
+	temparray=array.array('f', [((foobsin(2.0 * pival * (freq * stacksub) * t / synthfreq) - mean([foobsin(2.0 * pival * (freq *(stacksub * 2)) * t / synthfreq), foobsin(2.0 * pival * (freq *(stacksub * 3)) * t / synthfreq), foobsin(2.0 * pival * (freq *(stacksub * 4)) * t / synthfreq)]))) for t in xrange(0, STACKRANGE)])
+	#temparray=array.array('f', [(foobsin(2.0 * pival * freq * t / synthfreq)) for t in xrange(0, int(lenth * synthfreq))])
 	return temparray
 
 def autosquare5stacksubmean(freq, lenth):
-	temparray=array.array('f', [((foobsin(2.0 * math.pi * freq * t / 22050) - mean([foobsin(2.0 * math.pi * (freq * 2) * t / 22050), foobsin(2.0 * math.pi * (freq * 3) * t / 22050), foobsin(2.0 * math.pi * (freq * 4) * t / 22050), foobsin(2.0 * math.pi * (freq * 5) * t / 22050)]))) for t in xrange(0, int(22050))])
-	#temparray=array.array('f', [(foobsin(2.0 * math.pi * freq * t / 22050)) for t in xrange(0, int(lenth * 22050))])
+	temparray=array.array('f', [((foobsin(2.0 * pival * (freq * stacksub) * t / synthfreq) - mean([foobsin(2.0 * pival * (freq *(stacksub * 2)) * t / synthfreq), foobsin(2.0 * pival * (freq *(stacksub * 3)) * t / synthfreq), foobsin(2.0 * pival * (freq *(stacksub * 4)) * t / synthfreq), foobsin(2.0 * pival * (freq *(stacksub * 5)) * t / synthfreq)]))) for t in xrange(0, STACKRANGE)])
+	#temparray=array.array('f', [(foobsin(2.0 * pival * freq * t / synthfreq)) for t in xrange(0, int(lenth * synthfreq))])
 	return temparray
 
 #mean
 def autosquare2stackmean(freq, lenth):
-	temparray=array.array('f', [(mean([foobsin(2.0 * math.pi * freq * t / 22050), foobsin(2.0 * math.pi * (freq * 2) * t / 22050)])) for t in xrange(0, int(22050))])
-	#temparray=array.array('f', [(foobsin(2.0 * math.pi * freq * t / 22050)) for t in xrange(0, int(lenth * 22050))])
+	temparray=array.array('f', [(mean([foobsin(2.0 * pival * (freq * stacksub) * t / synthfreq), foobsin(2.0 * pival * (freq *(stacksub * 2)) * t / synthfreq)])) for t in xrange(0, STACKRANGE)])
+	#temparray=array.array('f', [(foobsin(2.0 * pival * freq * t / synthfreq)) for t in xrange(0, int(lenth * synthfreq))])
 	return temparray
 
 def autosquare3stackmean(freq, lenth):
-	temparray=array.array('f', [(mean([foobsin(2.0 * math.pi * freq * t / 22050), foobsin(2.0 * math.pi * (freq * 2) * t / 22050), foobsin(2.0 * math.pi * (freq * 3) * t / 22050)])) for t in xrange(0, int(22050))])
-	#temparray=array.array('f', [(foobsin(2.0 * math.pi * freq * t / 22050)) for t in xrange(0, int(lenth * 22050))])
+	temparray=array.array('f', [(mean([foobsin(2.0 * pival * (freq * stacksub) * t / synthfreq), foobsin(2.0 * pival * (freq *(stacksub * 2)) * t / synthfreq), foobsin(2.0 * pival * (freq *(stacksub * 3)) * t / synthfreq)])) for t in xrange(0, STACKRANGE)])
+	#temparray=array.array('f', [(foobsin(2.0 * pival * freq * t / synthfreq)) for t in xrange(0, int(lenth * synthfreq))])
 	return temparray
 
 def autosquare4stackmean(freq, lenth):
-	temparray=array.array('f', [(mean([foobsin(2.0 * math.pi * freq * t / 22050), foobsin(2.0 * math.pi * (freq * 2) * t / 22050), foobsin(2.0 * math.pi * (freq * 3) * t / 22050), foobsin(2.0 * math.pi * (freq * 4) * t / 22050)])) for t in xrange(0, int(22050))])
-	#temparray=array.array('f', [(foobsin(2.0 * math.pi * freq * t / 22050)) for t in xrange(0, int(lenth * 22050))])
+	temparray=array.array('f', [(mean([foobsin(2.0 * pival * (freq * stacksub) * t / synthfreq), foobsin(2.0 * pival * (freq *(stacksub * 2)) * t / synthfreq), foobsin(2.0 * pival * (freq *(stacksub * 3)) * t / synthfreq), foobsin(2.0 * pival * (freq *(stacksub * 4)) * t / synthfreq)])) for t in xrange(0, STACKRANGE)])
+	#temparray=array.array('f', [(foobsin(2.0 * pival * freq * t / synthfreq)) for t in xrange(0, int(lenth * synthfreq))])
 	return temparray
 
 def autosquare5stackmean(freq, lenth):
-	temparray=array.array('f', [(mean([foobsin(2.0 * math.pi * freq * t / 22050), foobsin(2.0 * math.pi * (freq * 2) * t / 22050), foobsin(2.0 * math.pi * (freq * 3) * t / 22050), foobsin(2.0 * math.pi * (freq * 4) * t / 22050), foobsin(2.0 * math.pi * (freq * 5) * t / 22050)])) for t in xrange(0, int(22050))])
-	#temparray=array.array('f', [(foobsin(2.0 * math.pi * freq * t / 22050)) for t in xrange(0, int(lenth * 22050))])
+	temparray=array.array('f', [(mean([foobsin(2.0 * pival * (freq * stacksub) * t / synthfreq), foobsin(2.0 * pival * (freq *(stacksub * 2)) * t / synthfreq), foobsin(2.0 * pival * (freq *(stacksub * 3)) * t / synthfreq), foobsin(2.0 * pival * (freq *(stacksub * 4)) * t / synthfreq), foobsin(2.0 * pival * (freq *(stacksub * 5)) * t / synthfreq)])) for t in xrange(0, STACKRANGE)])
+	#temparray=array.array('f', [(foobsin(2.0 * pival * freq * t / synthfreq)) for t in xrange(0, int(lenth * synthfreq))])
 	return temparray
 
 
@@ -531,8 +601,8 @@ def notepop(notesnd):
 		notethread.start()
 
 evhappenflg2=0
-cpytx=simplefont.render("(c) 2016-2017 Thomas Leathers, See readme.md for details.", True, (0, 0, 0))
-verstx=simplefont.render("v2.3", True, (0, 0, 0))
+cpytx=simplefont.render("Copyright (c) 2016-2017 Thomas Leathers, See readme.md for details.", True, (0, 0, 0))
+verstx=simplefont.render("v2.4", True, (0, 0, 0))
 bgimg.blit(verstx, (2, 2))
 bgimg.blit(cpytx, (2, 22))
 txtx1=simplefont.render("Use keys q-],2,3, 5-7, 9,0, + and z-?/, s,d,g-k, l,: to play.", True, (0, 0, 0))
@@ -540,13 +610,14 @@ txtx2=simplefont.render("shift+1,2,3,4, or 5 controls octave stacking.", True, (
 txtx2b=simplefont.render("CTRL+0,1,2,3, or 4 controls octave shift.", True, (0, 0, 0))
 txtx2c=simplefont.render("Shift + A,S,D,F,G,H controls Stack Synth ", True, (0, 0, 0))
 txtx2bc=simplefont.render("ALT+shift+1,2,3 controls multi-trigger", True, (0, 0, 0))
-txtx6=simplefont.render("shift+z,x controls square method", True, (0, 0, 0))
+txtx6=simplefont.render("shift+z,x,c,v,b,n,m controls square method", True, (0, 0, 0))
 txtx7=simplefont.render("shift+q,w,e,r controls basewave", True, (0, 0, 0))
 txtx1c=simplefont.render("Escape Quits", True, (0, 0, 0))
 txtx3b=simplefont.render("(hold shift for fine control)", True, (0, 0, 0))
 txtx3=simplefont.render("Use up and down arrow keys to control fade-out.", True, (0, 0, 0))
 txtx4=simplefont.render("Use pageup and pagedown to control note volume.", True, (0, 0, 0))
 txtx5=simplefont.render("Use left and right arrow keys to control fade-in.", True, (0, 0, 0))
+txtx6=simplefont.render("Use Home and End keys to control Aray Gen Limit.", True, (0, 0, 0))
 bgimg.blit(txtx1, (2, 62))
 bgimg.blit(txtx2, (2, 82))
 bgimg.blit(txtx2b, (2, 102))
@@ -559,6 +630,7 @@ bgimg.blit(txtx3b, (2, 122))
 bgimg.blit(txtx4, (2, 142))
 bgimg.blit(txtx3, (2, 162))
 bgimg.blit(txtx5, (2, 182))
+bgimg.blit(txtx6, (2, 202))
 fadeintime=0
 
 stm1=simplefont.render(("Stack Synth: Additive"), True, (255, 255, 255))
@@ -569,6 +641,11 @@ stm5=simplefont.render(("Stack Synth: Sub Mean"), True, (255, 255, 255))
 stm6=simplefont.render(("Stack Synth: Mean"), True, (255, 255, 255))
 ws1=simplefont.render(("square method: floor"), True, (255, 255, 255))
 ws2=simplefont.render(("square method: ceiling"), True, (255, 255, 255))
+ws3=simplefont.render(("square method: vstroke"), True, (255, 255, 255))
+ws4=simplefont.render(("square method: Two Way"), True, (255, 255, 255))
+ws5=simplefont.render(("square method: cstroke"), True, (255, 255, 255))
+ws6=simplefont.render(("square method: wstroke"), True, (255, 255, 255))
+ws7=simplefont.render(("square method: Three Way"), True, (255, 255, 255))
 wm1=simplefont.render(("Wave basetype: sin"), True, (255, 255, 255))
 wm2=simplefont.render(("Wave basetype: tan"), True, (255, 255, 255))
 wm3=simplefont.render(("Wave basetype: cos+sin"), True, (255, 255, 255))
@@ -582,12 +659,18 @@ def dispupdate():
 	stackintx=simplefont.render(("Octave Stacking: " + str(stackit)), True, (255, 255, 255))
 	octshifttx=simplefont.render(("Octave Shift: " + str(octshift)), True, (255, 255, 255))
 	multrigtx=simplefont.render(("Key multi-trigger: " + str(notestack)), True, (255, 255, 255))
+	arlimtx=simplefont.render(("Array Gen Limit: " + str(araylimit)), True, (255, 255, 255))
+	stacksubtx=simplefont.render(("Stack Multiplier mod: " + str(stacksub)), True, (255, 255, 255))
 	if stackmod==1:
 		stacksyntx=stm1
 	elif stackmod==3:
 		stacksyntx=stm3
 	elif stackmod==4:
 		stacksyntx=stm4
+	elif stackmod==5:
+		stacksyntx=stm5
+	elif stackmod==6:
+		stacksyntx=stm6
 	else:
 		stacksyntx=stm2
 	if sampup==1:
@@ -596,6 +679,16 @@ def dispupdate():
 		syntx=sam2
 	if strexmd==1:
 		wstx=ws1
+	elif strexmd==3:
+		wstx=ws3
+	elif strexmd==4:
+		wstx=ws4
+	elif strexmd==5:
+		wstx=ws5
+	elif strexmd==6:
+		wstx=ws6
+	elif strexmd==7:
+		wstx=ws7
 	else:
 		wstx=ws2
 	if wavemode==1:
@@ -604,10 +697,6 @@ def dispupdate():
 		wmtx=wm3
 	elif wavemode==4:
 		wmtx=wm4
-	elif wavemode==5:
-		wmtx=wm5
-	elif wavemode==6:
-		wmtx=wm6
 	else:
 		wmtx=wm2
 	screensurf.blit(bgimg, (0, 0))
@@ -616,12 +705,14 @@ def dispupdate():
 	screensurf.blit(octshifttx, (2, 520))
 	screensurf.blit(wstx, (2, 540))
 	screensurf.blit(wmtx, (2, 560))
+	screensurf.blit(arlimtx, (2, 580))
 	screensurf.blit(multrigtx, (200, 480))
 	screensurf.blit(fadetx, (200, 520))
 	screensurf.blit(fadeintx, (200, 540))
 	screensurf.blit(notevtx, (200, 500))
 	screensurf.blit(syntx, (200, 580))
 	
+	screensurf.blit(stacksubtx, (400, 480))
 	pygame.display.update()
 sampup=0
 redefsounds()
@@ -725,6 +816,41 @@ while evhappenflg2==0:
 						sampup=1
 						dispupdate()
 				
+				if event.type == KEYDOWN and event.key == K_c:
+					if strexmd!=3:
+						strexmd=3
+						#foobsin=foobsin2
+						strex=vstroke
+						sampup=1
+						dispupdate()
+				if event.type == KEYDOWN and event.key == K_v:
+					if strexmd!=4:
+						strexmd=4
+						#foobsin=foobsin2
+						strex=two_way
+						sampup=1
+						dispupdate()
+				if event.type == KEYDOWN and event.key == K_b:
+					if strexmd!=5:
+						strexmd=5
+						#foobsin=foobsin2
+						strex=cstroke
+						sampup=1
+						dispupdate()
+				if event.type == KEYDOWN and event.key == K_n:
+					if strexmd!=6:
+						strexmd=6
+						#foobsin=foobsin2
+						strex=wstroke
+						sampup=1
+						dispupdate()
+				if event.type == KEYDOWN and event.key == K_m:
+					if strexmd!=7:
+						strexmd=7
+						#foobsin=foobsin2
+						strex=three_way
+						sampup=1
+						dispupdate()
 				#stackmode
 				if event.type == KEYDOWN and event.key == K_a:
 					if stackmod!=1:
@@ -763,6 +889,18 @@ while evhappenflg2==0:
 						sampup=1
 						dispupdate()
 			elif pygame.key.get_mods() & pygame.KMOD_CTRL:
+				if event.type == KEYDOWN and (event.key == K_PAGEUP or event.key == K_KP9):
+					stacksub += 0.1
+					if stacksub>10.0:
+						stacksub=10.0
+					sampup=1
+					dispupdate()
+				if event.type == KEYDOWN and (event.key == K_PAGEDOWN or event.key == K_KP3):
+					stacksub -= 0.1
+					if stacksub<0.1:
+						stacksub=0.1
+					sampup=1
+					dispupdate()
 				if event.type == KEYDOWN and event.key == K_1:
 					if octshift!=1:
 						octshift=1
@@ -882,17 +1020,33 @@ while evhappenflg2==0:
 					if fadeintime<0:
 						fadeintime=0
 					dispupdate()
-				if event.type == KEYDOWN and (event.key == K_PAGEUP or event.key == K_KP9):
+				if event.type == KEYDOWN and (event.key == K_PAGEUP or event.key == K_KP9) and not pygame.key.get_mods() & pygame.KMOD_CTRL:
 					notevol += 0.01
 					if notevol>1.0:
 						notevol=1.0
 					setnotevols()
 					dispupdate()
-				if event.type == KEYDOWN and (event.key == K_PAGEDOWN or event.key == K_KP3):
+				if event.type == KEYDOWN and (event.key == K_PAGEDOWN or event.key == K_KP3) and not pygame.key.get_mods() & pygame.KMOD_CTRL:
 					notevol -= 0.01
 					if notevol<0.1:
 						notevol=0.1
 					setnotevols()
+					dispupdate()
+				if event.type == KEYDOWN and (event.key == K_HOME or event.key == K_KP7):
+					araylimit += 0.1
+					if araylimit>synthfreq:
+						araylimit=synthfreq
+					#setnotevols()
+					sampup=1
+					STACKRANGE=int(synthfreq/araylimit)
+					dispupdate()
+				if event.type == KEYDOWN and (event.key == K_END or event.key == K_KP1):
+					araylimit -= 0.1
+					if araylimit<1:
+						araylimit=1
+					#setnotevols()
+					sampup=1
+					STACKRANGE=int(synthfreq/araylimit)
 					dispupdate()
 			else:
 				
@@ -914,17 +1068,33 @@ while evhappenflg2==0:
 					if fadeintime<0:
 						fadeintime=0
 					dispupdate()
-				if event.type == KEYDOWN and (event.key == K_PAGEUP or event.key == K_KP9):
+				if event.type == KEYDOWN and (event.key == K_PAGEUP or event.key == K_KP9) and not pygame.key.get_mods() & pygame.KMOD_CTRL:
 					notevol += 0.1
 					if notevol>1.0:
 						notevol=1.0
 					setnotevols()
 					dispupdate()
-				if event.type == KEYDOWN and (event.key == K_PAGEDOWN or event.key == K_KP3):
+				if event.type == KEYDOWN and (event.key == K_PAGEDOWN or event.key == K_KP3) and not pygame.key.get_mods() & pygame.KMOD_CTRL:
 					notevol -= 0.1
 					if notevol<0.1:
 						notevol=0.1
 					setnotevols()
+					dispupdate()
+				if event.type == KEYDOWN and (event.key == K_HOME or event.key == K_KP7):
+					araylimit += 1
+					if araylimit>synthfreq:
+						araylimit=synthfreq
+					STACKRANGE=int(synthfreq/araylimit)
+					#setnotevols()
+					sampup=1
+					dispupdate()
+				if event.type == KEYDOWN and (event.key == K_END or event.key == K_KP1):
+					araylimit -= 1
+					if araylimit<1:
+						araylimit=1
+					STACKRANGE=int(synthfreq/araylimit)
+					#setnotevols()
+					sampup=1
 					dispupdate()
 			#if event.type == KEYDOWN and (event.key == K_LSHIFT or event.key == K_RSHIFT):
 				#fadetime=fadex

@@ -1,0 +1,29 @@
+FSSS HELP
+FSSS is an array-based software synth programmed in python using pygame.
+
+
+Controls come in two types:
+
+Live:
+	Key Multi-trigger: starts a background thread that calls the note multiple times if greater than 1 (default)
+	[alt+ 1,2,3]
+
+	Note Vol: a float that controls the volume of the generated note samples.
+	[pageup, pagedown (hold shift for fine control)]
+
+	Note Fadein time: Note fade-in time measured in miliseconds.
+	[Left, Right (hold shift for fine control)]
+
+	Note Fadeout time: Note fade-out time measured in miliseconds
+	[Up, down (hold shift for fine control)]
+Non-live (samples must be re-generated for changes to take effect):
+	Stack Synth: Controls the method used when stacking notes of multiple octaves.
+	[shift+ A,S,D,F,G,H]
+		Additive [A]: Add the values
+	Octave Stacking: Controls the number of octaves to stack in each note sample.
+	[shift+1,2,3,4,5]
+	Square Method: Method used to square the basewave
+	[
+	
+	
+
