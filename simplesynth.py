@@ -10,6 +10,7 @@ import time
 import os
 import array
 import math
+import copy
 from threading import Thread
 pygame.display.init()
 
@@ -30,13 +31,17 @@ synthfreq=22050
 #synthfreq=11025
 #synthfreq=8000
 
-STACKRANGE=int(synthfreq/1)
+synthfreqmain=synthfreq
+
+STACKRANGE=int(synthfreqmain/1)
 
 araylimit=1
 
 #pygame.mixer.init()
 pygame.mixer.init(frequency=synthfreq , size=-16)
-
+pygame.mixer.set_num_channels(24)
+print "mixer frequency:" + str(synthfreq)
+#pygame.mixer.set_num_channels(6)
 print ("number of channels: "+ str(pygame.mixer.get_num_channels()))
 def foobsin1(num):
 	return (strex(math.sin(num)) * 4500)
@@ -96,16 +101,23 @@ strex=math.floor
 strexmd=1
 wavemode=1
 
+retrigtime=0.1
+
 stackit=1
 octshift=1
 stackmod=1
 def autosquare(freq, lenth):
+	global STACKRANGE
 	if octshift==0:
-		freq=(freq//2)
-	if octshift==-1:
-		freq=(freq//3)
+		freq=(freq/2.0)
+	elif octshift==-1:
+		freq=(freq/3.0)
 	else:
 		freq=(freq*octshift)
+	#print freq
+	#STACKRANGE=(1)*int((synthfreqmain / araylimit) // (freq / float(stacksub)))
+	STACKRANGE=(1)*int((synthfreqmain / araylimit) / (freq /float((stackit) / (stacksub))))
+	#print stackmod
 	if stackmod==1:
 		if stackit==1:
 			retarray=autosquare1stack(freq, lenth)
@@ -119,7 +131,7 @@ def autosquare(freq, lenth):
 			retarray=autosquare5stack(freq, lenth)
 		else:
 			retarray=autosquare1stack(freq, lenth)
-	if stackmod==3:
+	elif stackmod==3:
 		if stackit==1:
 			retarray=autosquare1stack(freq, lenth)
 		elif stackit==2:
@@ -132,20 +144,20 @@ def autosquare(freq, lenth):
 			retarray=autosquare5stacknexq(freq, lenth)
 		else:
 			retarray=autosquare1stack(freq, lenth)
-	if stackmod==4:
+	elif stackmod==4:
 		if stackit==1:
 			retarray=autosquare1stack(freq, lenth)
 		elif stackit==2:
-			retarray=autosquare2stacksubab(freq, lenth)
+			retarray=autosquare2stack(freq, lenth)
 		elif stackit==3:
-			retarray=autosquare3stacksubab(freq, lenth)
+			retarray=autosquare3stackaddmean(freq, lenth)
 		elif stackit==4:
-			retarray=autosquare4stacksubab(freq, lenth)
+			retarray=autosquare4stackaddmean(freq, lenth)
 		elif stackit==5:
-			retarray=autosquare5stacksubab(freq, lenth)
+			retarray=autosquare5stackaddmean(freq, lenth)
 		else:
 			retarray=autosquare1stack(freq, lenth)
-	if stackmod==5:
+	elif stackmod==5:
 		if stackit==1:
 			retarray=autosquare1stack(freq, lenth)
 		elif stackit==2:
@@ -158,7 +170,7 @@ def autosquare(freq, lenth):
 			retarray=autosquare5stacksubmean(freq, lenth)
 		else:
 			retarray=autosquare1stack(freq, lenth)
-	if stackmod==6:
+	elif stackmod==6:
 		if stackit==1:
 			retarray=autosquare1stack(freq, lenth)
 		elif stackit==2:
@@ -184,8 +196,12 @@ def autosquare(freq, lenth):
 			retarray=autosquare5stackne(freq, lenth)
 		else:
 			retarray=autosquare1stack(freq, lenth)
-	#return (retarray + retarray[::-1])
+	#return ( + retarray)
+	#return arrayduplicate(retarray)
+	#sys.exit()
 	return retarray
+
+
 
 pival=math.pi
 
@@ -264,25 +280,21 @@ def autosquare5stacknexq(freq, lenth):
 
 #SUB ABS
 
-def autosquare2stacksubab(freq, lenth):
-	temparray=array.array('f', [((foobsin(2.0 * pival * (freq * stacksub) * t / synthfreq) - abs(foobsin(2.0 * pival * (freq *(stacksub * 2)) * t / synthfreq)))) for t in xrange(0, STACKRANGE)])
+def autosquare3stackaddmean(freq, lenth):
+	temparray=array.array('f', [((foobsin(2.0 * pival * (freq * stacksub) * t / synthfreq) + mean([foobsin(2.0 * pival * (freq *(stacksub * 2)) * t / synthfreq), foobsin(2.0 * pival * (freq *(stacksub * 3)) * t / synthfreq)]))) for t in xrange(0, STACKRANGE)])
 	#temparray=array.array('f', [(foobsin(2.0 * pival * freq * t / synthfreq)) for t in xrange(0, int(lenth * synthfreq))])
 	return temparray
 
-def autosquare3stacksubab(freq, lenth):
-	temparray=array.array('f', [((foobsin(2.0 * pival * (freq * stacksub) * t / synthfreq) - abs(foobsin(2.0 * pival * (freq *(stacksub * 2)) * t / synthfreq) + foobsin(2.0 * pival * (freq *(stacksub * 3)) * t / synthfreq)))) for t in xrange(0, STACKRANGE)])
+def autosquare4stackaddmean(freq, lenth):
+	temparray=array.array('f', [((foobsin(2.0 * pival * (freq * stacksub) * t / synthfreq) + mean([foobsin(2.0 * pival * (freq *(stacksub * 2)) * t / synthfreq), foobsin(2.0 * pival * (freq *(stacksub * 3)) * t / synthfreq), foobsin(2.0 * pival * (freq *(stacksub * 4)) * t / synthfreq)]))) for t in xrange(0, STACKRANGE)])
 	#temparray=array.array('f', [(foobsin(2.0 * pival * freq * t / synthfreq)) for t in xrange(0, int(lenth * synthfreq))])
 	return temparray
 
-def autosquare4stacksubab(freq, lenth):
-	temparray=array.array('f', [((foobsin(2.0 * pival * (freq * stacksub) * t / synthfreq) - abs(foobsin(2.0 * pival * (freq *(stacksub * 2)) * t / synthfreq) + foobsin(2.0 * pival * (freq *(stacksub * 3)) * t / synthfreq) + foobsin(2.0 * pival * (freq *(stacksub * 4)) * t / synthfreq)))) for t in xrange(0, STACKRANGE)])
+def autosquare5stackaddmean(freq, lenth):
+	temparray=array.array('f', [((foobsin(2.0 * pival * (freq * stacksub) * t / synthfreq) + mean([foobsin(2.0 * pival * (freq *(stacksub * 2)) * t / synthfreq), foobsin(2.0 * pival * (freq *(stacksub * 3)) * t / synthfreq), foobsin(2.0 * pival * (freq *(stacksub * 4)) * t / synthfreq), foobsin(2.0 * pival * (freq *(stacksub * 5)) * t / synthfreq)]))) for t in xrange(0, STACKRANGE)])
 	#temparray=array.array('f', [(foobsin(2.0 * pival * freq * t / synthfreq)) for t in xrange(0, int(lenth * synthfreq))])
 	return temparray
 
-def autosquare5stacksubab(freq, lenth):
-	temparray=array.array('f', [((foobsin(2.0 * pival * (freq * stacksub) * t / synthfreq) - abs(foobsin(2.0 * pival * (freq *(stacksub * 2)) * t / synthfreq) + foobsin(2.0 * pival * (freq *(stacksub * 3)) * t / synthfreq) + foobsin(2.0 * pival * (freq *(stacksub * 4)) * t / synthfreq) + foobsin(2.0 * pival * (freq *(stacksub * 5)) * t / synthfreq)))) for t in xrange(0, STACKRANGE)])
-	#temparray=array.array('f', [(foobsin(2.0 * pival * freq * t / synthfreq)) for t in xrange(0, int(lenth * synthfreq))])
-	return temparray
 	
 #sub mean
 
@@ -577,21 +589,56 @@ notevol=0.5
 
 notestack=1
 
-def mean(numbers):
+def meanx(numbers):
     return float(sum(numbers)) / max(len(numbers), 1)
-
+def absx(numbers):
+	return abs(sum(numbers))
+def abssubx(numbers):
+	return abs(numbers[0] - sum(numbers[1:]))
+mean=meanx
+meanflg=0
 def noteplay(notesnd):
 	if notestack==1:
 		notesnd.play(-1, fade_ms=fadeintime)
 	if notestack==2:
 		notesnd.play(-1, fade_ms=fadeintime)
-		time.sleep(.1)
+		time.sleep(retrigtime)
 		notesnd.play(-1, fade_ms=fadeintime)
 	if notestack==3:
 		notesnd.play(-1, fade_ms=fadeintime)
-		time.sleep(.1)
+		time.sleep(retrigtime)
 		notesnd.play(-1, fade_ms=fadeintime)
-		time.sleep(.1)
+		time.sleep(retrigtime)
+		notesnd.play(-1, fade_ms=fadeintime)
+	if notestack==4:
+		notesnd.play(-1, fade_ms=fadeintime)
+		time.sleep(retrigtime)
+		notesnd.play(-1, fade_ms=fadeintime)
+		time.sleep(retrigtime)
+		notesnd.play(-1, fade_ms=fadeintime)
+		time.sleep(retrigtime)
+		notesnd.play(-1, fade_ms=fadeintime)
+	if notestack==5:
+		notesnd.play(-1, fade_ms=fadeintime)
+		time.sleep(retrigtime)
+		notesnd.play(-1, fade_ms=fadeintime)
+		time.sleep(retrigtime)
+		notesnd.play(-1, fade_ms=fadeintime)
+		time.sleep(retrigtime)
+		notesnd.play(-1, fade_ms=fadeintime)
+		time.sleep(retrigtime)
+		notesnd.play(-1, fade_ms=fadeintime)
+	if notestack==6:
+		notesnd.play(-1, fade_ms=fadeintime)
+		time.sleep(retrigtime)
+		notesnd.play(-1, fade_ms=fadeintime)
+		time.sleep(retrigtime)
+		notesnd.play(-1, fade_ms=fadeintime)
+		time.sleep(retrigtime)
+		notesnd.play(-1, fade_ms=fadeintime)
+		time.sleep(retrigtime)
+		notesnd.play(-1, fade_ms=fadeintime)
+		time.sleep(retrigtime)
 		notesnd.play(-1, fade_ms=fadeintime)
 def notepop(notesnd):
 	if notestack==1:
@@ -602,12 +649,12 @@ def notepop(notesnd):
 
 evhappenflg2=0
 cpytx=simplefont.render("Copyright (c) 2016-2017 Thomas Leathers, See readme.md for details.", True, (0, 0, 0))
-verstx=simplefont.render("v2.4", True, (0, 0, 0))
+verstx=simplefont.render("v2.5", True, (0, 0, 0))
 bgimg.blit(verstx, (2, 2))
 bgimg.blit(cpytx, (2, 22))
 txtx1=simplefont.render("Use keys q-],2,3, 5-7, 9,0, + and z-?/, s,d,g-k, l,: to play.", True, (0, 0, 0))
 txtx2=simplefont.render("shift+1,2,3,4, or 5 controls octave stacking.", True, (0, 0, 0))
-txtx2b=simplefont.render("CTRL+0,1,2,3, or 4 controls octave shift.", True, (0, 0, 0))
+txtx2b=simplefont.render("CTRL+(-),0,1,2,3, or 4 controls octave shift.", True, (0, 0, 0))
 txtx2c=simplefont.render("Shift + A,S,D,F,G,H controls Stack Synth ", True, (0, 0, 0))
 txtx2bc=simplefont.render("ALT+shift+1,2,3 controls multi-trigger", True, (0, 0, 0))
 txtx6=simplefont.render("shift+z,x,c,v,b,n,m controls square method", True, (0, 0, 0))
@@ -617,15 +664,19 @@ txtx3b=simplefont.render("(hold shift for fine control)", True, (0, 0, 0))
 txtx3=simplefont.render("Use up and down arrow keys to control fade-out.", True, (0, 0, 0))
 txtx4=simplefont.render("Use pageup and pagedown to control note volume.", True, (0, 0, 0))
 txtx5=simplefont.render("Use left and right arrow keys to control fade-in.", True, (0, 0, 0))
-txtx6=simplefont.render("Use Home and End keys to control Aray Gen Limit.", True, (0, 0, 0))
+txtx6=simplefont.render("Use Home and End keys to control multi-trigger delay", True, (0, 0, 0))
+txtx8=simplefont.render("Use CTRL + PgUp and PgDn to control stack multi. mod.", True, (0, 0, 0))
+txtx9=simplefont.render("Use alt+shift + z,x,c,v,b to control aux function.", True, (0, 0, 0))
 bgimg.blit(txtx1, (2, 62))
 bgimg.blit(txtx2, (2, 82))
 bgimg.blit(txtx2b, (2, 102))
 bgimg.blit(txtx1c, (400, 62))
 bgimg.blit(txtx2c, (400, 82))
 bgimg.blit(txtx2bc, (400, 102))
-bgimg.blit(txtx6, (400, 122))
-bgimg.blit(txtx7, (400, 142))
+#bgimg.blit(txtx6, (400, 122))
+bgimg.blit(txtx7, (400, 122))
+bgimg.blit(txtx8, (400, 142))
+bgimg.blit(txtx9, (400, 162))
 bgimg.blit(txtx3b, (2, 122))
 bgimg.blit(txtx4, (2, 142))
 bgimg.blit(txtx3, (2, 162))
@@ -636,9 +687,9 @@ fadeintime=0
 stm1=simplefont.render(("Stack Synth: Additive"), True, (255, 255, 255))
 stm2=simplefont.render(("Stack Synth: Subtractive"), True, (255, 255, 255))
 stm3=simplefont.render(("Stack Synth: adsub1"), True, (255, 255, 255))
-stm4=simplefont.render(("Stack Synth: Sub ABS"), True, (255, 255, 255))
-stm5=simplefont.render(("Stack Synth: Sub Mean"), True, (255, 255, 255))
-stm6=simplefont.render(("Stack Synth: Mean"), True, (255, 255, 255))
+stm4=simplefont.render(("Stack Synth: Add function"), True, (255, 255, 255))
+stm5=simplefont.render(("Stack Synth: Sub function"), True, (255, 255, 255))
+stm6=simplefont.render(("Stack Synth: function"), True, (255, 255, 255))
 ws1=simplefont.render(("square method: floor"), True, (255, 255, 255))
 ws2=simplefont.render(("square method: ceiling"), True, (255, 255, 255))
 ws3=simplefont.render(("square method: vstroke"), True, (255, 255, 255))
@@ -650,6 +701,12 @@ wm1=simplefont.render(("Wave basetype: sin"), True, (255, 255, 255))
 wm2=simplefont.render(("Wave basetype: tan"), True, (255, 255, 255))
 wm3=simplefont.render(("Wave basetype: cos+sin"), True, (255, 255, 255))
 wm4=simplefont.render(("Wave basetype: tan+sin"), True, (255, 255, 255))
+af0=simplefont.render(("aux function: mean"), True, (255, 255, 255))
+af1=simplefont.render(("aux function: max"), True, (255, 255, 255))
+af2=simplefont.render(("aux function: min"), True, (255, 255, 255))
+af3=simplefont.render(("aux function: abs sum"), True, (255, 255, 255))
+af4=simplefont.render(("aux function: abs subtract"), True, (255, 255, 255))
+
 sam1=simplefont.render(("Press enter/return to update samples!"), True, (0, 0, 0), (255, 127, 127))
 sam2=simplefont.render(("Samples are updated."), True, (255, 255, 255))
 def dispupdate():
@@ -659,7 +716,7 @@ def dispupdate():
 	stackintx=simplefont.render(("Octave Stacking: " + str(stackit)), True, (255, 255, 255))
 	octshifttx=simplefont.render(("Octave Shift: " + str(octshift)), True, (255, 255, 255))
 	multrigtx=simplefont.render(("Key multi-trigger: " + str(notestack)), True, (255, 255, 255))
-	arlimtx=simplefont.render(("Array Gen Limit: " + str(araylimit)), True, (255, 255, 255))
+	arlimtx=simplefont.render(("multi-trigger delay: " + str(retrigtime)), True, (255, 255, 255))
 	stacksubtx=simplefont.render(("Stack Multiplier mod: " + str(stacksub)), True, (255, 255, 255))
 	if stackmod==1:
 		stacksyntx=stm1
@@ -699,6 +756,16 @@ def dispupdate():
 		wmtx=wm4
 	else:
 		wmtx=wm2
+	if meanflg==0:
+		auxfx=af0
+	elif meanflg==1:
+		auxfx=af1
+	elif meanflg==3:
+		auxfx=af3
+	elif meanflg==4:
+		auxfx=af4
+	else:
+		auxfx=af2
 	screensurf.blit(bgimg, (0, 0))
 	screensurf.blit(stacksyntx, (2, 480))
 	screensurf.blit(stackintx, (2, 500))
@@ -711,7 +778,7 @@ def dispupdate():
 	screensurf.blit(fadeintx, (200, 540))
 	screensurf.blit(notevtx, (200, 500))
 	screensurf.blit(syntx, (200, 580))
-	
+	screensurf.blit(auxfx, (400, 500))
 	screensurf.blit(stacksubtx, (400, 480))
 	pygame.display.update()
 sampup=0
@@ -729,8 +796,40 @@ while evhappenflg2==0:
 					setnotevols()
 					sampup=0
 					dispupdate()
-			
+			if event.type == KEYDOWN and event.key == K_SPACE:
+				pygame.mixer.stop()
 			if (pygame.key.get_mods() & pygame.KMOD_ALT) and (pygame.key.get_mods() & pygame.KMOD_SHIFT):
+				if event.type == KEYDOWN and event.key == K_z:
+					if meanflg!=0:
+						mean=meanx
+						meanflg=0
+						sampup=1
+						dispupdate()
+				if event.type == KEYDOWN and event.key == K_x:
+					if meanflg!=1:
+						meanflg=1
+						mean=max
+						sampup=1
+						dispupdate()
+				
+				if event.type == KEYDOWN and event.key == K_c:
+					if meanflg!=2:
+						meanflg=2
+						mean=min
+						sampup=1
+						dispupdate()
+				if event.type == KEYDOWN and event.key == K_v:
+					if meanflg!=3:
+						meanflg=3
+						mean=absx
+						sampup=1
+						dispupdate()
+				if event.type == KEYDOWN and event.key == K_b:
+					if meanflg!=4:
+						meanflg=4
+						mean=abssubx
+						sampup=1
+						dispupdate()
 				if event.type == KEYDOWN and event.key == K_1:
 					if notestack!=1:
 						notestack=1
@@ -742,6 +841,18 @@ while evhappenflg2==0:
 				if event.type == KEYDOWN and event.key == K_3:
 					if notestack!=3:
 						notestack=3
+						dispupdate()
+				if event.type == KEYDOWN and event.key == K_4:
+					if notestack!=4:
+						notestack=4
+						dispupdate()
+				if event.type == KEYDOWN and event.key == K_5:
+					if notestack!=5:
+						notestack=5
+						dispupdate()
+				if event.type == KEYDOWN and event.key == K_6:
+					if notestack!=6:
+						notestack=6
 						dispupdate()
 			elif pygame.key.get_mods() & pygame.KMOD_SHIFT:
 				if event.type == KEYDOWN and event.key == K_1:
@@ -925,9 +1036,38 @@ while evhappenflg2==0:
 						
 						sampup=1
 						dispupdate()
+				if event.type == KEYDOWN and event.key == K_5:
+					if octshift!=5:
+						octshift=5
+						
+						sampup=1
+						dispupdate()
+				if event.type == KEYDOWN and event.key == K_6:
+					if octshift!=6:
+						octshift=6
+						
+						sampup=1
+						dispupdate()
+				if event.type == KEYDOWN and event.key == K_7:
+					if octshift!=7:
+						octshift=7
+						
+						sampup=1
+						dispupdate()
+				if event.type == KEYDOWN and event.key == K_8:
+					if octshift!=8:
+						octshift=8
+						
+						sampup=1
+						dispupdate()
 				if event.type == KEYDOWN and event.key == K_0:
 					if octshift!=0:
 						octshift=0
+						sampup=1
+						dispupdate()
+				if event.type == KEYDOWN and event.key == K_MINUS:
+					if octshift!=-1:
+						octshift=-1
 						sampup=1
 						dispupdate()
 				
@@ -1033,20 +1173,15 @@ while evhappenflg2==0:
 					setnotevols()
 					dispupdate()
 				if event.type == KEYDOWN and (event.key == K_HOME or event.key == K_KP7):
-					araylimit += 0.1
-					if araylimit>synthfreq:
-						araylimit=synthfreq
+					retrigtime += 0.01
 					#setnotevols()
-					sampup=1
-					STACKRANGE=int(synthfreq/araylimit)
 					dispupdate()
 				if event.type == KEYDOWN and (event.key == K_END or event.key == K_KP1):
-					araylimit -= 0.1
-					if araylimit<1:
-						araylimit=1
+					retrigtime -= 0.01
+					if retrigtime<0.01:
+						retrigtime=0.01
+					
 					#setnotevols()
-					sampup=1
-					STACKRANGE=int(synthfreq/araylimit)
 					dispupdate()
 			else:
 				
@@ -1081,20 +1216,15 @@ while evhappenflg2==0:
 					setnotevols()
 					dispupdate()
 				if event.type == KEYDOWN and (event.key == K_HOME or event.key == K_KP7):
-					araylimit += 1
-					if araylimit>synthfreq:
-						araylimit=synthfreq
-					STACKRANGE=int(synthfreq/araylimit)
+					retrigtime += 0.1
 					#setnotevols()
-					sampup=1
 					dispupdate()
 				if event.type == KEYDOWN and (event.key == K_END or event.key == K_KP1):
-					araylimit -= 1
-					if araylimit<1:
-						araylimit=1
-					STACKRANGE=int(synthfreq/araylimit)
+					retrigtime -= 0.1
+					if retrigtime<0.01:
+						retrigtime=0.01
+					
 					#setnotevols()
-					sampup=1
 					dispupdate()
 			#if event.type == KEYDOWN and (event.key == K_LSHIFT or event.key == K_RSHIFT):
 				#fadetime=fadex

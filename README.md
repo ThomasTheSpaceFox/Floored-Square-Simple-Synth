@@ -1,6 +1,6 @@
 #Floored Square Simple Synth
 
-v2.4
+v2.5
 
 Copyright (c) 2016-2017 Thomas Leathers
 
