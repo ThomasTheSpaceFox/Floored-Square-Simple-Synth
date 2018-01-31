@@ -17,6 +17,7 @@ pygame.display.init()
 windowicon=pygame.image.load("icon32.png")
 pygame.display.set_icon(windowicon)
 screensurf=pygame.display.set_mode((800, 600))
+print (pygame.display.list_modes()[0])
 pygame.display.set_caption("Floored Square Simple Synth", "Floored Square Simple Synth")
 pygame.font.init()
 
@@ -40,7 +41,7 @@ araylimit=1
 #pygame.mixer.init()
 pygame.mixer.init(frequency=synthfreq , size=-16)
 pygame.mixer.set_num_channels(24)
-print "mixer frequency:" + str(synthfreq)
+print ("mixer frequency:" + str(synthfreq))
 #pygame.mixer.set_num_channels(6)
 print ("number of channels: "+ str(pygame.mixer.get_num_channels()))
 def foobsin1(num):
@@ -102,6 +103,7 @@ strexmd=1
 wavemode=1
 
 retrigtime=0.1
+
 
 stackit=1
 octshift=1
@@ -485,6 +487,8 @@ perc62tx=simplefont.render("62%", True, (0, 0, 0), (255, 127, 127))
 perc87tx=simplefont.render("87%", True, (0, 0, 0), (255, 127, 127))
 #Define sounds
 def redefsounds():
+	global WAVDRAW
+	WAVDRAW=autosquare(110, notetime)
 	dispupdate()
 	screensurf.blit(pleasewaittx, (200, 580))
 	screensurf.blit(perc0tx, (460, 580))
@@ -521,6 +525,7 @@ def redefsounds():
 	global snf27
 	global snf28
 	global snf29
+	
 	snf0=pygame.mixer.Sound(autosquare(65, notetime))
 	snf1=pygame.mixer.Sound(autosquare(69, notetime))
 	snf2=pygame.mixer.Sound(autosquare(74, notetime))
@@ -555,6 +560,7 @@ def redefsounds():
 	pygame.display.update()
 	snf19=pygame.mixer.Sound(autosquare(208, notetime))
 	snf=pygame.mixer.Sound(autosquare(220, notetime))
+	
 	snf20=pygame.mixer.Sound(autosquare(233, notetime))
 	snf21=pygame.mixer.Sound(autosquare(247, notetime))
 	snf22=pygame.mixer.Sound(autosquare(262, notetime))
@@ -648,8 +654,8 @@ def notepop(notesnd):
 		notethread.start()
 
 evhappenflg2=0
-cpytx=simplefont.render("Copyright (c) 2016-2017 Thomas Leathers, See readme.md for details.", True, (0, 0, 0))
-verstx=simplefont.render("v2.5", True, (0, 0, 0))
+cpytx=simplefont.render("Copyright (c) 2016-2018 Thomas Leathers, See readme.md for details.", True, (0, 0, 0))
+verstx=simplefont.render("v2.6", True, (0, 0, 0))
 bgimg.blit(verstx, (2, 2))
 bgimg.blit(cpytx, (2, 22))
 txtx1=simplefont.render("Use keys q-],2,3, 5-7, 9,0, + and z-?/, s,d,g-k, l,: to play.", True, (0, 0, 0))
@@ -780,15 +786,46 @@ def dispupdate():
 	screensurf.blit(syntx, (200, 580))
 	screensurf.blit(auxfx, (400, 500))
 	screensurf.blit(stacksubtx, (400, 480))
+	drawwave()
 	pygame.display.update()
+
+#waveform drawing function.
+def drawwave():
+	xpos=2
+	xjump=400.0/len(WAVDRAW)
+	yposbase=400
+	yposmag=0.005
+	oldxpos=0
+	oldypos=0
+	pygame.draw.rect(screensurf, (0, 0, 0), pygame.Rect(0, yposbase-60, 400, 120))
+	pygame.draw.line(screensurf, (0, 255, 0), (0, yposbase), (400, yposbase))
+	vlinecnt=0
+	vlineinterv=60
+	for x in WAVDRAW:
+		if vlinecnt<vlineinterv:
+			vlinecnt+=1
+		else:
+			vlinecnt=0
+			pygame.draw.line(screensurf, (0, 0, 150), (xpos, yposbase-60), (xpos, yposbase+60))
+		xmag=x*yposmag
+		if xmag>60:
+			xmag=60
+		if xmag<-60:
+			xmag=-60
+		pygame.draw.line(screensurf, (255, 0, 0), (oldxpos, (oldypos+yposbase)), (xpos, (xmag+yposbase)))
+		oldypos=xmag
+		oldxpos=xpos
+		xpos+=xjump
+
 sampup=0
 redefsounds()
 setnotevols()
 dispupdate()
-
+fscreen=0
 while evhappenflg2==0:
 		time.sleep(.001)
 		keycheckoff()
+		
 		for event in pygame.event.get():
 			if event.type == KEYDOWN and event.key == K_RETURN:
 				if sampup==1:
@@ -798,6 +835,15 @@ while evhappenflg2==0:
 					dispupdate()
 			if event.type == KEYDOWN and event.key == K_SPACE:
 				pygame.mixer.stop()
+			if event.type == KEYDOWN and event.key == K_F1:
+				if fscreen==0:
+					screensurf=pygame.display.set_mode((800, 600), pygame.FULLSCREEN)
+					fscreen=1
+					dispupdate()
+				else:
+					screensurf=pygame.display.set_mode((800, 600))
+					fscreen=0
+					dispupdate()
 			if (pygame.key.get_mods() & pygame.KMOD_ALT) and (pygame.key.get_mods() & pygame.KMOD_SHIFT):
 				if event.type == KEYDOWN and event.key == K_z:
 					if meanflg!=0:
