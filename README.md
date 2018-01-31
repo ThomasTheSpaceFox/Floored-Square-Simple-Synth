@@ -1,6 +1,6 @@
 #Floored Square Simple Synth
 
-v2.5
+v2.6
 
 Copyright (c) 2016-2018 Thomas Leathers
 
@@ -16,3 +16,9 @@ Copyright (c) 2016-2018 Thomas Leathers
  
   You should have received a copy of the GNU General Public License
   along with Floored Square Simple Synth. If not, see <http://www.gnu.org/licenses/>
+
+all images and other media content, unless otherwise noted,
+are licensed under the Creative Commons Attribution-ShareAlike 4.0
+International License. To view a copy of this license, visit
+http://creativecommons.org/licenses/by-sa/4.0/ or send a letter to
+Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
