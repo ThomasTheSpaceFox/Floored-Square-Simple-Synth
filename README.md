@@ -1,6 +1,8 @@
 #Floored Square Simple Synth
+A software array-based synthesizer.
+featuring a Drum sequencer, and plenty of square-like waveforms.
 
-v2.6
+v2.7
 
 Copyright (c) 2016-2018 Thomas Leathers
 

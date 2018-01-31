@@ -655,7 +655,7 @@ def notepop(notesnd):
 
 evhappenflg2=0
 cpytx=simplefont.render("Copyright (c) 2016-2018 Thomas Leathers, See readme.md for details.", True, (0, 0, 0))
-verstx=simplefont.render("v2.6", True, (0, 0, 0))
+verstx=simplefont.render("v2.7", True, (0, 0, 0))
 bgimg.blit(verstx, (2, 2))
 bgimg.blit(cpytx, (2, 22))
 txtx1=simplefont.render("Use keys q-],2,3, 5-7, 9,0, + and z-?/, s,d,g-k, l,: to play.", True, (0, 0, 0))
@@ -797,16 +797,21 @@ def drawwave():
 	yposmag=0.005
 	oldxpos=0
 	oldypos=0
-	pygame.draw.rect(screensurf, (0, 0, 0), pygame.Rect(0, yposbase-60, 400, 120))
-	pygame.draw.line(screensurf, (0, 255, 0), (0, yposbase), (400, yposbase))
 	vlinecnt=0
 	vlineinterv=60
+	pygame.draw.rect(screensurf, (0, 0, 0), pygame.Rect(0, yposbase-60, 401, 121))
 	for x in WAVDRAW:
 		if vlinecnt<vlineinterv:
 			vlinecnt+=1
 		else:
 			vlinecnt=0
 			pygame.draw.line(screensurf, (0, 0, 150), (xpos, yposbase-60), (xpos, yposbase+60))
+		xpos+=xjump
+	xpos=2		
+	
+	pygame.draw.line(screensurf, (0, 255, 0), (0, yposbase), (400, yposbase))
+	
+	for x in WAVDRAW:
 		xmag=x*yposmag
 		if xmag>60:
 			xmag=60
