@@ -1,8 +1,8 @@
 #Floored Square Simple Synth
-A software array-based synthesizer.
+A chiptune-esq array-based synthesizer suite.
 featuring a Drum sequencer, and plenty of square-like waveforms.
 
-v2.8
+v2.9
 
 Copyright (c) 2016-2018 Thomas Leathers
 
@@ -24,3 +24,6 @@ are licensed under the Creative Commons Attribution-ShareAlike 4.0
 International License. To view a copy of this license, visit
 http://creativecommons.org/licenses/by-sa/4.0/ or send a letter to
 Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
+
+
+Below is a list of contributors who have helped with FSSS:

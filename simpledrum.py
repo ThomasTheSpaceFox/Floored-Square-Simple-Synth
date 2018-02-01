@@ -28,8 +28,8 @@ iconhud=pygame.image.load("fssdl.png").convert()
 #controls the frequency of the synthesizer logic and pygame mixer.
 #lower frequencies are faster, but are lower quality.
 
-versioninfo="v2.8"
-copyrightinfo="Copyright (c) 2016-2018 Thomas Leathers"
+versioninfo="v2.9"
+copyrightinfo="Copyright (c) 2016-2018 Thomas Leathers and contributors"
 
 synthfreq=22050
 #synthfreq=16000
@@ -268,7 +268,7 @@ def sideprocess():
 				progactive=0
 			if event.type==MOUSEBUTTONDOWN:
 				if hudiconrect.collidepoint(event.pos):
-					OKpop("Floored Square Simple Drum Loop "+versioninfo, copyrightinfo)
+					OKpop("Floored Square Simple Drum Loop "+versioninfo, copyrightinfo, "A 16-event, 3 tone drum sequencer.")
 				if loadbx.collidepoint(event.pos):
 					nameret=nameloader("Type or double click file to load:")
 					if nameret!=None:
@@ -309,8 +309,9 @@ def sideprocess():
 						cell.clickevent(event.pos)
 					
 
-def OKpop(info, extra=None):
-	bgrect=pygame.Rect(0, 50, 300, 200)
+def OKpop(info, extra=None, extra2=None):
+	global progactive
+	bgrect=pygame.Rect(0, 50, 450, 200)
 	bgrect.centerx=(screensurf.get_width()//2)
 	pygame.draw.rect(screensurf, (0, 0, 0), bgrect)
 	pygame.draw.rect(screensurf, (255, 255, 255), bgrect, 1)
@@ -323,6 +324,10 @@ def OKpop(info, extra=None):
 		lineren=simplefont.render(extra, True, (255, 255, 255), (30, 30, 30))
 		screensurf.blit(lineren, ((screensurf.get_width()//2)-(lineren.get_width()//2), yoff+50))
 		yoff+=yjump
+	if extra2!=None:
+		lineren=simplefont.render(extra2, True, (255, 255, 255), (30, 30, 30))
+		screensurf.blit(lineren, ((screensurf.get_width()//2)-(lineren.get_width()//2), yoff+50))
+		yoff+=yjump
 	lineren=simplefont.render("Press any key or click to continue", True, (255, 255, 255), (30, 30, 30))
 	screensurf.blit(lineren, ((screensurf.get_width()//2)-(lineren.get_width()//2), yoff+50))
 	yoff+=yjump
@@ -330,13 +335,19 @@ def OKpop(info, extra=None):
 	while True:
 		time.sleep(0.1)
 		for event in pygame.event.get():
+			if event.type == QUIT:
+				progactive=0
+				return
+			if event.type == KEYDOWN and event.key == K_ESCAPE:
+				progactive=0
+				return
 			if event.type == KEYDOWN:
 				return
 			if event.type==MOUSEBUTTONDOWN:
 				return
 
 def YNpop(info):
-	bgrect=pygame.Rect(0, 50, 300, 200)
+	bgrect=pygame.Rect(0, 50, 450, 200)
 	bgrect.centerx=(screensurf.get_width()//2)
 	pygame.draw.rect(screensurf, (0, 0, 0), bgrect)
 	pygame.draw.rect(screensurf, (255, 255, 255), bgrect, 1)
@@ -352,7 +363,11 @@ def YNpop(info):
 	while True:
 		time.sleep(0.1)
 		for event in pygame.event.get():
+			if event.type == QUIT:
+				progactive=0
+				return 0
 			if event.type == KEYDOWN and event.key == K_ESCAPE:
+				progactive=0
 				return 0
 			if event.type == KEYDOWN and event.key == K_n:
 				return 0

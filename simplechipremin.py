@@ -15,7 +15,7 @@ import random
 from threading import Thread
 pygame.display.init()
 
-windowicon=pygame.image.load("fsct32.png")
+windowicon=pygame.image.load("fscr32.png")
 pygame.display.set_icon(windowicon)
 screensurf=pygame.display.set_mode((800, 600))
 print (pygame.display.list_modes()[0])
@@ -23,13 +23,13 @@ pygame.display.set_caption("Floored Square Chip-remin", "Floored Square Chip-rem
 pygame.font.init()
 
 simplefont = pygame.font.SysFont(None, 22)
-iconhud=pygame.image.load("fsct.png").convert()
+iconhud=pygame.image.load("fscr.png").convert()
 
 #controls the frequency of the synthesizer logic and pygame mixer.
 #lower frequencies are faster, but are lower quality.
 
-versioninfo="v2.8"
-copyrightinfo="Copyright (c) 2016-2018 Thomas Leathers"
+versioninfo="v2.9"
+copyrightinfo="Copyright (c) 2016-2018 Thomas Leathers and contributors"
 
 synthfreq=22050
 #synthfreq=16000
@@ -84,7 +84,7 @@ sideproc.start()
 
 def OKpop(info, extra=None, extra2=None):
 	global progactive
-	bgrect=pygame.Rect(0, 50, 300, 200)
+	bgrect=pygame.Rect(0, 50, 450, 200)
 	bgrect.centerx=(screensurf.get_width()//2)
 	pygame.draw.rect(screensurf, (0, 0, 0), bgrect)
 	pygame.draw.rect(screensurf, (255, 255, 255), bgrect, 1)
@@ -126,6 +126,9 @@ label220=simplefont.render((str(220)+"Hz"), True, (0, 255, 255), (0, 0, 0))
 label440=simplefont.render((str(440)+"Hz"), True, (0, 255, 255), (0, 0, 0))
 label880=simplefont.render((str(880)+"Hz"), True, (0, 255, 255), (0, 0, 0))
 label1760=simplefont.render((str(1760)+"Hz"), True, (0, 255, 255), (0, 0, 0))
+
+tracelist=[(0, 0), (0, 0), (0, 0), (0, 0), (0, 0), (0, 0), (0, 0), (0, 0), (0, 0), (0, 0)]
+
 while progactive==1:
 	mpos=pygame.mouse.get_pos()
 	pygame.event.pump()
@@ -135,13 +138,14 @@ while progactive==1:
 	vol=mposy*voljump
 	if vol<0.001:
 		vol=0.001
-	screensurf.fill((0, 0, 0))
-	
 	if abouttrigger==1:
 		OKpop("Floored Square Chip-remin "+versioninfo, copyrightinfo, "A Theremin-like Chiptune Synthesizer")
 		abouttrigger=0
+	screensurf.fill((0, 0, 0))
 	
-	
+	tracelist.insert(0, mpos)
+	del tracelist[-1]
+	pygame.draw.lines(screensurf, (255, 127, 127), 0, tracelist)
 	hudiconrect=screensurf.blit(iconhud, (screensurf.get_width()-68, screensurf.get_height()-68))
 	#frequency graph guides
 	pygame.draw.line(screensurf, (0, 255, 255), (55/freqjump, 0), (55/freqjump, 600))
@@ -168,7 +172,7 @@ while progactive==1:
 	#print(freq)
 	if freq<basefreq:
 		freq=basefreq
-	if slidechan.get_queue()==None:
+	if slidechan.get_queue()==None and (pygame.key.get_pressed()[K_SPACE] or pygame.mouse.get_pressed()[0]):
 		notearray=array.array('f', [(foobsin(2.0 * pival * freq * t / synthfreq)) for t in xrange(0, int((synthfreq/freq)*6))])
 		sample=pygame.mixer.Sound(notearray)
 		slidechan.queue(sample)
