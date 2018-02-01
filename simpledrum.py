@@ -238,6 +238,19 @@ def sideprocess():
 		for event in pygame.event.get():
 			if event.type == KEYDOWN and event.key == K_ESCAPE:
 				progactive=0
+			if event.type == KEYDOWN and event.key == K_F2:
+				nameret=nameloader("Type file to save to:")
+				if nameret!=None and nameret:
+					if not os.path.isfile(nameret):
+						rthmsave(nameret)
+					else:
+						if YNpop("file: \"" + nameret + "\"exists. overwrite?"):
+							rthmsave(nameret)
+			if event.type == KEYDOWN and event.key == K_F3:
+				#rthmload("test.rthm")
+				nameret=nameloader("Type file to load:")
+				if nameret!=None:
+					rthmload(nameret)
 			if event.type == QUIT:
 				progactive=0
 			if event.type==MOUSEBUTTONDOWN:
@@ -268,10 +281,152 @@ def sideprocess():
 					if cell.mainrect.collidepoint(event.pos):
 						cell.clickevent(event.pos)
 					
+
+def OKpop(info):
+	bgrect=pygame.Rect(0, 50, 300, 200)
+	bgrect.centerx=(screensurf.get_width()//2)
+	pygame.draw.rect(screensurf, (0, 0, 0), bgrect)
+	yoff=0
+	yjump=20
+	lineren=simplefont.render(info, True, (255, 255, 255), (30, 30, 30))
+	screensurf.blit(lineren, ((screensurf.get_width()//2)-(lineren.get_width()//2), yoff+50))
+	yoff+=yjump
+	lineren=simplefont.render("Press any key to continue", True, (255, 255, 255), (30, 30, 30))
+	screensurf.blit(lineren, ((screensurf.get_width()//2)-(lineren.get_width()//2), yoff+50))
+	yoff+=yjump
+	pygame.display.update()
+	while True:
+		time.sleep(0.1)
+		for event in pygame.event.get():
+			if event.type == KEYDOWN:
+				return
+
+def YNpop(info):
+	bgrect=pygame.Rect(0, 50, 300, 200)
+	bgrect.centerx=(screensurf.get_width()//2)
+	pygame.draw.rect(screensurf, (0, 0, 0), bgrect)
+	yoff=0
+	yjump=20
+	lineren=simplefont.render(info, True, (255, 255, 255), (30, 30, 30))
+	screensurf.blit(lineren, ((screensurf.get_width()//2)-(lineren.get_width()//2), yoff+50))
+	yoff+=yjump
+	lineren=simplefont.render("(Y)es or (N)o?", True, (255, 255, 255), (30, 30, 30))
+	screensurf.blit(lineren, ((screensurf.get_width()//2)-(lineren.get_width()//2), yoff+50))
+	yoff+=yjump
+	pygame.display.update()
+	while True:
+		time.sleep(0.1)
+		for event in pygame.event.get():
+			if event.type == KEYDOWN and event.key == K_ESCAPE:
+				return 0
+			if event.type == KEYDOWN and event.key == K_n:
+				return 0
+			if event.type == KEYDOWN and event.key == K_y:
+				return 1
+	
+
+def rthmsave(name):
+	rthmfile=open(name, "w")
+	rthmfile.write(str(BPM) + "\n")
+	rthmfile.write(str(timefraction) + "\n")
+	for cell in celllist:
+		rthmfile.write(str(cell.drumid) + "-" + str(cell.active) + "\n")
+	rthmfile.close()
+		
+def rthmload(name):
+	global BPM
+	global waittime
+	global timefraction
+	global celllist
+	if os.path.isfile(name):
+		rthmfile=open(name, "r")
+		linecnt=1
+		cellcnt=0
+		for linecon in rthmfile:
+			if linecnt==1:
+				BPM=int(linecon.replace("\n", ""))
+			elif linecnt==2:
+				timefraction=int(linecon.replace("\n", ""))
+				waittime=bpmdecode(BPM)
+			else:
+				curcell=celllist[cellcnt]
+				linelist=(linecon.replace("\n", "")).split("-")
+				curcell.drumid=int(linelist[0])
+				curcell.active=int(linelist[1])
+				cellcnt+=1
+			linecnt+=1
+	else:
+		OKpop("ERROR: File: \"" + name + "\" Not found.")
 				
+			
+def charremove(string, indexq):
+	if indexq==0:
+		return string
+	else:
+		return (string[:(indexq-1)] + string[(indexq):])
+def charinsert(string, char, indexq):
+	if indexq==0:
+		return char + string
+	else:
+		return (string[:(indexq-1)] + char + string[(indexq-1):])
+
+def nameloader(title):
+	curoffset=0
+	redraw=1
+	textstring=""
+	pathlist=sorted(os.listdir('.'), key=str.lower)
+	while True:
+		time.sleep(0.1)
+		if redraw==1:
+			redraw=0
+			yoff=0
+			yjump=20
+			bgrect=pygame.Rect(0, 50, 300,400)
+			bgrect.centerx=(screensurf.get_width()//2)
+			pygame.draw.rect(screensurf, (0, 0, 0), bgrect)
+			lineren=simplefont.render(title, True, (255, 255, 255), (30, 30, 30))
+			screensurf.blit(lineren, ((screensurf.get_width()//2)-(lineren.get_width()//2), yoff+50))
+			yoff+=yjump
+			for line in pathlist:
+				if line.endswith('.rthm'):
+					lineren=simplefont.render(line, True, (255, 255, 255), (0, 0, 0))
+					screensurf.blit(lineren, ((screensurf.get_width()//2)-(lineren.get_width()//2), yoff+50))
+					yoff+=yjump
+			
+			abttextB=simplefont.render(textstring+".rthm", True, (255, 255, 255), (40, 40, 40))
+			screensurf.blit(abttextB, ((screensurf.get_width()//2)-(abttextB.get_width()//2), 400))
+			pygame.display.update()
+		for event in pygame.event.get():
+			if event.type == KEYDOWN and event.key == K_BACKSPACE:
+				if len(textstring)!=0 and curoffset!=0:
+					textstring=charremove(textstring, curoffset)
+					curoffset -= 1
+					redraw=1
+				break
+			elif event.type == KEYDOWN and event.key == K_RETURN:
+				if textstring!="":
+					return textstring+ ".rthm"
+				else:
+					OKpop("\".rthm\" is not a valid name.")
+					return None
+			elif event.type == KEYDOWN and event.key != K_TAB:
+				curoffset += 1
+				textstring=charinsert(textstring, str(event.unicode), curoffset)
+				redraw=1
+				break
+			elif event.type == KEYDOWN and event.key == K_ESCAPE:
+				return None
+			
+	
+
+
 sideproc=Thread(target = sideprocess, args = [])
 sideproc.start()
 
+
+
+		
+		
 
 oldcell=celllist[7]
 while progactive==1:
@@ -282,6 +437,8 @@ while progactive==1:
 			if dispmode==0 and cell.cellid>8:
 				break
 			elif cell.drumprocess():
+				if cell.cellid==1:
+					time.sleep(waittime)
 				break
 			else:
 				cell.play=1
