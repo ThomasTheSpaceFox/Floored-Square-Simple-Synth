@@ -655,7 +655,7 @@ def notepop(notesnd):
 
 evhappenflg2=0
 cpytx=simplefont.render("Copyright (c) 2016-2018 Thomas Leathers, See readme.md for details.", True, (0, 0, 0))
-verstx=simplefont.render("v2.7", True, (0, 0, 0))
+verstx=simplefont.render("v2.8", True, (0, 0, 0))
 bgimg.blit(verstx, (2, 2))
 bgimg.blit(cpytx, (2, 22))
 txtx1=simplefont.render("Use keys q-],2,3, 5-7, 9,0, + and z-?/, s,d,g-k, l,: to play.", True, (0, 0, 0))

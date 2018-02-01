@@ -2,7 +2,7 @@
 A software array-based synthesizer.
 featuring a Drum sequencer, and plenty of square-like waveforms.
 
-v2.7
+v2.8
 
 Copyright (c) 2016-2018 Thomas Leathers
 

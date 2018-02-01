@@ -15,7 +15,7 @@ import random
 from threading import Thread
 pygame.display.init()
 
-windowicon=pygame.image.load("icon32.png")
+windowicon=pygame.image.load("fssdl32.png")
 pygame.display.set_icon(windowicon)
 screensurf=pygame.display.set_mode((570, 500))
 print (pygame.display.list_modes()[0])
@@ -23,10 +23,13 @@ pygame.display.set_caption("Floored Square Simple Drum Loop", "Floored Square Si
 pygame.font.init()
 
 simplefont = pygame.font.SysFont(None, 22)
-bgimg=pygame.image.load("simplesynth.jpg").convert()
+iconhud=pygame.image.load("fssdl.png").convert()
 
 #controls the frequency of the synthesizer logic and pygame mixer.
 #lower frequencies are faster, but are lower quality.
+
+versioninfo="v2.8"
+copyrightinfo="Copyright (c) 2016-2018 Thomas Leathers"
 
 synthfreq=22050
 #synthfreq=16000
@@ -173,13 +176,7 @@ pygame.display.update()
 celllist=[]
 xoff=10
 for cell in [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]:
-	
-	if cell>=3:
-		celllist.extend([beatcell(xoff, 0, cell, 0)])
-	elif cell>1:
-		celllist.extend([beatcell(xoff, 1, cell)])
-	else:
-		celllist.extend([beatcell(xoff, 2, cell)])
+	celllist.extend([beatcell(xoff, 0, cell, 0)])
 	xoff+=70
 
 timefraction=4
@@ -195,8 +192,14 @@ bpmdown=pygame.Rect(2, 460, 60, 40)
 cpbup=pygame.Rect(190, 390, 60, 40)
 cpbdown=pygame.Rect(190, 460, 60, 40)
 
+loadbx=pygame.Rect(280, 460, 70, 40)
+savebx=pygame.Rect(280, 390, 70, 40)
+
 cpbuplabel=simplefont.render("CPB +1", True, (255, 255, 255), (30, 30, 160))
 cpbdownlabel=simplefont.render("CPB -1", True, (255, 255, 255), (30, 30, 160))
+
+loadlabel=simplefont.render("Load(F3)", True, (255, 255, 255), (30, 30, 160))
+savelabel=simplefont.render("Save(F2)", True, (255, 255, 255), (30, 30, 160))
 
 bpmuplabel=simplefont.render("BPM +5", True, (255, 255, 255), (30, 30, 160))
 
@@ -214,14 +217,20 @@ def sideprocess():
 	print("starting event handler thread...")
 	while progactive==1:
 		screensurf.fill((60, 60, 60))
+		hudiconrect=screensurf.blit(iconhud, (screensurf.get_width()-68, screensurf.get_height()-68))
 		time.sleep(0.05)
+		#call render routines of cells
 		for cell in celllist:
 			cell.render()
+		#box drawing
 		pygame.draw.rect(screensurf, (30, 30, 160), bpmup)
 		pygame.draw.rect(screensurf, (30, 30, 160), bpmdown)
 		pygame.draw.rect(screensurf, (30, 30, 160), cpbup)
 		pygame.draw.rect(screensurf, (30, 30, 160), cpbdown)
 		pygame.draw.rect(screensurf, (30, 30, 160), displaymode)
+		pygame.draw.rect(screensurf, (30, 30, 160), loadbx)
+		pygame.draw.rect(screensurf, (30, 30, 160), savebx)
+		#labels
 		bpmlabel=simplefont.render(str(BPM), True, (255, 255, 255), (60, 60, 60))
 		cpblabel=simplefont.render("Cells/Beat "+str(timefraction), True, (255, 255, 255), (60, 60, 60))
 		screensurf.blit(bpmuplabel, (bpmup.x+2, bpmup.y+2))
@@ -230,16 +239,20 @@ def sideprocess():
 		screensurf.blit(cpbuplabel, (cpbup.x+2, cpbup.y+2))
 		screensurf.blit(cpbdownlabel, (cpbdown.x+2, cpbdown.y+2))
 		screensurf.blit(cpblabel, (cpbup.x+2, cpbup.y+42))
+		screensurf.blit(loadlabel, (loadbx.x+2, loadbx.y+2))
+		screensurf.blit(savelabel, (savebx.x+2, savebx.y+2))
+		
 		if dispmode==1:
 			screensurf.blit(dispm0, (displaymode.x+2, displaymode.y+2))
 		else:
 			screensurf.blit(dispm1, (displaymode.x+2, displaymode.y+2))
 		pygame.display.update()
+		#event processor
 		for event in pygame.event.get():
 			if event.type == KEYDOWN and event.key == K_ESCAPE:
 				progactive=0
 			if event.type == KEYDOWN and event.key == K_F2:
-				nameret=nameloader("Type file to save to:")
+				nameret=nameloader("Type or double click file to save to:")
 				if nameret!=None and nameret:
 					if not os.path.isfile(nameret):
 						rthmsave(nameret)
@@ -248,12 +261,26 @@ def sideprocess():
 							rthmsave(nameret)
 			if event.type == KEYDOWN and event.key == K_F3:
 				#rthmload("test.rthm")
-				nameret=nameloader("Type file to load:")
+				nameret=nameloader("Type or double click file to load:")
 				if nameret!=None:
 					rthmload(nameret)
 			if event.type == QUIT:
 				progactive=0
 			if event.type==MOUSEBUTTONDOWN:
+				if hudiconrect.collidepoint(event.pos):
+					OKpop("Floored Square Simple Drum Loop "+versioninfo, copyrightinfo)
+				if loadbx.collidepoint(event.pos):
+					nameret=nameloader("Type or double click file to load:")
+					if nameret!=None:
+						rthmload(nameret)
+				if savebx.collidepoint(event.pos):
+					nameret=nameloader("Type or double click file to save to:")
+					if nameret!=None and nameret:
+						if not os.path.isfile(nameret):
+							rthmsave(nameret)
+						else:
+							if YNpop("file: \"" + nameret + "\"exists. overwrite?"):
+								rthmsave(nameret)
 				if bpmup.collidepoint(event.pos):
 					BPM+=5
 					waittime=bpmdecode(BPM)
@@ -282,16 +309,21 @@ def sideprocess():
 						cell.clickevent(event.pos)
 					
 
-def OKpop(info):
+def OKpop(info, extra=None):
 	bgrect=pygame.Rect(0, 50, 300, 200)
 	bgrect.centerx=(screensurf.get_width()//2)
 	pygame.draw.rect(screensurf, (0, 0, 0), bgrect)
-	yoff=0
+	pygame.draw.rect(screensurf, (255, 255, 255), bgrect, 1)
+	yoff=2
 	yjump=20
 	lineren=simplefont.render(info, True, (255, 255, 255), (30, 30, 30))
 	screensurf.blit(lineren, ((screensurf.get_width()//2)-(lineren.get_width()//2), yoff+50))
 	yoff+=yjump
-	lineren=simplefont.render("Press any key to continue", True, (255, 255, 255), (30, 30, 30))
+	if extra!=None:
+		lineren=simplefont.render(extra, True, (255, 255, 255), (30, 30, 30))
+		screensurf.blit(lineren, ((screensurf.get_width()//2)-(lineren.get_width()//2), yoff+50))
+		yoff+=yjump
+	lineren=simplefont.render("Press any key or click to continue", True, (255, 255, 255), (30, 30, 30))
 	screensurf.blit(lineren, ((screensurf.get_width()//2)-(lineren.get_width()//2), yoff+50))
 	yoff+=yjump
 	pygame.display.update()
@@ -300,12 +332,15 @@ def OKpop(info):
 		for event in pygame.event.get():
 			if event.type == KEYDOWN:
 				return
+			if event.type==MOUSEBUTTONDOWN:
+				return
 
 def YNpop(info):
 	bgrect=pygame.Rect(0, 50, 300, 200)
 	bgrect.centerx=(screensurf.get_width()//2)
 	pygame.draw.rect(screensurf, (0, 0, 0), bgrect)
-	yoff=0
+	pygame.draw.rect(screensurf, (255, 255, 255), bgrect, 1)
+	yoff=2
 	yjump=20
 	lineren=simplefont.render(info, True, (255, 255, 255), (30, 30, 30))
 	screensurf.blit(lineren, ((screensurf.get_width()//2)-(lineren.get_width()//2), yoff+50))
@@ -379,30 +414,47 @@ def nameloader(title):
 		time.sleep(0.1)
 		if redraw==1:
 			redraw=0
-			yoff=0
+			yoff=2
 			yjump=20
 			bgrect=pygame.Rect(0, 50, 300,400)
 			bgrect.centerx=(screensurf.get_width()//2)
 			pygame.draw.rect(screensurf, (0, 0, 0), bgrect)
+			pygame.draw.rect(screensurf, (255, 255, 255), bgrect, 1)
 			lineren=simplefont.render(title, True, (255, 255, 255), (30, 30, 30))
 			screensurf.blit(lineren, ((screensurf.get_width()//2)-(lineren.get_width()//2), yoff+50))
 			yoff+=yjump
+			linedict={}
 			for line in pathlist:
 				if line.endswith('.rthm'):
-					lineren=simplefont.render(line, True, (255, 255, 255), (0, 0, 0))
-					screensurf.blit(lineren, ((screensurf.get_width()//2)-(lineren.get_width()//2), yoff+50))
+					if line.split(".")[0]==textstring:
+						lineren=simplefont.render(line, True, (0, 0, 0), (255, 255, 255))
+					else:
+						lineren=simplefont.render(line, True, (255, 255, 255), (0, 0, 0))
+					bxrect=screensurf.blit(lineren, ((screensurf.get_width()//2)-(lineren.get_width()//2), yoff+50))
 					yoff+=yjump
+					linedict[line.split(".")[0]]=bxrect
 			
 			abttextB=simplefont.render(textstring+".rthm", True, (255, 255, 255), (40, 40, 40))
 			screensurf.blit(abttextB, ((screensurf.get_width()//2)-(abttextB.get_width()//2), 400))
 			pygame.display.update()
 		for event in pygame.event.get():
+			if event.type==MOUSEBUTTONDOWN:
+				for rectbx in linedict:
+					if linedict[rectbx].collidepoint(event.pos):
+						if rectbx==textstring:
+							return rectbx+".rthm"
+						textstring=rectbx
+						redraw=1
+				if not bgrect.collidepoint(event.pos):
+					return None
 			if event.type == KEYDOWN and event.key == K_BACKSPACE:
 				if len(textstring)!=0 and curoffset!=0:
 					textstring=charremove(textstring, curoffset)
 					curoffset -= 1
 					redraw=1
 				break
+			elif event.type == KEYDOWN and event.key == K_ESCAPE:
+				return None
 			elif event.type == KEYDOWN and event.key == K_RETURN:
 				if textstring!="":
 					return textstring+ ".rthm"
@@ -414,8 +466,7 @@ def nameloader(title):
 				textstring=charinsert(textstring, str(event.unicode), curoffset)
 				redraw=1
 				break
-			elif event.type == KEYDOWN and event.key == K_ESCAPE:
-				return None
+			
 			
 	
 
