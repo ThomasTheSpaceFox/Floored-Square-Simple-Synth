@@ -214,6 +214,7 @@ def sideprocess():
 	global screensurf
 	global dispmode
 	global timefraction
+	global gotocell
 	print("starting event handler thread...")
 	while progactive==1:
 		screensurf.fill((60, 60, 60))
@@ -306,7 +307,10 @@ def sideprocess():
 						screensurf=pygame.display.set_mode((570, 500))
 				for cell in celllist:
 					if cell.mainrect.collidepoint(event.pos):
-						cell.clickevent(event.pos)
+						if event.button==3:
+							gotocell=cell.cellid-1
+						else:
+							cell.clickevent(event.pos)
 					
 
 def OKpop(info, extra=None, extra2=None):
@@ -483,7 +487,7 @@ def nameloader(title):
 				break
 			
 			
-	
+gotocell=None
 
 
 sideproc=Thread(target = sideprocess, args = [])
@@ -497,11 +501,19 @@ sideproc.start()
 oldcell=celllist[7]
 while progactive==1:
 	if playtones==1:
-		for cell in celllist:
+		loopiter=0
+		#for cell in celllist:
+		while loopiter<len(celllist):
+			cell=celllist[loopiter]
+			loopiter+=1
 			#if encounter an inactive cell, break iteration. else, wait calcualted time.
 			oldcell.play=0
 			if dispmode==0 and cell.cellid>8:
 				break
+			if gotocell!=None:
+				loopiter=gotocell
+				gotocell=None
+				cell=celllist[loopiter]
 			elif cell.drumprocess():
 				if cell.cellid==1:
 					time.sleep(waittime)
