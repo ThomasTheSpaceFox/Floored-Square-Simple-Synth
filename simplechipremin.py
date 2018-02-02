@@ -44,7 +44,7 @@ pival=math.pi
 pygame.mixer.init(frequency=synthfreq , size=-16)
 pygame.mixer.set_num_channels(4)
 
-basefreq=20
+basefreq=5
 
 maxfreq=2000
 
@@ -56,12 +56,40 @@ def foobsin(num):
 	return (math.floor(math.sin(num)) * 4500)
 
 
+
+#waveform drawing function.
+def drawwave(wave):
+	xpos=2
+	xjump=600.0/len(wave)
+	yposbase=580
+	yposmag=0.005
+	oldxpos=0
+	oldypos=0
+	vlinecnt=0
+	vlineinterv=60	
+	
+	pygame.draw.line(screensurf, (0, 255, 0), (0, yposbase), (600, yposbase))
+	
+	for x in wave:
+		xmag=x*yposmag
+		if xmag>60:
+			xmag=60
+		if xmag<-60:
+			xmag=-60
+		pygame.draw.line(screensurf, (255, 0, 0), (oldxpos, (oldypos+yposbase)), (xpos, (xmag+yposbase)))
+		oldypos=xmag
+		oldxpos=xpos
+		xpos+=xjump
+
+
+
 abouttrigger=0
 
 progactive=1
 def backprocess():
 	global progactive
 	global abouttrigger
+	global waveflag
 	while progactive==1:
 		time.sleep(0.1)
 		if abouttrigger==0:
@@ -72,6 +100,11 @@ def backprocess():
 					progactive=0
 				if event.type == KEYDOWN and event.key == K_ESCAPE:
 						progactive=0
+				if event.type == KEYDOWN and event.key == K_F2:
+						if waveflag==0:
+							waveflag=1
+						else:
+							waveflag=0
 				if event.type == MOUSEBUTTONDOWN:
 					if hudiconrect.collidepoint(event.pos):
 						abouttrigger=1
@@ -81,7 +114,7 @@ def backprocess():
 sideproc=Thread(target = backprocess, args = [])
 sideproc.start()
 
-
+waveflag=0
 def OKpop(info, extra=None, extra2=None):
 	global progactive
 	bgrect=pygame.Rect(0, 50, 450, 200)
@@ -129,6 +162,10 @@ label1760=simplefont.render((str(1760)+"Hz"), True, (0, 255, 255), (0, 0, 0))
 
 tracelist=[(0, 0), (0, 0), (0, 0), (0, 0), (0, 0), (0, 0), (0, 0), (0, 0), (0, 0), (0, 0)]
 
+freq=440
+notearray=array.array('f', [(foobsin(2.0 * pival * freq * t / synthfreq)) for t in xrange(0, int((synthfreq/90)*6))])
+
+
 while progactive==1:
 	mpos=pygame.mouse.get_pos()
 	pygame.event.pump()
@@ -162,6 +199,9 @@ while progactive==1:
 	screensurf.blit(label880, (880/freqjump+1, 0))
 	screensurf.blit(label1760, (1760/freqjump+1, 0))
 	
+	if waveflag==1:
+		drawwave(notearray)
+	
 	pygame.draw.line(screensurf, (255, 255, 0), (mposx, 0), (mposx, 600))
 	pygame.draw.line(screensurf, (255, 255, 0), (0, mpos[1]), (800, mpos[1]))
 	freqlabel=simplefont.render((str(freq)+"Hz"), True, (255, 255, 0), (0, 0, 0))
@@ -173,7 +213,7 @@ while progactive==1:
 	if freq<basefreq:
 		freq=basefreq
 	if slidechan.get_queue()==None and (pygame.key.get_pressed()[K_SPACE] or pygame.mouse.get_pressed()[0]):
-		notearray=array.array('f', [(foobsin(2.0 * pival * freq * t / synthfreq)) for t in xrange(0, int((synthfreq/freq)*6))])
+		notearray=array.array('f', [(foobsin(2.0 * pival * freq * t / synthfreq)) for t in xrange(0, int((synthfreq/90)*6))])
 		sample=pygame.mixer.Sound(notearray)
 		slidechan.queue(sample)
 	else:
