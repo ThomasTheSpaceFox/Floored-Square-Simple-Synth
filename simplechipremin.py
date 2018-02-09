@@ -212,6 +212,7 @@ while progactive==1:
 	#print(freq)
 	if freq<basefreq:
 		freq=basefreq
+	#poor man's audio streaming via pygame mixer Channel queue.
 	if slidechan.get_queue()==None and (pygame.key.get_pressed()[K_SPACE] or pygame.mouse.get_pressed()[0]):
 		notearray=array.array('f', [(foobsin(2.0 * pival * freq * t / synthfreq)) for t in xrange(0, int((synthfreq/90)*6))])
 		sample=pygame.mixer.Sound(notearray)
