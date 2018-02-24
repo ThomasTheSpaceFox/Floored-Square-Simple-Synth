@@ -29,7 +29,7 @@ iconhud=pygame.image.load("fschr.png").convert()
 #lower frequencies are faster, but are lower quality.
 
 versioninfo="v1.1"
-copyrightinfo="Copyright (c) 2016-2018 Thomas Leathers"
+copyrightinfo="Copyright (c) 2016-2018 Thomas Leathers and contributors"
 
 synthfreq=22050
 #synthfreq=16000
@@ -163,13 +163,13 @@ def gentones():
 	for tone in tonelist:
 		tone.setchan(tonenum)
 		tonenum+=1
-	print("tones generated.")	
+	print("tones ready.")	
 
 
 
-def OKpop(info, extra=None, extra2=None, extra3=None):
+def OKpop(info, extra=None, extra2=None):
 	global progactive
-	bgrect=pygame.Rect(0, 50, 300, 200)
+	bgrect=pygame.Rect(0, 50, 450, 200)
 	bgrect.centerx=(screensurf.get_width()//2)
 	pygame.draw.rect(screensurf, (0, 0, 0), bgrect)
 	pygame.draw.rect(screensurf, (255, 255, 255), bgrect, 1)
@@ -184,10 +184,6 @@ def OKpop(info, extra=None, extra2=None, extra3=None):
 		yoff+=yjump
 	if extra2!=None:
 		lineren=simplefont.render(extra2, True, (255, 255, 255), (30, 30, 30))
-		screensurf.blit(lineren, ((screensurf.get_width()//2)-(lineren.get_width()//2), yoff+50))
-		yoff+=yjump
-	if extra3!=None:
-		lineren=simplefont.render(extra3, True, (255, 255, 255), (30, 30, 30))
 		screensurf.blit(lineren, ((screensurf.get_width()//2)-(lineren.get_width()//2), yoff+50))
 		yoff+=yjump
 	lineren=simplefont.render("Press any key or click to continue", True, (255, 255, 255), (30, 30, 30))
@@ -228,7 +224,7 @@ while progactive==1:
 	if vol<0.001:
 		vol=0.001
 	if abouttrigger==1:
-		OKpop("Floored Square Chord-remin "+versioninfo, copyrightinfo, "A Theremin-like Chiptune", "Sliding Chord Synthesizer")
+		OKpop("Floored Square Chord-remin "+versioninfo, copyrightinfo, "A Theremin-like Chiptune Sliding Chord Synthesizer")
 		abouttrigger=0
 	screensurf.fill((0, 0, 0))
 	
