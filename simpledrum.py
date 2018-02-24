@@ -55,6 +55,7 @@ class drum:
 	def __init__(self, tone, fade, style=0, notearray=None):
 		self.tone=tone
 		if notearray==None:
+			#if style==1, generate via floored tangent, else, use floored sine.
 			if style==1:
 				self.notearray=array.array('f', [(foobtangent(2.0 * pival * (self.tone) * t / synthfreq)) for t in xrange(0, STACKRANGE)])
 			else:
@@ -65,39 +66,42 @@ class drum:
 		self.fade=fade
 		self.style=style
 	def play(self):
+		#play tone with infinate loop then instantly start fade.
 		self.sample.play(-1)
 		self.sample.fadeout(self.fade)
 	def setfade(self, fade):
 		self.fade=fade
 	def setvol(self, vol):
 		self.sample.set_volume(vol)
-	#copy is used by the cell class to avoid recalculating the drums 15 times.
+	#copy is used by the cell class to avoid recalculating the drums 63 times.
 	def copy(self):
 		return drum(self.tone, self.fade, self.style, notearray=self.notearray)
 
 class cymbal:
 	def __init__(self, fade, notearray=None):
 		if notearray==None:
+			#generate noise
 			self.notearray=array.array('f', [(random.uniform(-0.3, 0.3)) for t in xrange(0, STACKRANGE)])
 		else:
 			self.notearray=notearray
 		self.sample=pygame.mixer.Sound(self.notearray)
 		self.fade=fade
 	def play(self):
+		#play tone with infinate loop then instantly start fade.
 		self.sample.play(-1)
 		self.sample.fadeout(self.fade)
 	def setfade(self, fade):
 		self.fade=fade
 	def setvol(self, vol):
 		self.sample.set_volume(vol)
-	#copy is used by the cell class to avoid recalculating the cymbal 15 times.
+	#copy is used by the cell class to avoid recalculating the cymbal 63 times.
 	def copy(self):
 		return cymbal(self.fade, notearray=self.notearray)
 
 #bass.play()
 #time.sleep(0.3)
 
-
+mainvolume=1.0
 #crash=cymbal(400)
 
 #snare.play()
@@ -111,7 +115,7 @@ tansnare=drum(55, 250, 1)
 
 class beatcell:
 	def __init__(self, xoff, drumid, cellid, active=1, yoff=20):
-		#samples
+		#copy samples
 		self.snare=snare.copy()
 		self.bass=bass.copy()
 		self.cymbal=hithat.copy()
@@ -128,6 +132,7 @@ class beatcell:
 		self.padjump=38
 		self.padheight=34
 		pyoff=yoff+20
+		#rectangle definitions
 		self.drum0=pygame.Rect(xoff+3, pyoff+self.padjump*1, 54, self.padheight)
 		self.drum1=pygame.Rect(xoff+3, pyoff+self.padjump*2, 54, self.padheight)
 		self.drum2=pygame.Rect(xoff+3, pyoff+self.padjump*3, 54, self.padheight)
@@ -148,8 +153,11 @@ class beatcell:
 		self.cellid=cellid
 		self.xoff=xoff
 		self.yoff=yoff
+		#internal constant offset. (used to calculate actual x position against offset.)
 		self.Goff=xoff
 		self.ts=0
+		#render labels
+		#make cellid match cell colors
 		if self.cellid>48:
 			self.label1=simplefont.render(str(self.cellid), True, (0, 0, 0), (160, 160, 180))
 		elif self.cellid>32:
@@ -256,17 +264,19 @@ class beatcell:
 		else:
 			pygame.draw.rect(screensurf, (30, 30, 30), self.mainrect)
 		screensurf.blit(self.label1, ((self.xoff+29)-(self.label1.get_width()//2), self.yoff+330))
+		#play indicator
 		if self.play==1:
 			pygame.draw.rect(screensurf, (0, 255, 0), self.actlight)
 		else:
 			pygame.draw.rect(screensurf, (0, 40, 0), self.actlight)
+		#active switch
 		if self.active==1:
 			pygame.draw.rect(screensurf, (255, 0, 0), self.interrlight)
 			screensurf.blit(self.activeon, (self.interrlight.x+2, self.interrlight.y+2))
 		else:
 			pygame.draw.rect(screensurf, (40, 0, 0), self.interrlight)
 			screensurf.blit(self.activeoff, (self.interrlight.x+2, self.interrlight.y+2))
-		
+		#drums
 		if self.drumid==0:
 			pygame.draw.rect(screensurf, (0, 150, 150), self.drum0)
 			screensurf.blit(self.d0on, (self.drum0.x+2, self.drum0.y+2))
@@ -291,6 +301,7 @@ class beatcell:
 		else:
 			pygame.draw.rect(screensurf, (0, 0, 0), self.drum3)
 			screensurf.blit(self.d3off, (self.drum3.x+2, self.drum3.y+2))
+		#tangent/sine button
 		if self.ts==1:
 			pygame.draw.rect(screensurf, (150, 0, 150), self.tan_sine)
 			screensurf.blit(self.tstan, (self.tan_sine.x+2, self.tan_sine.y+2))
@@ -310,13 +321,15 @@ class beatcell:
 		pygame.draw.rect(screensurf, (255, 255, 255), self.faderot, 1)
 		pygame.draw.rect(screensurf, (255, 255, 255), self.volrot, 1)
 	def _setvols_(self):
+		#set volume. (calculated via multiplying internel cell volume with main volume.)
 		self.volume=simplefont.render(str(self.vol), True, (255, 255, 255), (120, 0, 120))
-		self.bass.setvol(self.vol)
-		self.snare.setvol(self.vol)
-		self.cymbal.setvol(self.vol)
-		self.tanbass.setvol(self.vol)
-		self.tansnare.setvol(self.vol)
+		self.bass.setvol(self.vol*mainvolume)
+		self.snare.setvol(self.vol*mainvolume)
+		self.cymbal.setvol(self.vol*mainvolume)
+		self.tanbass.setvol(self.vol*mainvolume)
+		self.tansnare.setvol(self.vol*mainvolume)
 	def _setfade_(self):
+		#set fade
 		self.fadelabel=simplefont.render(str(self.fade), True, (255, 255, 255), (120, 0, 120))
 		self.bass.setfade(self.fade)
 		self.snare.setfade(self.fade)
@@ -324,6 +337,7 @@ class beatcell:
 		self.tanbass.setfade(self.fade)
 		self.tansnare.setfade(self.fade)
 	def drumprocess(self):
+		#play drums. (see drum and cymbal classes for refrence)
 		if self.active==0:
 			return 1
 		else:
@@ -390,11 +404,10 @@ bpmdownlabel=simplefont.render("BPM -5", True, (255, 255, 255), (30, 30, 160))
 #chanlist=[]
 #for f in [0, 1, 2, 3, 4, 5, 6, 7]:
 	 #chanlist.extend([pygame.mixer.Channel(f)])
-#def setvols():
-	#global chanlist
-	#for f in chanlist:
-		#f.set_volume(mainvolume)
-	#return
+def setvols():
+	for f in celllist:
+		f._setvols_()
+	return
 
 voldownlabel=simplefont.render("vol-", True, (255, 255, 255), (30, 30, 160))
 
@@ -452,11 +465,11 @@ def sideprocess():
 		pygame.draw.rect(screensurf, (30, 30, 160), loadbx)
 		pygame.draw.rect(screensurf, (30, 30, 160), savebx)
 		
-		#pygame.draw.rect(screensurf, (30, 30, 160), volup)
-		#pygame.draw.rect(screensurf, (30, 30, 160), voldown)
+		pygame.draw.rect(screensurf, (30, 30, 160), volup)
+		pygame.draw.rect(screensurf, (30, 30, 160), voldown)
 		#labels
 		bpmlabel=simplefont.render(str(BPM), True, (255, 255, 255), (60, 60, 60))
-		#vollabel=simplefont.render(str(mainvolume), True, (255, 255, 255), (60, 60, 60))
+		vollabel=simplefont.render(str(mainvolume), True, (255, 255, 255), (60, 60, 60))
 		cpblabel=simplefont.render("Cells/Beat "+str(timefraction), True, (255, 255, 255), (60, 60, 60))
 		screensurf.blit(bpmuplabel, (bpmup.x+2, bpmup.y+2))
 		screensurf.blit(bpmdownlabel, (bpmdown.x+2, bpmdown.y+2))
@@ -467,9 +480,9 @@ def sideprocess():
 		screensurf.blit(loadlabel, (loadbx.x+2, loadbx.y+2))
 		screensurf.blit(savelabel, (savebx.x+2, savebx.y+2))
 		
-		#screensurf.blit(voluplabel, (volup.x+2, volup.y+2))
-		#screensurf.blit(vollabel, (volup.x+2, volup.y+42))
-		#screensurf.blit(voldownlabel, (voldown.x+2, voldown.y+2))
+		screensurf.blit(voluplabel, (volup.x+2, volup.y+2))
+		screensurf.blit(vollabel, (volup.x+2, volup.y+42))
+		screensurf.blit(voldownlabel, (voldown.x+2, voldown.y+2))
 		if dispmode==1:
 			screensurf.blit(dispm2, (displaymode.x+2, displaymode.y+2))
 		elif dispmode==2:
@@ -541,16 +554,16 @@ def sideprocess():
 							if YNpop("file: \"" + nameret + "\"exists. overwrite?"):
 								rthmsave(nameret)
 				#first attempt did not work. disabling for now.
-				#if volup.collidepoint(event.pos):
-					#mainvolume+=0.1
-					#if mainvolume>1.0:
-						#mainvolume=1.0
-					#setvols()
-				#if voldown.collidepoint(event.pos):
-					#mainvolume-=0.1
-					#if mainvolume<0.1:
-						#mainvolume=0.1
-					#setvols()
+				if volup.collidepoint(event.pos):
+					mainvolume+=0.1
+					if mainvolume>1.0:
+						mainvolume=1.0
+					setvols()
+				if voldown.collidepoint(event.pos):
+					mainvolume-=0.1
+					if mainvolume<0.1:
+						mainvolume=0.1
+					setvols()
 				if bpmup.collidepoint(event.pos):
 					BPM+=5
 					waittime=bpmdecode(BPM)
@@ -692,7 +705,7 @@ rthmfilename=None
 
 dispmode=0
 celloffset=0
-mainvolume=0.1
+#mainvolume=0.1
 def rthmsave(name):
 	global rthmfilename
 	rthmfilename=name

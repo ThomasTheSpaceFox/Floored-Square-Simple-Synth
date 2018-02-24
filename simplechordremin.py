@@ -106,6 +106,8 @@ class nv:
 		#	octave=0.5
 		#if octave==0:
 		#	octave=0.25
+		if octave==0:
+			octave=0.001
 		tone=self.tone*octave
 		for f in self.trigkeys:
 			self.drawtracex=0
