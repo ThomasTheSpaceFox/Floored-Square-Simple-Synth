@@ -53,7 +53,15 @@ def foobsin3(num):
 def foobsin4(num):
 	return (strex(math.tan(num) + math.sin(num)) * 4500)
 foobsin=foobsin1
-
+def foobsin5(num):
+	return (math.floor(math.sin(num)+math.sin(num*2)-math.cos(num)) * 2500)
+def foobsin6(num):
+	return (math.floor(math.sin(num)+math.cos(num*2)-math.cos(num)) * 2500)
+def foobsin7(num):
+	return (math.floor(math.sin(num)-math.sin(num*2)-math.cos(num)) * 2500)
+def foobsin8(num):
+	return (math.floor(math.sin(num)-math.cos(num*2)-math.cos(num)) * 2500)
+#foobsin=foobsin7
 def vstroke(num):
 	if num<0.5:
 		return math.ceil(num)
@@ -664,7 +672,7 @@ txtx2b=simplefont.render("CTRL+(-),0,1,2,3, or 4 controls octave shift.", True, 
 txtx2c=simplefont.render("Shift + A,S,D,F,G,H controls Stack Synth ", True, (0, 0, 0))
 txtx2bc=simplefont.render("ALT+shift+1,2,3 controls multi-trigger", True, (0, 0, 0))
 txtx6=simplefont.render("shift+z,x,c,v,b,n,m controls square method", True, (0, 0, 0))
-txtx7=simplefont.render("shift+q,w,e,r controls basewave", True, (0, 0, 0))
+txtx7=simplefont.render("shift+q,w,e,r,t,y,u,i controls basewave", True, (0, 0, 0))
 txtx1c=simplefont.render("Escape Quits", True, (0, 0, 0))
 txtx3b=simplefont.render("(hold shift for fine control)", True, (0, 0, 0))
 txtx3=simplefont.render("Use up and down arrow keys to control fade-out.", True, (0, 0, 0))
@@ -707,6 +715,10 @@ wm1=simplefont.render(("Wave basetype: sin"), True, (255, 255, 255))
 wm2=simplefont.render(("Wave basetype: tan"), True, (255, 255, 255))
 wm3=simplefont.render(("Wave basetype: cos+sin"), True, (255, 255, 255))
 wm4=simplefont.render(("Wave basetype: tan+sin"), True, (255, 255, 255))
+wm5=simplefont.render(("Wave basetype: SC+S2"), True, (255, 255, 255))
+wm6=simplefont.render(("Wave basetype: SC+C2"), True, (255, 255, 255))
+wm7=simplefont.render(("Wave basetype: SC-S2"), True, (255, 255, 255))
+wm8=simplefont.render(("Wave basetype: SC-C2"), True, (255, 255, 255))
 af0=simplefont.render(("aux function: mean"), True, (255, 255, 255))
 af1=simplefont.render(("aux function: max"), True, (255, 255, 255))
 af2=simplefont.render(("aux function: min"), True, (255, 255, 255))
@@ -760,6 +772,14 @@ def dispupdate():
 		wmtx=wm3
 	elif wavemode==4:
 		wmtx=wm4
+	elif wavemode==5:
+		wmtx=wm5
+	elif wavemode==6:
+		wmtx=wm6
+	elif wavemode==7:
+		wmtx=wm7
+	elif wavemode==8:
+		wmtx=wm8
 	else:
 		wmtx=wm2
 	if meanflg==0:
@@ -962,6 +982,31 @@ while evhappenflg2==0:
 						foobsin=foobsin4
 						sampup=1
 						dispupdate()
+				if event.type == KEYDOWN and event.key == K_t:
+					if wavemode!=5:
+						wavemode=5
+						foobsin=foobsin5
+						sampup=1
+						dispupdate()
+				if event.type == KEYDOWN and event.key == K_y:
+					if wavemode!=6:
+						wavemode=6
+						foobsin=foobsin6
+						sampup=1
+						dispupdate()
+				if event.type == KEYDOWN and event.key == K_u:
+					if wavemode!=7:
+						wavemode=7
+						foobsin=foobsin7
+						sampup=1
+						dispupdate()
+				if event.type == KEYDOWN and event.key == K_i:
+					if wavemode!=8:
+						wavemode=8
+						foobsin=foobsin8
+						sampup=1
+						dispupdate()
+				
 				#wavesqmode
 				if event.type == KEYDOWN and event.key == K_z:
 					if strexmd!=1:

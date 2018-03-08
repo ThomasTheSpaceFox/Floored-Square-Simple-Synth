@@ -62,9 +62,14 @@ def limit(limit, num):
 
 def foobtan(num):
 	return (math.floor(math.tan(num)) * 4500)
-
+#def foobtan(num):
+#	
+	#return math.floor(math.sin((math.e**(num/100)))) * 4500
+	#return abs(math.e**((num)/1000))
 def foobsin(num):
 	return (math.floor(math.sin(num)) * 4500)
+#def foobsin(num):
+#	return (math.floor(math.sin(num)-math.cos(num*2)-math.cos(num)) * 4500)
 sinetan=0
 tonevolume=0.3
 class notevoice:
