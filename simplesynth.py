@@ -27,6 +27,7 @@ bgimg=pygame.image.load("simplesynth.jpg").convert()
 #controls the frequency of the synthesizer logic and pygame mixer.
 #lower frequencies are faster, but are lower quality.
 
+#synthfreq=44100
 synthfreq=22050
 #synthfreq=16000
 #synthfreq=11025
@@ -54,14 +55,18 @@ def foobsin4(num):
 	return (strex(math.tan(num) + math.sin(num)) * 4500)
 foobsin=foobsin1
 def foobsin5(num):
-	return (math.floor(math.sin(num)+math.sin(num*2)-math.cos(num)) * 2500)
+	return (strex(math.sin(num)+math.sin(num*2)-math.cos(num)) * 2500)
 def foobsin6(num):
-	return (math.floor(math.sin(num)+math.cos(num*2)-math.cos(num)) * 2500)
+	return (strex(math.sin(num)+math.cos(num*2)-math.cos(num)) * 2500)
 def foobsin7(num):
-	return (math.floor(math.sin(num)-math.sin(num*2)-math.cos(num)) * 2500)
+	return (strex(math.sin(num)-math.sin(num*2)-math.cos(num)) * 2500)
 def foobsin8(num):
-	return (math.floor(math.sin(num)-math.cos(num*2)-math.cos(num)) * 2500)
-#foobsin=foobsin7
+	return (strex(math.sin(num)-math.cos(num*2)-math.cos(num)) * 2500)
+def foobsin9(num):
+	return (strex(math.sin(num)*7) * 800)
+def foobsin10(num):
+	return (strex(math.tan(num)*4) * 300)
+#foobsin=foobsin10
 def vstroke(num):
 	if num<0.5:
 		return math.ceil(num)
@@ -588,17 +593,23 @@ def redefsounds():
 
 
 def setnotevols():
+	if wavemode==10:
+		notevolx=notevol*0.7
+	elif wavemode==9:
+		notevolx=notevol*1.1
+	else:
+		notevolx=notevol
 	for snd in [snf, snf0, snf1, snf2, snf3, snf4, snf5, snf5b, snf6, snf7, snf8, snf9, snf10, snf11, snf12, snf13, snf14, snf15, snf16, snf17, snf18, snf19, snf20, snf21, snf22, snf23, snf24, snf25, snf26, snf27, snf28, snf29]:
 		if stackit==1:
-			snd.set_volume((notevol))
+			snd.set_volume((notevolx))
 		if stackit==2:
-			snd.set_volume((notevol/1.3))
+			snd.set_volume((notevolx/1.3))
 		if stackit==3:
-			snd.set_volume((notevol/1.5))
+			snd.set_volume((notevolx/1.5))
 		if stackit==4:
-			snd.set_volume((notevol/1.6))
+			snd.set_volume((notevolx/1.6))
 		if stackit==5:
-			snd.set_volume((notevol/1.7))
+			snd.set_volume((notevolx/1.7))
 notevol=0.5
 
 notestack=1
@@ -663,7 +674,7 @@ def notepop(notesnd):
 
 evhappenflg2=0
 cpytx=simplefont.render("Copyright (c) 2016-2018 Thomas Leathers and contributors, See readme.md for details.", True, (0, 0, 0))
-verstx=simplefont.render("v2.9", True, (0, 0, 0))
+verstx=simplefont.render("v2.10", True, (0, 0, 0))
 bgimg.blit(verstx, (2, 2))
 bgimg.blit(cpytx, (2, 22))
 txtx1=simplefont.render("Use keys q-],2,3, 5-7, 9,0, + and z-?/, s,d,g-k, l,: to play.", True, (0, 0, 0))
@@ -672,7 +683,7 @@ txtx2b=simplefont.render("CTRL+(-),0,1,2,3, or 4 controls octave shift.", True, 
 txtx2c=simplefont.render("Shift + A,S,D,F,G,H controls Stack Synth ", True, (0, 0, 0))
 txtx2bc=simplefont.render("ALT+shift+1,2,3 controls multi-trigger", True, (0, 0, 0))
 txtx6=simplefont.render("shift+z,x,c,v,b,n,m controls square method", True, (0, 0, 0))
-txtx7=simplefont.render("shift+q,w,e,r,t,y,u,i controls basewave", True, (0, 0, 0))
+txtx7=simplefont.render("shift+q,w,e,r,t,y,u,i,o,p controls basewave", True, (0, 0, 0))
 txtx1c=simplefont.render("Escape Quits", True, (0, 0, 0))
 txtx3b=simplefont.render("(hold shift for fine control)", True, (0, 0, 0))
 txtx3=simplefont.render("Use up and down arrow keys to control fade-out.", True, (0, 0, 0))
@@ -719,6 +730,8 @@ wm5=simplefont.render(("Wave basetype: SC+S2"), True, (255, 255, 255))
 wm6=simplefont.render(("Wave basetype: SC+C2"), True, (255, 255, 255))
 wm7=simplefont.render(("Wave basetype: SC-S2"), True, (255, 255, 255))
 wm8=simplefont.render(("Wave basetype: SC-C2"), True, (255, 255, 255))
+wm9=simplefont.render(("Wave basetype: ap. sine"), True, (255, 255, 255))
+wm10=simplefont.render(("Wave basetype: ap. tan"), True, (255, 255, 255))
 af0=simplefont.render(("aux function: mean"), True, (255, 255, 255))
 af1=simplefont.render(("aux function: max"), True, (255, 255, 255))
 af2=simplefont.render(("aux function: min"), True, (255, 255, 255))
@@ -780,6 +793,10 @@ def dispupdate():
 		wmtx=wm7
 	elif wavemode==8:
 		wmtx=wm8
+	elif wavemode==9:
+		wmtx=wm9
+	elif wavemode==10:
+		wmtx=wm10
 	else:
 		wmtx=wm2
 	if meanflg==0:
@@ -837,7 +854,9 @@ def drawwave():
 			xmag=60
 		if xmag<-60:
 			xmag=-60
+		
 		pygame.draw.line(screensurf, (255, 0, 0), (oldxpos, (oldypos+yposbase)), (xpos, (xmag+yposbase)))
+		pygame.draw.line(screensurf, (255, 255, 255), (xpos, (xmag+3+yposbase)), (xpos, (xmag+4+yposbase)))
 		oldypos=xmag
 		oldxpos=xpos
 		xpos+=xjump
@@ -1004,6 +1023,18 @@ while evhappenflg2==0:
 					if wavemode!=8:
 						wavemode=8
 						foobsin=foobsin8
+						sampup=1
+						dispupdate()
+				if event.type == KEYDOWN and event.key == K_o:
+					if wavemode!=9:
+						wavemode=9
+						foobsin=foobsin9
+						sampup=1
+						dispupdate()
+				if event.type == KEYDOWN and event.key == K_p:
+					if wavemode!=10:
+						wavemode=10
+						foobsin=foobsin10
 						sampup=1
 						dispupdate()
 				
