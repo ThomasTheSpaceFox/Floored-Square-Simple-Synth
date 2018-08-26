@@ -34,7 +34,7 @@ copyrightinfo="Copyright (c) 2016-2018 Thomas Leathers and contributors"
 synthfreq=22050
 #synthfreq=16000
 #synthfreq=11025
-#synthfreq=8000
+synthfreq=8000
 
 synthfreqmain=synthfreq
 
@@ -93,6 +93,8 @@ class nv:
 		self.drawtracex=0
 		self.playflag=0
 		self.firstrender=1
+		self.tx=0
+		self.ispressed=0
 	def drawtrace(self, mpos):
 		qx=mpos[0]+self.tone/6
 		self.tracelist.insert(0, (qx, mpos[1]))
@@ -109,13 +111,21 @@ class nv:
 		if octave==0:
 			octave=0.001
 		tone=self.tone*octave
+		self.ispressed=0
 		for f in self.trigkeys:
 			self.drawtracex=0
 			if pressed[f]:
 				if self.channel.get_queue()==None:
-					self.channel.queue(pygame.mixer.Sound(array.array('f', [(foobsin(2.0 * pival * tone * t / synthfreq)) for t in xrange(0, int((synthfreq/(220))*6))])))
+					self.channel.queue(pygame.mixer.Sound(array.array('f', [(foobsin(2.0 * pival * tone * t / synthfreq)) for t in xrange(self.tx, self.tx+int((synthfreq/(220))*6))])))
+					self.tx=t
+					print(self.tx)
 					self.drawtracex=1
+					
 					return
+				self.ispressed=1
+		if not self.ispressed:
+			self.tx=0
+					
 		return
 	def setchan(self, channel):
 		self.voicenum=channel

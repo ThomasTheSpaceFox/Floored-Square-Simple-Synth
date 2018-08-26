@@ -214,9 +214,12 @@ while progactive==1:
 		freq=basefreq
 	#poor man's audio streaming via pygame mixer Channel queue.
 	if slidechan.get_queue()==None and (pygame.key.get_pressed()[K_SPACE] or pygame.mouse.get_pressed()[0]):
-		notearray=array.array('f', [(foobsin(2.0 * pival * freq * t / synthfreq)) for t in xrange(0, int((synthfreq/90)*6))])
+		notearray=array.array('f', [(foobsin(2.0 * pival * freq * t / synthfreq)) for t in xrange(tx, tx+int((synthfreq/90)*6))])
 		sample=pygame.mixer.Sound(notearray)
+		tx=t
 		slidechan.queue(sample)
+	elif not pygame.key.get_pressed()[K_SPACE] and not pygame.mouse.get_pressed()[0]:
+		tx=0
 	else:
 		time.sleep(.005)
 		
