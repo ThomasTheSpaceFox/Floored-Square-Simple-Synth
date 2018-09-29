@@ -86,7 +86,7 @@ class notevoice:
 		self.vol=tonevolume
 		#self.notearray=array.array('i', [ewchunk(foobsin(2.0 * pival * (self.tone) * t / synthfreq)) for t in xrange(0, STACKRANGE)])
 		#self.notearray=fssynthlib.makesquare(self.tone)
-		self.notearray=fssynthlib.maketangent(self.tone)
+		self.notearray=fssynthlib.makesaw(self.tone)
 		self.sample=pygame.mixer.Sound(self.notearray)
 		self.sample.set_volume(self.vol)
 		vol2=self.vol*reverbdecay
