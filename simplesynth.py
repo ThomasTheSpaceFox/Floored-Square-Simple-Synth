@@ -11,6 +11,8 @@ import os
 import array
 import math
 import copy
+import fssynthlib
+from fssynthlib import ewchunk
 from threading import Thread
 pygame.display.init()
 
@@ -47,6 +49,10 @@ print ("mixer frequency:" + str(synthfreq))
 print ("number of channels: "+ str(pygame.mixer.get_num_channels()))
 def foobsin1(num):
 	return (strex(math.sin(num)) * 4500)
+
+#def foobsin1(num):
+#	return strex((num) * 240)
+
 def foobsin2(num):
 	return (strex(math.tan(num)) * 4500)
 def foobsin3(num):
@@ -108,7 +114,11 @@ def two_way(num):
 		return float(1)
 	else:
 		return float(0)
+def floorceil(num):
+	num=num/2.0
+	return math.ceil(num)+math.floor(num)
 strex=math.floor
+#strex=floorceil
 #strex=two_way
 #def dummyfunct(arg):
 #	return arg
@@ -224,129 +234,131 @@ stacksub=1
 
 #add
 def autosquare1stack(freq, lenth):
-	temparray=array.array('f', [(foobsin(2.0 * pival * (freq * stacksub) * t / synthfreq)) for t in xrange(0, STACKRANGE)])
-	#temparray=array.array('f', [(foobsin(2.0 * pival * freq * t / synthfreq)) for t in xrange(0, int(lenth * synthfreq))])
+	temparray=array.array('i', [ewchunk(foobsin(2.0 * pival * (freq * stacksub) * t / synthfreq)) for t in xrange(0, STACKRANGE)])
+	#temparray=array.array('i', [ewchunk(foobsin(2.0 * pival * freq * t / synthfreq)) for t in xrange(0, int(lenth * synthfreq))])
 	return temparray
 
-def autosquare1stack(freq, lenth):
-	temparray=array.array('f', [(foobsin(2.0 * pival * (freq * stacksub) * t / synthfreq)) for t in xrange(0, STACKRANGE)])
-	#temparray=array.array('f', [(foobsin(2.0 * pival * freq * t / synthfreq)) for t in xrange(0, int(lenth * synthfreq))])
-	return temparray
+#def autosquare1stack(freq, lenth):
+#	#temparray=array.array('i', [ewchunk(foobsin(2.0 * pival * (freq * stacksub) * t / synthfreq)) for t in xrange(0, STACKRANGE)])
+#	#temparray=array.array('i', [ewchunk(foobsin(2.0 * pival * freq * t / synthfreq)) for t in xrange(0, int(lenth * synthfreq))])
+#	rangeq=int(synthfreq/float(freq * stacksub))
+#	temparray=array.array('f', [math.floor((1000.0/rangeq) * t) for t in xrange(0, rangeq)])
+#	return temparray
 
 def autosquare2stack(freq, lenth):
-	temparray=array.array('f', [((foobsin(2.0 * pival * (freq * stacksub) * t / synthfreq) + foobsin(2.0 * pival * (freq *(stacksub * 2)) * t / synthfreq))) for t in xrange(0, STACKRANGE)])
-	#temparray=array.array('f', [(foobsin(2.0 * pival * freq * t / synthfreq)) for t in xrange(0, int(lenth * synthfreq))])
+	temparray=array.array('i', [ewchunk((foobsin(2.0 * pival * (freq * stacksub) * t / synthfreq) + foobsin(2.0 * pival * (freq *(stacksub * 2)) * t / synthfreq))) for t in xrange(0, STACKRANGE)])
+	#temparray=array.array('i', [ewchunk(foobsin(2.0 * pival * freq * t / synthfreq)) for t in xrange(0, int(lenth * synthfreq))])
 	return temparray
 
 def autosquare3stack(freq, lenth):
-	temparray=array.array('f', [((foobsin(2.0 * pival * (freq * stacksub) * t / synthfreq) + foobsin(2.0 * pival * (freq *(stacksub * 2)) * t / synthfreq) + foobsin(2.0 * pival * (freq *(stacksub * 3)) * t / synthfreq))) for t in xrange(0, STACKRANGE)])
-	#temparray=array.array('f', [(foobsin(2.0 * pival * freq * t / synthfreq)) for t in xrange(0, int(lenth * synthfreq))])
+	temparray=array.array('i', [ewchunk((foobsin(2.0 * pival * (freq * stacksub) * t / synthfreq) + foobsin(2.0 * pival * (freq *(stacksub * 2)) * t / synthfreq) + foobsin(2.0 * pival * (freq *(stacksub * 3)) * t / synthfreq))) for t in xrange(0, STACKRANGE)])
+	#temparray=array.array('i', [ewchunk(foobsin(2.0 * pival * freq * t / synthfreq)) for t in xrange(0, int(lenth * synthfreq))])
 	return temparray
 
 def autosquare4stack(freq, lenth):
-	temparray=array.array('f', [((foobsin(2.0 * pival * (freq * stacksub) * t / synthfreq) + foobsin(2.0 * pival * (freq *(stacksub * 2)) * t / synthfreq) + foobsin(2.0 * pival * (freq *(stacksub * 3)) * t / synthfreq) + foobsin(2.0 * pival * (freq *(stacksub * 4)) * t / synthfreq))) for t in xrange(0, STACKRANGE)])
-	#temparray=array.array('f', [(foobsin(2.0 * pival * freq * t / synthfreq)) for t in xrange(0, int(lenth * synthfreq))])
+	temparray=array.array('i', [ewchunk((foobsin(2.0 * pival * (freq * stacksub) * t / synthfreq) + foobsin(2.0 * pival * (freq *(stacksub * 2)) * t / synthfreq) + foobsin(2.0 * pival * (freq *(stacksub * 3)) * t / synthfreq) + foobsin(2.0 * pival * (freq *(stacksub * 4)) * t / synthfreq))) for t in xrange(0, STACKRANGE)])
+	#temparray=array.array('i', [ewchunk(foobsin(2.0 * pival * freq * t / synthfreq)) for t in xrange(0, int(lenth * synthfreq))])
 	return temparray
 	
 def autosquare5stack(freq, lenth):
-	temparray=array.array('f', [((foobsin(2.0 * pival * (freq * stacksub) * t / synthfreq) + foobsin(2.0 * pival * (freq *(stacksub * 2)) * t / synthfreq) + foobsin(2.0 * pival * (freq *(stacksub * 3)) * t / synthfreq) + foobsin(2.0 * pival * (freq *(stacksub * 4)) * t / synthfreq) + foobsin(2.0 * pival * (freq *(stacksub * 5)) * t / synthfreq))) for t in xrange(0, STACKRANGE)])
-	#temparray=array.array('f', [(foobsin(2.0 * pival * freq * t / synthfreq)) for t in xrange(0, int(lenth * synthfreq))])
+	temparray=array.array('i', [ewchunk((foobsin(2.0 * pival * (freq * stacksub) * t / synthfreq) + foobsin(2.0 * pival * (freq *(stacksub * 2)) * t / synthfreq) + foobsin(2.0 * pival * (freq *(stacksub * 3)) * t / synthfreq) + foobsin(2.0 * pival * (freq *(stacksub * 4)) * t / synthfreq) + foobsin(2.0 * pival * (freq *(stacksub * 5)) * t / synthfreq))) for t in xrange(0, STACKRANGE)])
+	#temparray=array.array('i', [ewchunk(foobsin(2.0 * pival * freq * t / synthfreq)) for t in xrange(0, int(lenth * synthfreq))])
 	return temparray
 #subtract
 def autosquare2stackne(freq, lenth):
-	temparray=array.array('f', [((foobsin(2.0 * pival * (freq * stacksub) * t / synthfreq) - foobsin(2.0 * pival * (freq *(stacksub * 2)) * t / synthfreq))) for t in xrange(0, STACKRANGE)])
-	#temparray=array.array('f', [(foobsin(2.0 * pival * freq * t / synthfreq)) for t in xrange(0, int(lenth * synthfreq))])
+	temparray=array.array('i', [ewchunk((foobsin(2.0 * pival * (freq * stacksub) * t / synthfreq) - foobsin(2.0 * pival * (freq *(stacksub * 2)) * t / synthfreq))) for t in xrange(0, STACKRANGE)])
+	#temparray=array.array('i', [ewchunk(foobsin(2.0 * pival * freq * t / synthfreq)) for t in xrange(0, int(lenth * synthfreq))])
 	return temparray
 
 def autosquare3stackne(freq, lenth):
-	temparray=array.array('f', [((foobsin(2.0 * pival * (freq * stacksub) * t / synthfreq) - foobsin(2.0 * pival * (freq *(stacksub * 2)) * t / synthfreq) - foobsin(2.0 * pival * (freq *(stacksub * 3)) * t / synthfreq))) for t in xrange(0, STACKRANGE)])
-	#temparray=array.array('f', [(foobsin(2.0 * pival * freq * t / synthfreq)) for t in xrange(0, int(lenth * synthfreq))])
+	temparray=array.array('i', [ewchunk((foobsin(2.0 * pival * (freq * stacksub) * t / synthfreq) - foobsin(2.0 * pival * (freq *(stacksub * 2)) * t / synthfreq) - foobsin(2.0 * pival * (freq *(stacksub * 3)) * t / synthfreq))) for t in xrange(0, STACKRANGE)])
+	#temparray=array.array('i', [ewchunk(foobsin(2.0 * pival * freq * t / synthfreq)) for t in xrange(0, int(lenth * synthfreq))])
 	return temparray
 
 def autosquare4stackne(freq, lenth):
-	temparray=array.array('f', [((foobsin(2.0 * pival * (freq * stacksub) * t / synthfreq) - foobsin(2.0 * pival * (freq *(stacksub * 2)) * t / synthfreq) - foobsin(2.0 * pival * (freq *(stacksub * 3)) * t / synthfreq) - foobsin(2.0 * pival * (freq *(stacksub * 4)) * t / synthfreq))) for t in xrange(0, STACKRANGE)])
-	#temparray=array.array('f', [(foobsin(2.0 * pival * freq * t / synthfreq)) for t in xrange(0, int(lenth * synthfreq))])
+	temparray=array.array('i', [ewchunk((foobsin(2.0 * pival * (freq * stacksub) * t / synthfreq) - foobsin(2.0 * pival * (freq *(stacksub * 2)) * t / synthfreq) - foobsin(2.0 * pival * (freq *(stacksub * 3)) * t / synthfreq) - foobsin(2.0 * pival * (freq *(stacksub * 4)) * t / synthfreq))) for t in xrange(0, STACKRANGE)])
+	#temparray=array.array('i', [ewchunk(foobsin(2.0 * pival * freq * t / synthfreq)) for t in xrange(0, int(lenth * synthfreq))])
 	return temparray
 
 def autosquare5stackne(freq, lenth):
-	temparray=array.array('f', [((foobsin(2.0 * pival * (freq * stacksub) * t / synthfreq) - foobsin(2.0 * pival * (freq *(stacksub * 2)) * t / synthfreq) - foobsin(2.0 * pival * (freq *(stacksub * 3)) * t / synthfreq) - foobsin(2.0 * pival * (freq *(stacksub * 4)) * t / synthfreq) - foobsin(2.0 * pival * (freq *(stacksub * 5)) * t / synthfreq))) for t in xrange(0, STACKRANGE)])
-	#temparray=array.array('f', [(foobsin(2.0 * pival * freq * t / synthfreq)) for t in xrange(0, int(lenth * synthfreq))])
+	temparray=array.array('i', [ewchunk((foobsin(2.0 * pival * (freq * stacksub) * t / synthfreq) - foobsin(2.0 * pival * (freq *(stacksub * 2)) * t / synthfreq) - foobsin(2.0 * pival * (freq *(stacksub * 3)) * t / synthfreq) - foobsin(2.0 * pival * (freq *(stacksub * 4)) * t / synthfreq) - foobsin(2.0 * pival * (freq *(stacksub * 5)) * t / synthfreq))) for t in xrange(0, STACKRANGE)])
+	#temparray=array.array('i', [ewchunk(foobsin(2.0 * pival * freq * t / synthfreq)) for t in xrange(0, int(lenth * synthfreq))])
 	return temparray
 #adsub1
 def autosquare2stacknexq(freq, lenth):
-	temparray=array.array('f', [((foobsin(2.0 * pival * (freq * stacksub) * t / synthfreq) - (foobsin(2.0 * pival * (freq *(stacksub * 2)) * t / synthfreq)))) for t in xrange(0, STACKRANGE)])
-	#temparray=array.array('f', [(foobsin(2.0 * pival * freq * t / synthfreq)) for t in xrange(0, int(lenth * synthfreq))])
+	temparray=array.array('i', [ewchunk((foobsin(2.0 * pival * (freq * stacksub) * t / synthfreq) - (foobsin(2.0 * pival * (freq *(stacksub * 2)) * t / synthfreq)))) for t in xrange(0, STACKRANGE)])
+	#temparray=array.array('i', [ewchunk(foobsin(2.0 * pival * freq * t / synthfreq)) for t in xrange(0, int(lenth * synthfreq))])
 	return temparray
 
 def autosquare3stacknexq(freq, lenth):
-	temparray=array.array('f', [((foobsin(2.0 * pival * (freq * stacksub) * t / synthfreq) - (foobsin(2.0 * pival * (freq *(stacksub * 2)) * t / synthfreq) + foobsin(2.0 * pival * (freq *(stacksub * 3)) * t / synthfreq)))) for t in xrange(0, STACKRANGE)])
-	#temparray=array.array('f', [(foobsin(2.0 * pival * freq * t / synthfreq)) for t in xrange(0, int(lenth * synthfreq))])
+	temparray=array.array('i', [ewchunk((foobsin(2.0 * pival * (freq * stacksub) * t / synthfreq) - (foobsin(2.0 * pival * (freq *(stacksub * 2)) * t / synthfreq) + foobsin(2.0 * pival * (freq *(stacksub * 3)) * t / synthfreq)))) for t in xrange(0, STACKRANGE)])
+	#temparray=array.array('i', [ewchunk(foobsin(2.0 * pival * freq * t / synthfreq)) for t in xrange(0, int(lenth * synthfreq))])
 	return temparray
 
 def autosquare4stacknexq(freq, lenth):
-	temparray=array.array('f', [((foobsin(2.0 * pival * (freq * stacksub) * t / synthfreq) - (foobsin(2.0 * pival * (freq *(stacksub * 2)) * t / synthfreq) + foobsin(2.0 * pival * (freq *(stacksub * 3)) * t / synthfreq) - foobsin(2.0 * pival * (freq *(stacksub * 4)) * t / synthfreq)))) for t in xrange(0, STACKRANGE)])
-	#temparray=array.array('f', [(foobsin(2.0 * pival * freq * t / synthfreq)) for t in xrange(0, int(lenth * synthfreq))])
+	temparray=array.array('i', [ewchunk((foobsin(2.0 * pival * (freq * stacksub) * t / synthfreq) - (foobsin(2.0 * pival * (freq *(stacksub * 2)) * t / synthfreq) + foobsin(2.0 * pival * (freq *(stacksub * 3)) * t / synthfreq) - foobsin(2.0 * pival * (freq *(stacksub * 4)) * t / synthfreq)))) for t in xrange(0, STACKRANGE)])
+	#temparray=array.array('i', [ewchunk(foobsin(2.0 * pival * freq * t / synthfreq)) for t in xrange(0, int(lenth * synthfreq))])
 	return temparray
 
 def autosquare5stacknexq(freq, lenth):
-	temparray=array.array('f', [((foobsin(2.0 * pival * (freq * stacksub) * t / synthfreq) - (foobsin(2.0 * pival * (freq *(stacksub * 2)) * t / synthfreq) + foobsin(2.0 * pival * (freq *(stacksub * 3)) * t / synthfreq) - foobsin(2.0 * pival * (freq *(stacksub * 4)) * t / synthfreq) + foobsin(2.0 * pival * (freq *(stacksub * 5)) * t / synthfreq)))) for t in xrange(0, STACKRANGE)])
-	#temparray=array.array('f', [(foobsin(2.0 * pival * freq * t / synthfreq)) for t in xrange(0, int(lenth * synthfreq))])
+	temparray=array.array('i', [ewchunk((foobsin(2.0 * pival * (freq * stacksub) * t / synthfreq) - (foobsin(2.0 * pival * (freq *(stacksub * 2)) * t / synthfreq) + foobsin(2.0 * pival * (freq *(stacksub * 3)) * t / synthfreq) - foobsin(2.0 * pival * (freq *(stacksub * 4)) * t / synthfreq) + foobsin(2.0 * pival * (freq *(stacksub * 5)) * t / synthfreq)))) for t in xrange(0, STACKRANGE)])
+	#temparray=array.array('i', [ewchunk(foobsin(2.0 * pival * freq * t / synthfreq)) for t in xrange(0, int(lenth * synthfreq))])
 	return temparray
 
 #SUB ABS
 
 def autosquare3stackaddmean(freq, lenth):
-	temparray=array.array('f', [((foobsin(2.0 * pival * (freq * stacksub) * t / synthfreq) + mean([foobsin(2.0 * pival * (freq *(stacksub * 2)) * t / synthfreq), foobsin(2.0 * pival * (freq *(stacksub * 3)) * t / synthfreq)]))) for t in xrange(0, STACKRANGE)])
-	#temparray=array.array('f', [(foobsin(2.0 * pival * freq * t / synthfreq)) for t in xrange(0, int(lenth * synthfreq))])
+	temparray=array.array('i', [ewchunk((foobsin(2.0 * pival * (freq * stacksub) * t / synthfreq) + mean([foobsin(2.0 * pival * (freq *(stacksub * 2)) * t / synthfreq), foobsin(2.0 * pival * (freq *(stacksub * 3)) * t / synthfreq)]))) for t in xrange(0, STACKRANGE)])
+	#temparray=array.array('i', [ewchunk(foobsin(2.0 * pival * freq * t / synthfreq)) for t in xrange(0, int(lenth * synthfreq))])
 	return temparray
 
 def autosquare4stackaddmean(freq, lenth):
-	temparray=array.array('f', [((foobsin(2.0 * pival * (freq * stacksub) * t / synthfreq) + mean([foobsin(2.0 * pival * (freq *(stacksub * 2)) * t / synthfreq), foobsin(2.0 * pival * (freq *(stacksub * 3)) * t / synthfreq), foobsin(2.0 * pival * (freq *(stacksub * 4)) * t / synthfreq)]))) for t in xrange(0, STACKRANGE)])
-	#temparray=array.array('f', [(foobsin(2.0 * pival * freq * t / synthfreq)) for t in xrange(0, int(lenth * synthfreq))])
+	temparray=array.array('i', [ewchunk((foobsin(2.0 * pival * (freq * stacksub) * t / synthfreq) + mean([foobsin(2.0 * pival * (freq *(stacksub * 2)) * t / synthfreq), foobsin(2.0 * pival * (freq *(stacksub * 3)) * t / synthfreq), foobsin(2.0 * pival * (freq *(stacksub * 4)) * t / synthfreq)]))) for t in xrange(0, STACKRANGE)])
+	#temparray=array.array('i', [ewchunk(foobsin(2.0 * pival * freq * t / synthfreq)) for t in xrange(0, int(lenth * synthfreq))])
 	return temparray
 
 def autosquare5stackaddmean(freq, lenth):
-	temparray=array.array('f', [((foobsin(2.0 * pival * (freq * stacksub) * t / synthfreq) + mean([foobsin(2.0 * pival * (freq *(stacksub * 2)) * t / synthfreq), foobsin(2.0 * pival * (freq *(stacksub * 3)) * t / synthfreq), foobsin(2.0 * pival * (freq *(stacksub * 4)) * t / synthfreq), foobsin(2.0 * pival * (freq *(stacksub * 5)) * t / synthfreq)]))) for t in xrange(0, STACKRANGE)])
-	#temparray=array.array('f', [(foobsin(2.0 * pival * freq * t / synthfreq)) for t in xrange(0, int(lenth * synthfreq))])
+	temparray=array.array('i', [ewchunk((foobsin(2.0 * pival * (freq * stacksub) * t / synthfreq) + mean([foobsin(2.0 * pival * (freq *(stacksub * 2)) * t / synthfreq), foobsin(2.0 * pival * (freq *(stacksub * 3)) * t / synthfreq), foobsin(2.0 * pival * (freq *(stacksub * 4)) * t / synthfreq), foobsin(2.0 * pival * (freq *(stacksub * 5)) * t / synthfreq)]))) for t in xrange(0, STACKRANGE)])
+	#temparray=array.array('i', [ewchunk(foobsin(2.0 * pival * freq * t / synthfreq)) for t in xrange(0, int(lenth * synthfreq))])
 	return temparray
 
 	
 #sub mean
 
 def autosquare3stacksubmean(freq, lenth):
-	temparray=array.array('f', [((foobsin(2.0 * pival * (freq * stacksub) * t / synthfreq) - mean([foobsin(2.0 * pival * (freq *(stacksub * 2)) * t / synthfreq), foobsin(2.0 * pival * (freq *(stacksub * 3)) * t / synthfreq)]))) for t in xrange(0, STACKRANGE)])
-	#temparray=array.array('f', [(foobsin(2.0 * pival * freq * t / synthfreq)) for t in xrange(0, int(lenth * synthfreq))])
+	temparray=array.array('i', [ewchunk((foobsin(2.0 * pival * (freq * stacksub) * t / synthfreq) - mean([foobsin(2.0 * pival * (freq *(stacksub * 2)) * t / synthfreq), foobsin(2.0 * pival * (freq *(stacksub * 3)) * t / synthfreq)]))) for t in xrange(0, STACKRANGE)])
+	#temparray=array.array('i', [ewchunk(foobsin(2.0 * pival * freq * t / synthfreq)) for t in xrange(0, int(lenth * synthfreq))])
 	return temparray
 
 def autosquare4stacksubmean(freq, lenth):
-	temparray=array.array('f', [((foobsin(2.0 * pival * (freq * stacksub) * t / synthfreq) - mean([foobsin(2.0 * pival * (freq *(stacksub * 2)) * t / synthfreq), foobsin(2.0 * pival * (freq *(stacksub * 3)) * t / synthfreq), foobsin(2.0 * pival * (freq *(stacksub * 4)) * t / synthfreq)]))) for t in xrange(0, STACKRANGE)])
-	#temparray=array.array('f', [(foobsin(2.0 * pival * freq * t / synthfreq)) for t in xrange(0, int(lenth * synthfreq))])
+	temparray=array.array('i', [ewchunk((foobsin(2.0 * pival * (freq * stacksub) * t / synthfreq) - mean([foobsin(2.0 * pival * (freq *(stacksub * 2)) * t / synthfreq), foobsin(2.0 * pival * (freq *(stacksub * 3)) * t / synthfreq), foobsin(2.0 * pival * (freq *(stacksub * 4)) * t / synthfreq)]))) for t in xrange(0, STACKRANGE)])
+	#temparray=array.array('i', [ewchunk(foobsin(2.0 * pival * freq * t / synthfreq)) for t in xrange(0, int(lenth * synthfreq))])
 	return temparray
 
 def autosquare5stacksubmean(freq, lenth):
-	temparray=array.array('f', [((foobsin(2.0 * pival * (freq * stacksub) * t / synthfreq) - mean([foobsin(2.0 * pival * (freq *(stacksub * 2)) * t / synthfreq), foobsin(2.0 * pival * (freq *(stacksub * 3)) * t / synthfreq), foobsin(2.0 * pival * (freq *(stacksub * 4)) * t / synthfreq), foobsin(2.0 * pival * (freq *(stacksub * 5)) * t / synthfreq)]))) for t in xrange(0, STACKRANGE)])
-	#temparray=array.array('f', [(foobsin(2.0 * pival * freq * t / synthfreq)) for t in xrange(0, int(lenth * synthfreq))])
+	temparray=array.array('i', [ewchunk((foobsin(2.0 * pival * (freq * stacksub) * t / synthfreq) - mean([foobsin(2.0 * pival * (freq *(stacksub * 2)) * t / synthfreq), foobsin(2.0 * pival * (freq *(stacksub * 3)) * t / synthfreq), foobsin(2.0 * pival * (freq *(stacksub * 4)) * t / synthfreq), foobsin(2.0 * pival * (freq *(stacksub * 5)) * t / synthfreq)]))) for t in xrange(0, STACKRANGE)])
+	#temparray=array.array('i', [ewchunk(foobsin(2.0 * pival * freq * t / synthfreq)) for t in xrange(0, int(lenth * synthfreq))])
 	return temparray
 
 #mean
 def autosquare2stackmean(freq, lenth):
-	temparray=array.array('f', [(mean([foobsin(2.0 * pival * (freq * stacksub) * t / synthfreq), foobsin(2.0 * pival * (freq *(stacksub * 2)) * t / synthfreq)])) for t in xrange(0, STACKRANGE)])
-	#temparray=array.array('f', [(foobsin(2.0 * pival * freq * t / synthfreq)) for t in xrange(0, int(lenth * synthfreq))])
+	temparray=array.array('i', [ewchunk(mean([foobsin(2.0 * pival * (freq * stacksub) * t / synthfreq), foobsin(2.0 * pival * (freq *(stacksub * 2)) * t / synthfreq)])) for t in xrange(0, STACKRANGE)])
+	#temparray=array.array('i', [ewchunk(foobsin(2.0 * pival * freq * t / synthfreq)) for t in xrange(0, int(lenth * synthfreq))])
 	return temparray
 
 def autosquare3stackmean(freq, lenth):
-	temparray=array.array('f', [(mean([foobsin(2.0 * pival * (freq * stacksub) * t / synthfreq), foobsin(2.0 * pival * (freq *(stacksub * 2)) * t / synthfreq), foobsin(2.0 * pival * (freq *(stacksub * 3)) * t / synthfreq)])) for t in xrange(0, STACKRANGE)])
-	#temparray=array.array('f', [(foobsin(2.0 * pival * freq * t / synthfreq)) for t in xrange(0, int(lenth * synthfreq))])
+	temparray=array.array('i', [ewchunk(mean([foobsin(2.0 * pival * (freq * stacksub) * t / synthfreq), foobsin(2.0 * pival * (freq *(stacksub * 2)) * t / synthfreq), foobsin(2.0 * pival * (freq *(stacksub * 3)) * t / synthfreq)])) for t in xrange(0, STACKRANGE)])
+	#temparray=array.array('i', [ewchunk(foobsin(2.0 * pival * freq * t / synthfreq)) for t in xrange(0, int(lenth * synthfreq))])
 	return temparray
 
 def autosquare4stackmean(freq, lenth):
-	temparray=array.array('f', [(mean([foobsin(2.0 * pival * (freq * stacksub) * t / synthfreq), foobsin(2.0 * pival * (freq *(stacksub * 2)) * t / synthfreq), foobsin(2.0 * pival * (freq *(stacksub * 3)) * t / synthfreq), foobsin(2.0 * pival * (freq *(stacksub * 4)) * t / synthfreq)])) for t in xrange(0, STACKRANGE)])
-	#temparray=array.array('f', [(foobsin(2.0 * pival * freq * t / synthfreq)) for t in xrange(0, int(lenth * synthfreq))])
+	temparray=array.array('i', [ewchunk(mean([foobsin(2.0 * pival * (freq * stacksub) * t / synthfreq), foobsin(2.0 * pival * (freq *(stacksub * 2)) * t / synthfreq), foobsin(2.0 * pival * (freq *(stacksub * 3)) * t / synthfreq), foobsin(2.0 * pival * (freq *(stacksub * 4)) * t / synthfreq)])) for t in xrange(0, STACKRANGE)])
+	#temparray=array.array('i', [ewchunk(foobsin(2.0 * pival * freq * t / synthfreq)) for t in xrange(0, int(lenth * synthfreq))])
 	return temparray
 
 def autosquare5stackmean(freq, lenth):
-	temparray=array.array('f', [(mean([foobsin(2.0 * pival * (freq * stacksub) * t / synthfreq), foobsin(2.0 * pival * (freq *(stacksub * 2)) * t / synthfreq), foobsin(2.0 * pival * (freq *(stacksub * 3)) * t / synthfreq), foobsin(2.0 * pival * (freq *(stacksub * 4)) * t / synthfreq), foobsin(2.0 * pival * (freq *(stacksub * 5)) * t / synthfreq)])) for t in xrange(0, STACKRANGE)])
-	#temparray=array.array('f', [(foobsin(2.0 * pival * freq * t / synthfreq)) for t in xrange(0, int(lenth * synthfreq))])
+	temparray=array.array('i', [ewchunk(mean([foobsin(2.0 * pival * (freq * stacksub) * t / synthfreq), foobsin(2.0 * pival * (freq *(stacksub * 2)) * t / synthfreq), foobsin(2.0 * pival * (freq *(stacksub * 3)) * t / synthfreq), foobsin(2.0 * pival * (freq *(stacksub * 4)) * t / synthfreq), foobsin(2.0 * pival * (freq *(stacksub * 5)) * t / synthfreq)])) for t in xrange(0, STACKRANGE)])
+	#temparray=array.array('i', [ewchunk(foobsin(2.0 * pival * freq * t / synthfreq)) for t in xrange(0, int(lenth * synthfreq))])
 	return temparray
 
 
@@ -831,7 +843,7 @@ def drawwave():
 	xpos=2
 	xjump=400.0/len(WAVDRAW)
 	yposbase=400
-	yposmag=0.005
+	yposmag=0.00000005
 	oldxpos=0
 	oldypos=0
 	vlinecnt=0

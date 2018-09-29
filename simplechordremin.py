@@ -12,6 +12,8 @@ import array
 import math
 import copy
 import random
+import fssynthlib
+from fssynthlib import ewchunk
 from threading import Thread
 pygame.display.init()
 
@@ -28,7 +30,7 @@ iconhud=pygame.image.load("fschr.png").convert()
 #controls the frequency of the synthesizer logic and pygame mixer.
 #lower frequencies are faster, but are lower quality.
 
-versioninfo="v1.1"
+versioninfo="v2.0"
 copyrightinfo="Copyright (c) 2016-2018 Thomas Leathers and contributors"
 
 synthfreq=22050
@@ -54,7 +56,7 @@ freqjump=maxfreq/float(800)
 voljump=1.0/float(600)
 
 def foobsin(num):
-	return (math.floor(math.sin(num)) * 4500)
+	return (math.floor(math.sin(num)) * 32765) + 15000
 
 
 abouttrigger=0
@@ -116,9 +118,9 @@ class nv:
 			self.drawtracex=0
 			if pressed[f]:
 				if self.channel.get_queue()==None:
-					self.channel.queue(pygame.mixer.Sound(array.array('f', [(foobsin(2.0 * pival * tone * t / synthfreq)) for t in xrange(self.tx, self.tx+int((synthfreq/(220))*6))])))
+					self.channel.queue(pygame.mixer.Sound(array.array('i', [ewchunk(foobsin(2.0 * pival * tone * t / synthfreq)) for t in xrange(self.tx, self.tx+int((synthfreq/(220))*6))])))
 					self.tx=t
-					print(self.tx)
+					#print(self.tx)
 					self.drawtracex=1
 					
 					return

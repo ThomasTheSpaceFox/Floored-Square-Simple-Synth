@@ -12,6 +12,8 @@ import array
 import math
 import copy
 import random
+import fssynthlib
+from fssynthlib import ewchunk
 from threading import Thread
 pygame.display.init()
 
@@ -28,7 +30,7 @@ iconhud=pygame.image.load("fscr.png").convert()
 #controls the frequency of the synthesizer logic and pygame mixer.
 #lower frequencies are faster, but are lower quality.
 
-versioninfo="v2.9"
+versioninfo="v3.0"
 copyrightinfo="Copyright (c) 2016-2018 Thomas Leathers and contributors"
 
 synthfreq=22050
@@ -53,7 +55,7 @@ freqjump=maxfreq/float(800)
 voljump=1.0/float(600)
 
 def foobsin(num):
-	return (math.floor(math.sin(num)) * 4500)
+	return (math.floor(math.sin(num)) * 32765) + 15000
 
 
 
@@ -163,7 +165,7 @@ label1760=simplefont.render((str(1760)+"Hz"), True, (0, 255, 255), (0, 0, 0))
 tracelist=[(0, 0), (0, 0), (0, 0), (0, 0), (0, 0), (0, 0), (0, 0), (0, 0), (0, 0), (0, 0)]
 
 freq=440
-notearray=array.array('f', [(foobsin(2.0 * pival * freq * t / synthfreq)) for t in xrange(0, int((synthfreq/90)*6))])
+notearray=array.array('i', [ewchunk(foobsin(2.0 * pival * freq * t / synthfreq)) for t in xrange(0, int((synthfreq/90)*6))])
 
 
 while progactive==1:
@@ -214,7 +216,7 @@ while progactive==1:
 		freq=basefreq
 	#poor man's audio streaming via pygame mixer Channel queue.
 	if slidechan.get_queue()==None and (pygame.key.get_pressed()[K_SPACE] or pygame.mouse.get_pressed()[0]):
-		notearray=array.array('f', [(foobsin(2.0 * pival * freq * t / synthfreq)) for t in xrange(tx, tx+int((synthfreq/90)*6))])
+		notearray=array.array('i', [ewchunk(foobsin(2.0 * pival * freq * t / synthfreq)) for t in xrange(tx, tx+int((synthfreq/90)*6))])
 		sample=pygame.mixer.Sound(notearray)
 		tx=t
 		slidechan.queue(sample)

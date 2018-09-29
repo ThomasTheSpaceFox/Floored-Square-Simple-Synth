@@ -12,6 +12,7 @@ import array
 import math
 import copy
 import random
+import fssynthlib
 from threading import Thread
 pygame.display.init()
 
@@ -44,22 +45,15 @@ pival=math.pi
 pygame.mixer.init(frequency=synthfreq , size=-16)
 pygame.mixer.set_num_channels(8)
 
-def foobsin(num):
-	return (math.floor(math.sin(num)) * 4500)
-
-
-def foobtangent(num):
-	return (math.floor(math.tan(num)) * 4500)
-	
 class drum:
 	def __init__(self, tone, fade, style=0, notearray=None):
 		self.tone=tone
 		if notearray==None:
 			#if style==1, generate via floored tangent, else, use floored sine.
 			if style==1:
-				self.notearray=array.array('f', [(foobtangent(2.0 * pival * (self.tone) * t / synthfreq)) for t in xrange(0, STACKRANGE)])
+				self.notearray=fssynthlib.makedistangent(self.tone)
 			else:
-				self.notearray=array.array('f', [(foobsin(2.0 * pival * (self.tone) * t / synthfreq)) for t in xrange(0, STACKRANGE)])
+				self.notearray=fssynthlib.makesquare(self.tone)
 		else:
 			self.notearray=notearray
 		self.sample=pygame.mixer.Sound(self.notearray)
@@ -81,7 +75,7 @@ class cymbal:
 	def __init__(self, fade, notearray=None):
 		if notearray==None:
 			#generate noise
-			self.notearray=array.array('f', [(random.uniform(-0.3, 0.3)) for t in xrange(0, STACKRANGE)])
+			self.notearray=fssynthlib.makenoise()
 		else:
 			self.notearray=notearray
 		self.sample=pygame.mixer.Sound(self.notearray)
@@ -110,8 +104,8 @@ mainvolume=1.0
 snare=drum(110, 250)
 bass=drum(55, 250)
 hithat=cymbal(250)
-tanbass=drum(27.5, 250, 1)
-tansnare=drum(55, 250, 1)
+tanbass=drum(55, 250, 1)
+tansnare=drum(110, 250, 1)
 
 class beatcell:
 	def __init__(self, xoff, drumid, cellid, active=1, yoff=20):
@@ -443,7 +437,7 @@ def sideprocess():
 			pygame.draw.rect(screensurf, (120, 120, 140), scrollbar)
 			screensurf.blit(scrollbarmesage3, (screensurf.get_width()//2-scrollbarmesage2.get_width()//2, scrollbar.y+20))
 		hudiconrect=screensurf.blit(iconhud, (screensurf.get_width()-68, screensurf.get_height()-68))
-		time.sleep(0.05)
+		time.sleep(0.1)
 		#call render routines of cells
 		for cell in celllist:
 			if dispmode==0 and cell.cellid>8:

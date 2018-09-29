@@ -2,7 +2,10 @@
 A chiptune-esq array-based synthesizer suite.
 featuring a Drum sequencer, and plenty of square-like waveforms.
 
-v2.9
+v3.0
+
+Featuring a new general-use synth lib, called fssynthlib, that can be used for
+easy waveform-based audio in any pygame program.
 
 Copyright (c) 2016-2018 Thomas Leathers
 

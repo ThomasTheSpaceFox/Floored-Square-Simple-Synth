@@ -5,6 +5,8 @@ import pygame.display
 import pygame.image
 import pygame.mixer
 import pygame
+from fssynthlib import ewchunk
+import fssynthlib
 from pygame.locals import *
 import time
 import os
@@ -67,21 +69,24 @@ def foobtan(num):
 	#return math.floor(math.sin((math.e**(num/100)))) * 4500
 	#return abs(math.e**((num)/1000))
 def foobsin(num):
-	return (math.floor(math.sin(num)) * 4500)
+	return (math.floor(math.sin(num)) * 32000)
+
+
+
 #def foobsin(num):
 #	return (math.floor(math.sin(num)-math.cos(num*2)-math.cos(num)) * 4500)
-sinetan=0
-tonevolume=0.3
+
+tonevolume=0.2
+tonevolume=0.6
 class notevoice:
 	def __init__(self, tone, trigkeys, voicenum=1):
 		self.voicenum=voicenum
 		self.tone=tone
 		self.trigkeys=trigkeys
 		self.vol=tonevolume
-		if sinetan==1:
-			self.notearray=array.array('f', [(foobtan(2.0 * pival * (self.tone) * t / synthfreq)) for t in xrange(0, STACKRANGE)])
-		else:
-			self.notearray=array.array('f', [(foobsin(2.0 * pival * (self.tone) * t / synthfreq)) for t in xrange(0, STACKRANGE)])
+		#self.notearray=array.array('i', [ewchunk(foobsin(2.0 * pival * (self.tone) * t / synthfreq)) for t in xrange(0, STACKRANGE)])
+		#self.notearray=fssynthlib.makesquare(self.tone)
+		self.notearray=fssynthlib.maketangent(self.tone)
 		self.sample=pygame.mixer.Sound(self.notearray)
 		self.sample.set_volume(self.vol)
 		vol2=self.vol*reverbdecay

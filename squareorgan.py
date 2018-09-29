@@ -11,6 +11,7 @@ import os
 import array
 import math
 import copy
+import fssynthlib
 from threading import Thread
 pygame.display.init()
 
@@ -60,38 +61,40 @@ def limit(limit, num):
 		return num
 
 def foobtan(num):
-	return (math.floor(math.tan(num)) * 3500)
+	return (math.floor(math.tan(num)) * 13500)
 
 def foobcos(num):
-	return (math.floor(math.cos(num)) * 3500)
+	return (math.floor(math.cos(num)) * 13500)
 #def foobtan(num):
 #	
 	#return math.floor(math.sin((math.e**(num/100)))) * 4500
 	#return abs(math.e**((num)/1000))
 def foobsin(num):
-	return (math.floor(math.sin(num)) * 3500)
+	return (math.floor(math.sin(num)) * 13500)
 #def foobsin(num):
 #	return (math.floor(math.sin(num)-math.cos(num*2)-math.cos(num)) * 4500)
 sinetan=0
 tonevolume=0.08
-tonevolume=0.06
+tonevolume=0.2
+
+octavemul=0.5
 
 #stops
-stoptan=1
+stoptan=0
 stopsin=1
 stopcos=1
 
 class notevoice:
 	def __init__(self, tone, trigkeys, voicenum=1):
 		self.voicenum=voicenum
-		self.tone=tone
+		self.tone=tone*octavemul
 		self.trigkeys=trigkeys
 		self.vol1=tonevolume
 		
 		#fsin stop
-		self.notearray2=array.array('f', [(foobsin(2.0 * pival * (self.tone*1.0) * t / synthfreq)) for t in xrange(0, int(STACKRANGE//self.tone*1.0))])
-		self.notearray1=array.array('f', [(foobsin(2.0 * pival * (self.tone/2.0) * t / synthfreq)) for t in xrange(0, int(STACKRANGE//(self.tone/2.0)))])
-		self.notearray3=array.array('f', [(foobsin(2.0 * pival * (self.tone*2.0) * t / synthfreq)) for t in xrange(0, int(STACKRANGE//(self.tone*2.0)))])
+		self.notearray2=array.array('i', [fssynthlib.ewchunk(foobsin(2.0 * pival * (self.tone*1.0) * t / synthfreq)) for t in xrange(0, int(STACKRANGE//self.tone*1.0))])
+		self.notearray1=array.array('i', [fssynthlib.ewchunk(foobsin(2.0 * pival * (self.tone/2.0) * t / synthfreq)) for t in xrange(0, int(STACKRANGE//(self.tone/2.0)))])
+		self.notearray3=array.array('i', [fssynthlib.ewchunk(foobsin(2.0 * pival * (self.tone*2.0) * t / synthfreq)) for t in xrange(0, int(STACKRANGE//(self.tone*2.0)))])
 		
 		self.sampled1=pygame.mixer.Sound(self.notearray1)
 		self.sampled1.set_volume(self.vol1)
@@ -101,9 +104,9 @@ class notevoice:
 		self.sampled3.set_volume(self.vol1)
 		
 		#fcos stop
-		self.cosarray2=array.array('f', [(foobcos(2.0 * pival * (self.tone*1.0) * t / synthfreq)) for t in xrange(0, int(STACKRANGE//self.tone*1.0))])
-		self.cosarray1=array.array('f', [(foobcos(2.0 * pival * (self.tone/2.0) * t / synthfreq)) for t in xrange(0, int(STACKRANGE//(self.tone/2.0)))])
-		self.cosarray3=array.array('f', [(foobcos(2.0 * pival * (self.tone*2.0) * t / synthfreq)) for t in xrange(0, int(STACKRANGE//(self.tone*2.0)))])
+		self.cosarray2=array.array('i', [fssynthlib.ewchunk(foobcos(2.0 * pival * (self.tone*1.0) * t / synthfreq)) for t in xrange(0, int(STACKRANGE//self.tone*1.0))])
+		self.cosarray1=array.array('i', [fssynthlib.ewchunk(foobcos(2.0 * pival * (self.tone/2.0) * t / synthfreq)) for t in xrange(0, int(STACKRANGE//(self.tone/2.0)))])
+		self.cosarray3=array.array('i', [fssynthlib.ewchunk(foobcos(2.0 * pival * (self.tone*2.0) * t / synthfreq)) for t in xrange(0, int(STACKRANGE//(self.tone*2.0)))])
 		
 		self.cos1=pygame.mixer.Sound(self.cosarray1)
 		self.cos1.set_volume(self.vol1)
@@ -112,9 +115,9 @@ class notevoice:
 		self.cos3=pygame.mixer.Sound(self.cosarray3)
 		self.cos3.set_volume(self.vol1)
 		#ftan stop
-		self.tanarray2=array.array('f', [(foobtan(2.0 * pival * (self.tone/2.0) * t / synthfreq)) for t in xrange(0, int(STACKRANGE//self.tone/2.0))])
-		self.tanarray1=array.array('f', [(foobtan(2.0 * pival * (self.tone/4.0) * t / synthfreq)) for t in xrange(0, int(STACKRANGE//(self.tone/4.0)))])
-		self.tanarray3=array.array('f', [(foobtan(2.0 * pival * (self.tone*1.0) * t / synthfreq)) for t in xrange(0, int(STACKRANGE//(self.tone*1.0)))])
+		self.tanarray2=array.array('i', [fssynthlib.ewchunk(foobtan(2.0 * pival * (self.tone/2.0) * t / synthfreq)) for t in xrange(0, int(STACKRANGE//self.tone/2.0))])
+		self.tanarray1=array.array('i', [fssynthlib.ewchunk(foobtan(2.0 * pival * (self.tone/4.0) * t / synthfreq)) for t in xrange(0, int(STACKRANGE//(self.tone/4.0)))])
+		self.tanarray3=array.array('i', [fssynthlib.ewchunk(foobtan(2.0 * pival * (self.tone*1.0) * t / synthfreq)) for t in xrange(0, int(STACKRANGE//(self.tone*1.0)))])
 
 		
 		self.tan1=pygame.mixer.Sound(self.tanarray1)
