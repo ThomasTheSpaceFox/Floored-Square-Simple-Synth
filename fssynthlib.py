@@ -68,6 +68,20 @@ def makepulse(freq, duty=0.5):
 def makesaw(freq):
 	sawramp=1.0/(mixrate/float(freq))
 	return array.array('i', [ewchunk(((sawramp * t) * 32765) - 15000) for t in xrange(0, int(mixrate/freq))])
+
+def trihelp(num, trifall, rangesize, t):
+	if t<trifall:
+		return num * t
+	else:
+		return num * abs(t - rangesize)
+
+def maketri(freq):
+	rangesize=int(mixrate/freq)
+	quarter=rangesize//4
+	triramp=2.0/(mixrate/float(freq))
+	trifall=int((mixrate/freq)/2)
+	
+	return array.array('i', [ewchunk((trihelp(triramp, trifall, rangesize, t) * 36765) - 17000) for t in xrange(0 + quarter, int(mixrate/freq) + quarter)])
 	
 	
 #generate white noise sample data.
@@ -183,6 +197,23 @@ def test6(freq=110):
 	time.sleep(1)
 	chan.stop()
 
+
+def test7(freq=110):
+	print("Triangle wave synthesis test (test 7) Freq: '" + str(freq) + "'")
+	sound1=pygame.mixer.Sound(maketri(freq))
+	chan=pygame.mixer.Channel(1)
+	print('Center')
+	chan.set_volume(1, 1)
+	chan.play(sound1, -1)
+	time.sleep(1)
+	print('Left')
+	chan.set_volume(1, 0)
+	time.sleep(1)
+	print('Right')
+	chan.set_volume(0, 1)
+	time.sleep(1)
+	chan.stop()
+
 if __name__=="__main__":
 	pygame.mixer.init(frequency=mixrate, size=-16, channels=2)
 	#print(makesaw(110))
@@ -219,4 +250,9 @@ if __name__=="__main__":
 	test6(110)
 	test6(220)
 	test6(440)
-	
+	#Triangle wave
+	test7(55)
+	test7(110)
+	test7(220)
+	test7(440)
+	test7(880)

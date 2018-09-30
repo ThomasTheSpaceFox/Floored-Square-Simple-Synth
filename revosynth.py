@@ -47,10 +47,10 @@ print ("mixer frequency:" + str(synthfreq))
 #pygame.mixer.set_num_channels(6)
 print ("number of channels: "+ str(pygame.mixer.get_num_channels()))
 
-reverbtime=0.07
-reverbtime=0.1
+reverbtimein=0.07
+reverbtimeout=0.07
 reverbdecay=0.5
-
+fadeouttime=10
 progrun=1
 pival=math.pi
 
@@ -159,51 +159,51 @@ class notevoice:
 	
 	def play(self):
 		self.sample.play(-1)
-		time.sleep(reverbtime)
+		time.sleep(reverbtimein)
 		self.playflag=1
 		self.sampled1.play(-1)
-		time.sleep(reverbtime)
+		time.sleep(reverbtimein)
 		self.playflag=2
 		self.sampled2.play(-1)
-		time.sleep(reverbtime)
+		time.sleep(reverbtimein)
 		self.playflag=3
 		self.sampled3.play(-1)
-		time.sleep(reverbtime)
+		time.sleep(reverbtimein)
 		self.playflag=4
 		self.sampled4.play(-1)
-		time.sleep(reverbtime)
+		time.sleep(reverbtimein)
 		self.playflag=5
 		self.sampled5.play(-1)
-		time.sleep(reverbtime)
+		time.sleep(reverbtimein)
 		self.playflag=6
 		self.sampled6.play(-1)
-		time.sleep(reverbtime)
+		time.sleep(reverbtimein)
 		self.playflag=6
 		self.sampled7.play(-1)
 		self.playflag=7
 	def stop(self):
-		self.sample.stop()
-		time.sleep(reverbtime)
+		self.sample.fadeout(fadeouttime)
+		time.sleep(reverbtimeout)
 		self.playflag=6
-		self.sampled1.stop()
-		time.sleep(reverbtime)
+		self.sampled1.fadeout(fadeouttime)
+		time.sleep(reverbtimeout)
 		self.playflag=5
-		self.sampled2.stop()
-		time.sleep(reverbtime)
+		self.sampled2.fadeout(fadeouttime)
+		time.sleep(reverbtimeout)
 		self.playflag=4
-		self.sampled3.stop()
-		time.sleep(reverbtime)
+		self.sampled3.fadeout(fadeouttime)
+		time.sleep(reverbtimeout)
 		self.playflag=3
-		self.sampled4.stop()
-		time.sleep(reverbtime)
+		self.sampled4.fadeout(fadeouttime)
+		time.sleep(reverbtimeout)
 		self.playflag=2
-		self.sampled5.stop()
-		time.sleep(reverbtime)
+		self.sampled5.fadeout(fadeouttime)
+		time.sleep(reverbtimeout)
 		self.playflag=1
-		self.sampled6.stop()
-		time.sleep(reverbtime)
+		self.sampled6.fadeout(fadeouttime)
+		time.sleep(reverbtimeout)
 		self.playflag=0
-		self.sampled7.stop()
+		self.sampled7.fadeout(fadeouttime)
 
 
 def gentones():

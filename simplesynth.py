@@ -48,28 +48,28 @@ print ("mixer frequency:" + str(synthfreq))
 #pygame.mixer.set_num_channels(6)
 print ("number of channels: "+ str(pygame.mixer.get_num_channels()))
 def foobsin1(num):
-	return (strex(math.sin(num)) * 4500)
+	return (strex(math.sin(num)) * 12500)
 
 #def foobsin1(num):
 #	return strex((num) * 240)
 
 def foobsin2(num):
-	return (strex(math.tan(num)) * 4500)
+	return (strex(math.tan(num)) * 12500)
 def foobsin3(num):
-	return (strex(math.cos(num) + math.sin(num)) * 4500)	
+	return (strex(math.cos(num) + math.sin(num)) * 5500)	
 def foobsin4(num):
-	return (strex(math.tan(num) + math.sin(num)) * 4500)
+	return (strex(math.tan(num) + math.sin(num)) * 5500)
 foobsin=foobsin1
 def foobsin5(num):
-	return (strex(math.sin(num)+math.sin(num*2)-math.cos(num)) * 2500)
+	return (strex(math.sin(num)+math.sin(num*2)-math.cos(num)) * 3000)
 def foobsin6(num):
-	return (strex(math.sin(num)+math.cos(num*2)-math.cos(num)) * 2500)
+	return (strex(math.sin(num)+math.cos(num*2)-math.cos(num)) * 3000)
 def foobsin7(num):
-	return (strex(math.sin(num)-math.sin(num*2)-math.cos(num)) * 2500)
+	return (strex(math.sin(num)-math.sin(num*2)-math.cos(num)) * 3000)
 def foobsin8(num):
-	return (strex(math.sin(num)-math.cos(num*2)-math.cos(num)) * 2500)
+	return (strex(math.sin(num)-math.cos(num*2)-math.cos(num)) * 3000)
 def foobsin9(num):
-	return (strex(math.sin(num)*7) * 800)
+	return (strex(math.sin(num)*7) * 700)
 def foobsin10(num):
 	return (strex(math.tan(num)*4) * 300)
 #foobsin=foobsin10
