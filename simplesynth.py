@@ -843,7 +843,7 @@ def drawwave():
 	xpos=2
 	xjump=400.0/len(WAVDRAW)
 	yposbase=400
-	yposmag=0.00000005
+	yposmag=0.00000002
 	oldxpos=0
 	oldypos=0
 	vlinecnt=0

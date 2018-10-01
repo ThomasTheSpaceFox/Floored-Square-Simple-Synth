@@ -9,7 +9,11 @@ mixrate=22050
 #mixrate=8000
 #mixrate=48000
 
-#FSSS Basic Python Synthesizer Library 
+#FSSS Synthesis library
+#v1.1.0
+verlst=[1, 1, 0]
+verstr="v1.1.0"
+
 
 def init(mixerrate):
 	global mixrate
@@ -215,6 +219,7 @@ def test7(freq=110):
 	chan.stop()
 
 if __name__=="__main__":
+	print("FSSS Synthesis library " + verstr)
 	pygame.mixer.init(frequency=mixrate, size=-16, channels=2)
 	#print(makesaw(110))
 	print("Running Self tests...")
