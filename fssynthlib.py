@@ -86,6 +86,27 @@ def maketri(freq):
 	trifall=int((mixrate/freq)/2)
 	
 	return array.array('i', [ewchunk((trihelp(triramp, trifall, rangesize, t) * 36765) - 17000) for t in xrange(0 + quarter, int(mixrate/freq) + quarter)])
+
+
+##sliding triangle
+
+def trihelp_sl(num, trifall, rangesize, t, numfall):
+	if t<trifall:
+		return num * t
+	else:
+		return abs(1.0 - (numfall * abs(t - trifall)))
+
+def maketrisl(freq, duty=0.5):
+	dutyflip=((-(duty-0.5))+0.5)
+	rangefloat=(mixrate/float(freq))
+	rangesize=int(rangefloat)
+	quarter=0
+	triramp=1.0/((rangefloat*duty))
+	trirampfall=1.0/(rangefloat*dutyflip)
+	#triramp=(1.0/duty)/(mixrate/float(freq))
+	trifall=int(rangefloat*duty)
+	
+	return array.array('i', [ewchunk((trihelp_sl(triramp, trifall, rangesize, t, trirampfall) * 36765) - 17000) for t in xrange(0 + quarter, int(mixrate/freq) + quarter)])
 	
 	
 #generate white noise sample data.
@@ -126,6 +147,16 @@ def test3(freq=110):
 	chan.stop()
 
 
+
+def test8(freq=110):
+	print("Sliding trinagle synthesis test (sweep) (test 1) Freq: '" + str(freq) + "'")
+	chan=pygame.mixer.Channel(1)
+	chan.set_volume(1, 1)
+	for duty in [0.01, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 0.99]:
+		print("duty: '" + str(duty) + "'")
+		sound1=pygame.mixer.Sound(maketrisl(freq, duty))
+		chan.play(sound1, -1)
+		time.sleep(0.25)
 
 def test4(freq=110):
 	print("Pulse wave synthesis test (sweep) (test 1) Freq: '" + str(freq) + "'")
@@ -223,41 +254,48 @@ if __name__=="__main__":
 	pygame.mixer.init(frequency=mixrate, size=-16, channels=2)
 	#print(makesaw(110))
 	print("Running Self tests...")
-	#noise
-	test1()
-	#sawtooth
-	test2(27)
-	test2(55)
-	test2(110)
-	test2(220)
-	test2(440)
-	#square wave
-	test3(27)
-	test3(55)
-	test3(110)
-	test3(220)
-	test3(440)
-	#pulse wave (test will sweep a range of pulse widths.)
-	test4(27)
-	test4(55)
-	test4(110)
-	test4(220)
-	test4(440)
-	#Sine wave
-	test5(55)
-	test5(110)
-	test5(220)
-	test5(440)
-	test5(880)
-	#distorted tangent wave
-	test6(27)
-	test6(55)
-	test6(110)
-	test6(220)
-	test6(440)
+	##noise
+	#test1()
+	##sawtooth
+	#test2(27)
+	#test2(55)
+	#test2(110)
+	#test2(220)
+	#test2(440)
+	##square wave
+	#test3(27)
+	#test3(55)
+	#test3(110)
+	#test3(220)
+	#test3(440)
+	##pulse wave (test will sweep a range of pulse widths.)
+	#test4(27)
+	#test4(55)
+	#test4(110)
+	#test4(220)
+	#test4(440)
+	##Sine wave
+	#test5(55)
+	#test5(110)
+	#test5(220)
+	#test5(440)
+	#test5(880)
+	##distorted tangent wave
+	#test6(27)
+	#test6(55)
+	#test6(110)
+	#test6(220)
+	#test6(440)
 	#Triangle wave
 	test7(55)
 	test7(110)
 	test7(220)
 	test7(440)
 	test7(880)
+	#Triangle wave (test will sweep a range of pulse widths.)
+	### expect pops. pop reduction too complex.
+	test8(55)
+	test8(110)
+	test8(220)
+	test8(440)
+	test8(880)
