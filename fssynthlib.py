@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-import pygame
 import math
 import array
 import time
@@ -250,6 +249,7 @@ def test7(freq=110):
 	chan.stop()
 
 if __name__=="__main__":
+	import pygame
 	print("FSSS Synthesis library " + verstr)
 	pygame.mixer.init(frequency=mixrate, size=-16, channels=2)
 	#print(makesaw(110))

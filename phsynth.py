@@ -50,7 +50,7 @@ print ("number of channels: "+ str(pygame.mixer.get_num_channels()))
 reverbtimein=0.07
 reverbtimeout=0.07
 reverbdecay=0.5
-fadeouttime=10
+fadeouttime=100
 progrun=1
 pival=math.pi
 
@@ -76,15 +76,29 @@ def foobsin(num):
 #def foobsin(num):
 #	return (math.floor(math.sin(num)-math.cos(num*2)-math.cos(num)) * 4500)
 shift=0.01
-tonevolume=0.2
-tonevolume=0.6
+
+volL=0.4
+volR=0.6
+fadein=100
+lduty=0.7
+rduty=0.7
+
+lvoice=0
+rvoice=1
+
+
+lvoicesquare=simplefont.render("Left voice [z,x]: square pulse", True, (255, 255, 255), (0, 0, 100))
+lvoicetri=simplefont.render("Left voice [z,x]: triangle pulse", True, (255, 255, 255), (0, 0, 100))
+rvoicesquare=simplefont.render("Right voice [z,x]: square pulse", True, (255, 255, 255), (0, 0, 100))
+rvoicetri=simplefont.render("Right voice [z,x]: triangle pulse", True, (255, 255, 255), (0, 0, 100))
+
 class notevoice:
 	def __init__(self, tone, trigkeys, voicenum=1):
 		self.voicenum=voicenum
 		self.tone=tone
 		self.Rtone=tone
 		self.Ltone=tone
-		self.vol=tonevolume
+		#self.vol=tonevolume
 		self.channelL=pygame.mixer.Channel(voicenum)
 		self.channelR=pygame.mixer.Channel(voicenum+32)
 		
@@ -93,22 +107,28 @@ class notevoice:
 			self.Rtone=tone*(1.0-shift)
 		self.trigkeys=trigkeys
 		
-		self.notearrayL=fssynthlib.maketri(self.Ltone)
+		#self.notearrayL=fssynthlib.maketri(self.Ltone)
+		if lvoice==1:
+			self.notearrayL=fssynthlib.maketrisl(self.Ltone, lduty)
+		else:
+			self.notearrayL=fssynthlib.makepulse(self.Ltone, lduty)
 		self.sampleL=pygame.mixer.Sound(self.notearrayL)
 		#self.sampleL.set_volume(self.vol)
-		self.notearrayR=fssynthlib.maketri(self.Rtone)
+		#self.notearrayR=fssynthlib.maketri(self.Rtone)
+		if rvoice==1:
+			self.notearrayR=fssynthlib.maketrisl(self.Rtone, rduty)
+		else:
+			self.notearrayR=fssynthlib.makepulse(self.Rtone, rduty)
 		self.sampleR=pygame.mixer.Sound(self.notearrayR)
 		#self.sampleR.set_volume(self.vol)
 		self.playflag=0
 		self.firstrender=1
 	def keyup(self, event):
 		if event.key in self.trigkeys:
-			sideproc=Thread(target = self.stop, args = [])
-			sideproc.start()
+			self.stop()
 	def keydown(self, event):
 		if event.key in self.trigkeys:
-			sideproc=Thread(target = self.play, args = [])
-			sideproc.start()	
+			self.play()	
 		return 0
 	def render(self, offset):
 		if self.firstrender==1:
@@ -149,10 +169,10 @@ class notevoice:
 		self.playflag=1
 		self.channelL.stop()
 		self.channelR.stop()
-		self.channelL.set_volume(self.vol, 0)
-		self.channelR.set_volume(0, self.vol)
-		self.channelL.play(self.sampleL, -1)
-		self.channelR.play(self.sampleR, -1)
+		self.channelL.set_volume(volL, 0)
+		self.channelR.set_volume(0, volR)
+		self.channelL.play(self.sampleL, -1, fade_ms=fadein)
+		self.channelR.play(self.sampleR, -1, fade_ms=fadein)
 	def stop(self):
 		self.playflag=0
 		self.channelL.fadeout(fadeouttime)
@@ -203,14 +223,38 @@ gentones()
 print("ready")
 clock=pygame.time.Clock()
 #NEEDS WORK!
+
 while progrun==1:
 	#time.sleep(0.05)
 	clock.tick(30)
 	#pygame.event.pump()
 	for event in pygame.event.get():
 		if event.type==KEYDOWN:
-			for tone in tonelist:
-				tone.keydown(event)
+			if pygame.key.get_mods() & pygame.KMOD_SHIFT:
+				if event.key==pygame.K_z:
+					if not lvoice==0:
+						lvoice=0
+						pygame.mixer.stop()
+						gentones()
+				if event.key==pygame.K_x:
+					if not lvoice==1:
+						lvoice=1
+						pygame.mixer.stop()
+						gentones()
+				if event.key==pygame.K_a:
+					if not rvoice==0:
+						rvoice=0
+						pygame.mixer.stop()
+						gentones()
+				if event.key==pygame.K_s:
+					if not rvoice==1:
+						rvoice=1
+						pygame.mixer.stop()
+						gentones()
+					
+			else:
+				for tone in tonelist:
+					tone.keydown(event)
 		if event.type==KEYUP:
 			for tone in tonelist:
 				tone.keyup(event)
@@ -218,6 +262,15 @@ while progrun==1:
 			progrun=0
 			break
 	offset=33
+	screensurf.fill((0, 0, 0))
+	if lvoice:
+		screensurf.blit(lvoicetri, (0, 500))
+	else:
+		screensurf.blit(lvoicesquare, (0, 500))
+	if rvoice:
+		screensurf.blit(rvoicetri, (500, 500))
+	else:
+		screensurf.blit(rvoicesquare, (500, 500))
 	for tone in tonelist:
 		
 		tone.render(offset)
